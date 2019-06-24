@@ -2,6 +2,7 @@
 
 - [How to use markdown with vscode](#how-to-use-markdown-with-vscode)
   - [auto-creat-topic](#auto-creat-topic)
+  - [插入公式](#插入公式)
 
 ## auto-creat-topic
 
