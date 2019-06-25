@@ -140,10 +140,8 @@ regist=>operation: registers the operators
 relay->go->regist
 ```
 
-```mermaid
 graph TD;
-  A-->B;
-  A-->C;
-  B-->D;
-  C-->D;
-```
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
