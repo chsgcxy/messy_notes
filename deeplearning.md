@@ -89,9 +89,13 @@ JIT编译器和解释器还是有区别的，JIT是即时编译，实质是还�
 
 计算图
 
-## 算子（OP）
+## 图优化
 
-算子
+tvm的算子优化包括operator fusion, pruning, layout transformation, and memory management，这个一个高层次的优化，与后端没有关系，对于operator fusion很好理解，一些可以合并的操作可以提前合并，但是所谓的layout transformation和memory management是什么意思呢？在tvm中，relay来做图优化
+
+## tensor优化
+
+对于tensor优化，tensor即张量，是各个算子所要操作的矩阵，基于tensor的优化也就是说矩阵运算的优化。举个例子矩阵加法，如果在x86上那么充分利用cache会有很大的效率提升，如果在AI芯片上，那么很有可能支持矩阵加法的操作，可以直接转换为芯片的矩阵加法操作,在TVM中tvm来做tensor的优化
 
 ## 深度学习(神经网络)编译器
 
@@ -103,4 +107,35 @@ XLA
 
 ### TVM
 
-TVM
+#### relay
+
+#### relay.build_module.build
+
+**relay.build_module.build** returns three components:
+
+- the execution graph in json format
+- the TVM module library of compiled functions specifically for this graph on the target hardware
+- the parameter blobs of the model
+
+about optimization
+> During the compilation, Relay does the graph-level optimization while TVM does the tensor-level optimization, resulting in an optimized runtime module for model serving.
+
+about tvm schedule
+> TVM asks the user to provide a description of the computation called a schedule. A schedule is a set of transformation of computation that transforms the loop of computations in the program
+
+#### 流程
+
+```flow
+tf=>operation: tensorflow
+mxnet=>operation: mxnet
+caffe=>operation: caffe2
+baserelay=>operation: based on relay
+relay=>operation: relay.build_module.build
+tf->relay
+mxnet->relay
+caffe->relay
+baserelay->relay
+go=>operation: graph-level optimizations
+regist=>operation: registers the operators
+relay->go->regist
+```
