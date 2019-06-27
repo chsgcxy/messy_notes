@@ -11,14 +11,18 @@ rectangle model-formats {
 }
 
 rpf -down-> (mod): output
+note left: a object of tvm.relay.Module \nfor compilation 
 rpf -down-> (params): output
+note left: dict of str to NDArray \nInput parameters to the graph \nthat do not change during inference time. \nUsed for constant folding.
 (mod) -down-> (func): mod[mod.entry_func]
 
 (relay.build) as rb
-(target:\nllvm\ncuda) -down-> (target): one target
-(target) -down-> rb: input
-(target_host:\ncuda) -down-> (target_host): one target_host
-(target_host) -down-> rb: input
+(target) as target
+note right: can be:\nllvm\ncuda\n...
+target -left-> rb: input
+(target_host) as th
+note left: can be:cuda
+th -> rb: input
 (func) -down-> rb: input
 (params) -down-> rb: input
 
