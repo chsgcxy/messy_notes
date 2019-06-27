@@ -29,3 +29,9 @@ vscode要使能插入公式预览必须安装'markdown math'插件
 
 1. [Cmd Markdown 公式指导手册](https://www.zybuluo.com/codeep/note/163962)
 2. [Markdown数学公式语法](https://www.jianshu.com/p/e74eb43960a1)
+
+## plantuml
+
+vscode 支持plantuml插件，依赖于java和Graphviz，而且对文件后缀有要求。
+实际上vscode并不能完美使用plantuml,理想中的方式是直接在markdown的预览中能够看到plantuml的效果，但是实际上我们只能创建一个单独plantuml文件来生成图片
+markdown解析器的版本太多了，导致很难做到兼容，我希望能够在vscode中和github中看到同样的效果，所以，对于流程图，使用嵌入图片应该是最好的选择；当然还有公式的显示也是让人头疼，不知道其他人有没有更好的解决方案，其实目的就是无论在什么地方都能比较轻松的看到markdown效果，而且在本机的离线状态下也能够看到markdown效果。或许之前使用过的github.io会是个不错的选择？？？

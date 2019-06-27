@@ -1,0 +1,44 @@
+@startuml tvm-input-output-flow
+title tvm input and output flow
+(relay python frontend) as rpf
+
+rectangle model-formats {
+    (MXNet) -down-> rpf: relay.frontend.from_mxnet
+    (TensorFlow) -down->rpf: relay.frontend.from_tensorflow
+    (CoreML) -down->rpf: relay.frontend.from_coreml
+    (ONNX) -down->rpf: relay.frontend.from_onnx
+    (***) -down->rpf: relay.frontend.from_***
+}
+
+rpf -down-> (mod): output
+rpf -down-> (params): output
+(mod) -down-> (func): mod[mod.entry_func]
+
+(relay.build) as rb
+(target:\nllvm\ncuda) -down-> (target): one target
+(target) -down-> rb: input
+(target_host:\ncuda) -down-> (target_host): one target_host
+(target_host) -down-> rb: input
+(func) -down-> rb: input
+(params) -down-> rb: input
+
+rb -down-> (graph): output
+rb -down-> (lib): output
+rb -down-> (-params): output
+
+(graph_runtime.create) as grc
+(graph) -down-> grc: input
+(lib) -down-> grc: input
+(ctx: tvm.cpu0) -> grc: input
+
+grc -down-> (runtime): output
+(runtime.setinput) as rs
+(-params) -down-> rs: input
+(image data) -down-> rs: input
+(runtime) -down-> rs: runtime method
+(runtime.run) as rr
+(runtime.getoutput) as rg
+rs -> rr: runtime method
+rr -> rg: runtime method
+
+@enduml

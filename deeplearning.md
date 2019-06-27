@@ -125,23 +125,4 @@ about tvm schedule
 
 #### 流程
 
-```flow
-tf=>operation: tensorflow
-mxnet=>operation: mxnet
-caffe=>operation: caffe2
-baserelay=>operation: based on relay
-relay=>operation: relay.build_module.build
-tf->relay
-mxnet->relay
-caffe->relay
-baserelay->relay
-go=>operation: graph-level optimizations
-regist=>operation: registers the operators
-relay->go->regist
-```
 
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;

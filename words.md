@@ -11,3 +11,6 @@ landscape | 江山/风景
 tutorials | 教程
 relay | 中继/转播
 primitives | 原函数
+demonstrate | 演示
+iteration | 迭代
+prefix | 字首

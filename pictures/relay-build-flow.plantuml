@@ -1,0 +1,13 @@
+@startuml relay.build
+title relay.build flow
+rectangle relay.build {
+    (graph-level optimization by relay\n\n1. optimizeoperator fusion\n2. pre-computation\n3. layout transformation) as glo
+    (registers the operators to TVM implementations) as regop
+    (tensor-level optimization by tvm) as tlo
+    (transfer the high level IR into\nthe lower intrinsic IR \nof the specified target backend) as transfer
+    glo -right-> regop
+    regop -down-> tlo
+    tlo -left-> transfer
+    
+}
+@enduml
