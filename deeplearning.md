@@ -125,4 +125,6 @@ about tvm schedule
 
 #### 流程
 
-![tvm-input-output-flow](./out/pictures/tvm-input-output-flow/tvm-input-output-flow.png)
+tvm-input-output-flow![tvm-input-output-flow](./out/pictures/tvm-input-output-flow/tvm-input-output-flow.png)
+
+relay-build-flow![relay-build-flow](./out/pictures/relay-build-flow/relay-build-flow.png)

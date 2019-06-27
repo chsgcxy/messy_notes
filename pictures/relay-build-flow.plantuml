@@ -1,13 +1,51 @@
-@startuml relay.build
-title relay.build flow
-rectangle relay.build {
-    (graph-level optimization by relay\n\n1. optimizeoperator fusion\n2. pre-computation\n3. layout transformation) as glo
-    (registers the operators to TVM implementations) as regop
-    (tensor-level optimization by tvm) as tlo
-    (transfer the high level IR into\nthe lower intrinsic IR \nof the specified target backend) as transfer
-    glo -right-> regop
-    regop -down-> tlo
-    tlo -left-> transfer
-    
+@startuml relay-build-flow
+title relay build flow
+
+(python/tvm/relay/build_module.py\n\n build) as ptrbb
+rectangle input {
+    entity func
+    entity target
+    entity target_host
+    entity params
 }
+func .down-> ptrbb: input
+target .down-> ptrbb: input
+target_host .down-> ptrbb: input
+params .down-> ptrbb: input
+
+(python/tvm/relay/build_module.py\n\n BuildModule.build) as bmb
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.SetParam) as rbmsp
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.Build) as rbmb
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.BuildRelay) as rbmbr
+ptrbb -right-> bmb: func, target, target_host, params
+bmb -right-> rbmsp: params
+rbmsp -down-> rbmb: func, target, target_host
+rbmb -left-> rbmbr: in RelayBuildModule
+
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.BindParamsByName) as rbmbpbn
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.Optimize) as rbmo
+(relay::ModuleNode::FromExpr creat a relay::module) as rmfe
+rbmbr -left-> rbmbpbn: func, params
+rbmbpbn -down-> rmfe: func
+rmfe -right-> rbmo: "relay::Module, target, params"
+
+(src/relay/backend/build_module.cc\n\n new a GraphCodegen) as nag
+rbmo -right-> nag
+
+(src/relay/backend/graph_runtime_codegen.cc\n\n GraphRuntimeCodegenModule.init) as grcmi
+(src/relay/backend/graph_runtime_codegen.cc\n\n GraphRuntimeCodegenModule.codegen) as grcmc
+nag -down-> grcmi: target
+grcmi -left-> grcmc: func
+
+(src/codegen/build_module.cc\n\n tvm::build) as tb
+rectangle output {
+    entity "graph" as graph
+    entity "new params" as np
+    entity "mod" as mod
+}
+grcmc .down-> graph: output
+grcmc .down-> np: output
+grcmc -left-> tb: LowerFunc, target_host
+tb .down-> mod: output
+
 @enduml
