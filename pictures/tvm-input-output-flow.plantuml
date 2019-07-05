@@ -18,7 +18,7 @@ note left: dict of str to NDArray \nInput parameters to the graph \nthat do not 
 
 (relay.build) as rb
 (target) as target
-note right: can be:\nllvm\ncuda\n...
+note right: {"aocl", "aocl_sw_emu", "c",\n"cuda", "ext_dev", "hybrid", \n"llvm", "metal", "nvptx", "opencl", \n"opengl", "rocm", "sdaccel",\n "stackvm", "vulkan"}
 target -left-> rb: input
 (target_host) as th
 note left: can be:cuda

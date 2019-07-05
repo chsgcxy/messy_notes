@@ -1,0 +1,10 @@
+@startuml tvm-class-diagram
+
+class NodeRef {
+    {field} +NodePtr<Node> node_
+    {method} +inline const Node* operator->() const
+
+    
+} 
+
+@enduml

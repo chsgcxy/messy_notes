@@ -107,6 +107,11 @@ XLA
 
 ### TVM
 
+#### tvm软件栈
+
+- tvm如何管理OP,即如果要添加OP，应该如何添加
+- TVM如何生成target的mod
+
 #### relay
 
 #### relay.build_module.build

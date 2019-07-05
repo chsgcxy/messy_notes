@@ -37,3 +37,5 @@ vscode 支持plantuml插件，依赖于java和Graphviz，而且对文件后缀�
 markdown解析器的版本太多了，导致很难做到兼容，我希望能够在vscode中和github中看到同样的效果，所以，对于流程图，使用嵌入图片应该是最好的选择；当然还有公式的显示也是让人头疼，不知道其他人有没有更好的解决方案，其实目的就是无论在什么地方都能比较轻松的看到markdown效果，而且在本机的离线状态下也能够看到markdown效果。或许之前使用过的github.io会是个不错的选择？？？
 
 使用方法参考[使用Emacs敲出UML，PlantUML快速指南](http://archive.3zso.com/archives/plantuml-quickstart.html)
+
+其中 class-diagram 语法格式可以参考[PlantUML Class Diagram 类图](https://blog.csdn.net/DHPSL/article/details/82711440)

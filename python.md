@@ -29,3 +29,7 @@ Get a named attribute from an object; getattr(x, 'y') is equivalent to x.y. When
 ```
 
 可以从模块中获得类的实例，也可以从类中获得属性值，总之，getattr(x, 'y')是一个返回x.y的功能，因此y中如果包含字符'.'会被解析成attribute
+
+## python中*与**
+
+[Python中*args 和**kwargs的用法](https://www.cnblogs.com/cwind/p/8996000.html)
