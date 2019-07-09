@@ -14,6 +14,8 @@
 - Generate a compute expression and a schedule for the operator
 - Compile the operator into object code
 
+TVM defines the compiled object as Module. The user can get the compiled function from Module as PackedFunc
+
 ### 主目录结构
 
 .
@@ -195,7 +197,7 @@
 │       │   │   ├── xgboost_cost_model.py
 │       │   │   └── xgboost_tuner.py
 │       │   └── util.py
-│       ├── build_module.py
+│       ├── build_module.py **包含了tvm.build(),利用schedule,input tensor, output tensor, target 来生成tvm.module， 同时包含了tvm.lower(),这是build过程的第一步**
 │       ├── codegen.py
 │       ├── container.py
 │       ├── contrib
@@ -283,7 +285,7 @@
 │       ├── ir_builder.py
 │       ├── ir_pass.py
 │       ├── make.py
-│       ├── module.py
+│       ├── module.py **实现了tvm.module的定义， module包含了一个编译好的func,可以使用函数调用语法进行调用**
 │       ├── ndarray.py
 │       ├── node.py
 │       ├── _pyversion.py
@@ -939,14 +941,14 @@
 │   │   └── workspace_pool.h
 │   └── schedule
 │       ├── auto_inline_elem_wise.cc
-│       ├── bound.cc
-│       ├── graph.cc
+│       ├── bound.cc **bound实现，bound infrence是推断出所有循环边界和中间缓冲区大小的过程**
+│       ├── graph.cc **与bound有关**
 │       ├── graph.h
-│       ├── message_passing.cc
+│       ├── message_passing.cc **与bound有关**
 │       ├── message_passing.h
 │       ├── schedule_dataflow_rewrite.cc
 │       ├── schedule_lang.cc
-│       └── schedule_ops.cc
+│       └── schedule_ops.cc **定义ScheduleOps(),返回stmt**
 ├── topi
 │   ├── include
 │   │   └── topi

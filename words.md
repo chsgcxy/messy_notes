@@ -29,3 +29,5 @@ illustrate | 说明
 terminology | 术语
 aspects | 方面
 mechanism | 机制
+nest | 嵌套
+glues | 胶水
