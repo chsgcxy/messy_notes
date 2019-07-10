@@ -104,32 +104,3 @@ tvm的算子优化包括operator fusion, pruning, layout transformation, and mem
 ### XLA
 
 XLA
-
-### TVM
-
-#### tvm软件栈
-
-- tvm如何管理OP,即如果要添加OP，应该如何添加
-- TVM如何生成target的mod
-
-#### relay
-
-#### relay.build_module.build
-
-**relay.build_module.build** returns three components:
-
-- the execution graph in json format
-- the TVM module library of compiled functions specifically for this graph on the target hardware
-- the parameter blobs of the model
-
-about optimization
-> During the compilation, Relay does the graph-level optimization while TVM does the tensor-level optimization, resulting in an optimized runtime module for model serving.
-
-about tvm schedule
-> TVM asks the user to provide a description of the computation called a schedule. A schedule is a set of transformation of computation that transforms the loop of computations in the program
-
-#### 流程
-
-tvm-input-output-flow![tvm-input-output-flow](./out/pictures/tvm-input-output-flow/tvm-input-output-flow.png)
-
-relay-build-flow![relay-build-flow](./out/pictures/relay-build-flow/relay-build-flow.png)

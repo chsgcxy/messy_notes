@@ -6,6 +6,28 @@
 
 - interoperability between C++ and Python is not unidirectional
 
+## relay
+
+### relay.build_module.build
+
+**relay.build_module.build** returns three components:
+
+- the execution graph in json format
+- the TVM module library of compiled functions specifically for this graph on the target hardware
+- the parameter blobs of the model
+
+about optimization
+> During the compilation, Relay does the graph-level optimization while TVM does the tensor-level optimization, resulting in an optimized runtime module for model serving.
+
+about tvm schedule
+> TVM asks the user to provide a description of the computation called a schedule. A schedule is a set of transformation of computation that transforms the loop of computations in the program
+
+## 流程
+
+tvm-input-output-flow![tvm-input-output-flow](../out/tvm/input-output-flow/tvm-input-output-flow.png)
+
+relay-build-flow![relay-build-flow](../out/tvm/relay-build-flow/relay-build-flow.png)
+
 ## codebase-structure-overview
 
 所有繁重代码都在ｃ++中实现，python是为了用户接口，但是c++也可以调用python里面的接口
