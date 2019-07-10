@@ -23,9 +23,10 @@ class NodeIndexer {
     {method} +void Visit(const char* key, std::string* value);
     {method} +void Visit(const char* key, void** value);
     {method} +void Visit(const char* key, Type* value);
-    {method} +void Visit(const char* key, NodeRef* value);
+    {method} +void Visit(const char* key, NodeRef* value) final {MakeIndex(value->node_.get());};
     {method} +void Visit(const char* key, runtime::NDArray* value);
-    {method} +void Visit(const char* key, runtime::Object* value);    
+    {method} +void Visit(const char* key, runtime::Object* value);
+    {method} +void MakeIndex(Node* node);
 }
 
 class NodeAttrSetter {
@@ -53,7 +54,8 @@ class JSONAttrGetter {
     {method} +void Visit(const char* key, Type* value);
     {method} +void Visit(const char* key, NodeRef* value);
     {method} +void Visit(const char* key, runtime::NDArray* value);
-    {method} +void Visit(const char* key, runtime::Object* value);    
+    {method} +void Visit(const char* key, runtime::Object* value);
+    {method} +void Get(Node* node);   
 }
 
 class JSONAttrSetter {
@@ -67,7 +69,8 @@ class JSONAttrSetter {
     {method} +void Visit(const char* key, Type* value);
     {method} +void Visit(const char* key, NodeRef* value);
     {method} +void Visit(const char* key, runtime::NDArray* value);
-    {method} +void Visit(const char* key, runtime::Object* value);    
+    {method} +void Visit(const char* key, runtime::Object* value);
+    {method} +void Set(Node* node);    
 }
 
 NodeIndexer --|> AttrVisitor
@@ -77,7 +80,10 @@ JSONAttrSetter --|> AttrVisitor
 
 
 class Node {
+    {field} +static constexpr const char* _type_key = "Node";
     {method} +virtual void VisitAttrs(AttrVisitor* visitor) {}
+    {method} +inline NodePtr<Node> GetNodePtr() const;
+    {method} +template<typename T> inline bool is_type() const;
 }
 
 class TensorNode {
@@ -109,10 +115,26 @@ IterVarNode -up-|> Node
 TensorNode -up-|> Node
 
 class NodeRef {
-  {method} +inline const Node* operator->() const;
+    {field} +NodePtr<Node> node_;
+    {method} +inline size_t hash() const;
+    {method} +inline const Node* operator->() const;
+    {method} +template<typename T> inline const T *as() const;
 }
 
+class "template<typename Y> NodePtr" as NodePtr{
+    {field} -NodeBase* data_{nullptr};
+    {method} +T* get() const {return static_cast<T*>(data_);}
+    {method} +NodePtr(const NodePtr<T>& other);
+}
+
+class NodeBase {
+    {field} -std::atomic<int> ref_counter_{0};
+    {method} +NodeBase(const NodeBase& other);
+}
+
+Node -right-|> NodeBase
 NodeRef -up- AttrVisitor
-Node -left- NodeRef
+NodePtr --> NodeBase 
+NodeRef --> NodePtr
 
 @enduml
