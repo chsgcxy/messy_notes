@@ -1,114 +1,38 @@
 # directory-structure
 
-所有繁重代码都在ｃ++中实现，python是为了用户接口，但是c++也可以调用python里面的接口
+<!-- TOC -->
+- [directory-structure](#directory-structure)
+  - [主目录结构](#主目录结构)
+  - [详细结构](#详细结构)
+    - [python](#python)
+    - [src](#src)
+    - [topi](#topi)
+<!-- /TOC -->
 
-- Look up an operator implementation by querying the operator registry
-- Generate a compute expression and a schedule for the operator
-- Compile the operator into object code
-
-TVM defines the compiled object as Module. The user can get the compiled function from Module as PackedFunc
+所有复杂代码都在ｃ++中实现，python是为了用户接口，但是c++也可以调用python里面的接口
 
 ## 主目录结构
 
-.  
-├── conda  
-├── golang  
-├── include  
-├── python **可以理解为软件前端，c++可以理解为软件后端，python实现了对c++代码的封装，可以控制编译流程**  
-├── rust  
-├── src **op编译相关的c++代码和runtime部署相关的c++代码**  
-└── topi **op的实现在这里，包含的compute和schedule实现，实现支持c++和python**  
+├── ***3rdparty*** 第三方软件库，其中一些以git submodule的形式包含， 包括 HalideIR, rang, dlpack等一些开源软件  
+├── ***apps*** 包含了一些基于TVM的扩展项目，也作为如何使用tvm的例程  
+├── ***cmake*** tvm编译用的cmake  
+├── ***conda*** conda是一个开源的软件包管理系统和环境管理系统，用于安装多个版本的软件包及其依赖关系，并在它们之间轻松切换,这里实现了tvm的安装的包装，使得tvm安装更加方便  
+├── ***docker*** 基于docker的tvm快速部署，包含了一系列的dockerfile和安装脚本，能够根据dockerfile直接生成相应的镜像，省去了安装依赖环境的烦恼  
+├── ***docs*** 基于rst的文档，和官网的doc是一样的  
+├── ***golang*** tvm runtime的golang接口  
+├── ***include*** src 目录下的cc文件对应的头文件  
+├── ***jvm*** tvm runtime的java接口  
+├── ***nnvm*** nnvm实现，我们使用relay  
+├── ***python*** 可以理解为软件前端，c++可以理解为软件后端，python实现了对c++代码的封装，可以控制编译流程  
+├── ***rust*** Rust是一门系统编程语言，专注于安全，尤其是并发安全，支持函数式和命令式以及泛型等编程范式的多范式语言,放在tvm中不知道是要做什么，似乎是不影响我们了解tvm的编译过程  
+├── ***src*** op编译相关的c++代码和runtime部署相关的c++代码  
+├── ***tests*** 应该是测试相关的  
+├── ***topi*** op的实现在这里，包含的compute和schedule实现，实现支持c++和python  
+├── ***tutorials*** 一些demo  
+├── ***vta*** versatile tensor accelerator
+└── ***web*** This folder contains TVM WebAssembly and Javascript backend through Emscripten  
 
 ## 详细结构
-
-### conda
-
-├── conda  
-│   ├── build_cpu.sh  
-│   ├── build_cuda.sh  
-│   ├── conda_build_config.yaml  
-│   ├── cross-linux.cmake  
-│   ├── Dockerfile.template  
-│   ├── render_cuda.py  
-│   ├── tvm  
-│   └── tvm-libs  
-
-### golang
-
-├── golang  
-│   ├── Makefile  
-│   ├── sample  
-│   └── src  
-
-### include
-
-├── include  
-│   └── tvm  
-│       ├── api_registry.h  
-│       ├── arithmetic.h  
-│       ├── attrs.h  
-│       ├── base.h  
-│       ├── buffer.h  
-│       ├── build_module.h  
-│       ├── c_dsl_api.h  
-│       ├── channel.h  
-│       ├── codegen.h  
-│       ├── data_layout.h  
-│       ├── expr.h  
-│       ├── expr_operator.h  
-│       ├── ir_functor_ext.h  
-│       ├── ir.h  
-│       ├── ir_mutator.h  
-│       ├── ir_pass.h  
-│       ├── ir_visitor.h  
-│       ├── logging.h  
-│       ├── lowered_func.h  
-│       ├── operation.h  
-│       ├── packed_func_ext.h  
-│       ├── relay  
-│       │   ├── adt.h  
-│       │   ├── analysis.h  
-│       │   ├── attrs  
-│       │   │   ├── algorithm.h  
-│       │   │   ├── annotation.h  
-│       │   │   ├── debug.h  
-│       │   │   ├── device_copy.h  
-│       │   │   ├── image.h  
-│       │   │   ├── nn.h  
-│       │   │   ├── transform.h  
-│       │   │   └── vision.h  
-│       │   ├── base.h  
-│       │   ├── error.h  
-│       │   ├── expr_functor.h  
-│       │   ├── expr.h  
-│       │   ├── feature.h  
-│       │   ├── interpreter.h  
-│       │   ├── module.h  
-│       │   ├── op_attr_types.h  
-│       │   ├── op.h  
-│       │   ├── pattern_functor.h  
-│       │   ├── transform.h  
-│       │   └── type.h  
-│       ├── runtime  
-│       │   ├── c_backend_api.h  
-│       │   ├── c_runtime_api.h  
-│       │   ├── device_api.h  
-│       │   ├── module.h  
-│       │   ├── ndarray.h  
-│       │   ├── node_base.h  
-│       │   ├── object.h  
-│       │   ├── packed_func.h  
-│       │   ├── registry.h  
-│       │   ├── serializer.h  
-│       │   ├── threading_backend.h  
-│       │   ├── util.h  
-│       │   └── vm.h  
-│       ├── schedule.h  
-│       ├── schedule_pass.h  
-│       ├── target_info.h  
-│       ├── tensor.h **对应tensor.cc的** <span id="tensor.h"> **头文件** </span>  
-│       ├── tensor_intrin.h  
-│       └── tvm.h  
 
 ### python
 
@@ -377,13 +301,6 @@ TVM defines the compiled object as Module. The user can get the compiled functio
 │       ├── tensor_intrin.py  
 │       ├── tensor.py <span id="tensor.py"> **tensor的抽象，例如A = tvm.placeholder((n,), name='A')， A就是一个tensor， 也包含operation的抽象** </span> [tensor具体实现在c++中](#tensor.cc)  
 │       └── testing.py  
-
-### rust
-
-├── rust  
-│   ├── frontend  
-│   ├── macros  
-│   └── runtime
 
 ### src
 

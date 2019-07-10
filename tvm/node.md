@@ -1,5 +1,7 @@
 # Node-SubSystem
 
+编译栈里面任何一个语言对象都是Node的子类
+
 > We faced a constant changing of the compiler API for the need of research. We need a new language object or IR node whenever we want to test out new primitives. However, we don’t want to change our API from time to time. Besides that, we also want to
 
 - be able to serialize any language object and IRs
