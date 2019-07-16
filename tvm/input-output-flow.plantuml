@@ -1,6 +1,9 @@
 @startuml tvm-input-output-flow
 title tvm input and output flow
 (relay python frontend) as rpf
+note right
+    @目录 python/tvm/relay/frontend/
+end note
 
 rectangle model-formats {
     (MXNet) -down-> rpf: relay.frontend.from_mxnet
@@ -11,14 +14,40 @@ rectangle model-formats {
 }
 
 rpf -down-> (mod): output
-note left: a object of tvm.relay.Module \nfor compilation 
+note left
+    @包含了funcs的全局的relay module
+    @目录 python/tvm/relay/module.py
+    @是对src/relay/目录下的一些接口的封装
+    @module 本质上也是一个node
+    @每一个global func 都通过一个唯一的
+    tvm.relay.GlobalVar来区别
+end note
+
 rpf -down-> (params): output
-note left: dict of str to NDArray \nInput parameters to the graph \nthat do not change during inference time. \nUsed for constant folding.
+note left
+    @dict of str to NDArray
+     Input parameters to the graph
+     that do not change during inference time.
+    @Used for constant folding.
+end note
+
 (mod) -down-> (func): mod[mod.entry_func]
+note left
+    @A function declaration expression
+    @python/tvm/relay/expr.py
+    @继承于Expr, Expr 是RelayNode的子类
+end note
 
 (relay.build) as rb
 (target) as target
-note right: {"aocl", "aocl_sw_emu", "c",\n"cuda", "ext_dev", "hybrid", \n"llvm", "metal", "nvptx", "opencl", \n"opengl", "rocm", "sdaccel",\n "stackvm", "vulkan"}
+note right 
+    {"aocl", "aocl_sw_emu", "c",
+    "cuda", "ext_dev", "hybrid",
+    "llvm", "metal", "nvptx", "opencl",
+    "opengl", "rocm", "sdaccel",
+    "stackvm", "vulkan"}
+end note
+
 target -left-> rb: input
 (target_host) as th
 note left: can be:cuda

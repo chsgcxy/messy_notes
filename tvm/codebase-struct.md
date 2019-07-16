@@ -45,180 +45,41 @@
 │       ├── arith.py  
 │       ├── attrs.py  
 │       ├── autotvm  
-│       │   ├── database.py  
-│       │   ├── env.py  
-│       │   ├── feature.py  
-│       │   ├── graph_tuner  
-│       │   │   ├── base_graph_tuner.py  
-│       │   │   ├── _base.py  
-│       │   │   ├── dynamic_programming_stage.py  
-│       │   │   ├── dynamic_programming_tuner.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── pbqp_tuner.py  
-│       │   │   └── utils  
-│       │   │       ├── __init__.py  
-│       │   │       ├── traverse_graph.py  
-│       │   │       └── utils.py  
-│       │   ├── __init__.py  
-│       │   ├── measure  
-│       │   │   ├── executor.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── local_executor.py  
-│       │   │   ├── measure_methods.py  
-│       │   │   ├── measure.py  
-│       │   │   └── __pycache__  
-│       │   ├── record.py  
-│       │   ├── task  
-│       │   │   ├── code_hash.py  
-│       │   │   ├── dispatcher.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── nnvm_integration.py  
-│       │   │   ├── relay_integration.py  
-│       │   │   ├── space.py  
-│       │   │   ├── task.py  
-│       │   │   └── topi_integration.py  
-│       │   ├── tophub.py  
-│       │   ├── tuner  
-│       │   │   ├── callback.py  
-│       │   │   ├── ga_tuner.py  
-│       │   │   ├── gridsearch_tuner.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── metric.py  
-│       │   │   ├── model_based_tuner.py  
-│       │   │   ├── sa_model_optimizer.py  
-│       │   │   ├── tuner.py  
-│       │   │   ├── xgboost_cost_model.py  
-│       │   │   └── xgboost_tuner.py  
-│       │   └── util.py  
 │       ├── build_module.py **包含了tvm.build(),利用schedule,input tensor, output tensor, target 来生成tvm.module， 同时包含了tvm.lower(),这是build过程的第一步**  
 │       ├── codegen.py  
 │       ├── container.py  
-│       ├── contrib  
-│       │   ├── cblas.py  
-│       │   ├── cc.py  
-│       │   ├── clang.py  
-│       │   ├── cublas.py  
-│       │   ├── cudnn.py  
-│       │   ├── debugger  
-│       │   │   ├── debug_result.py  
-│       │   │   ├── debug_runtime.py  
-│       │   │   └── __init__.py  
-│       │   ├── dlpack.py  
-│       │   ├── download.py  
-│       │   ├── emscripten.py  
-│       │   ├── graph_runtime.py  
-│       │   ├── __init__.py  
-│       │   ├── miopen.py  
-│       │   ├── mps.py  
-│       │   ├── mxnet.py  
-│       │   ├── ndk.py  
-│       │   ├── nnpack.py  
-│       │   ├── nvcc.py  
-│       │   ├── peak.py  
-│       │   ├── pickle_memoize.py  
-│       │   ├── random.py  
-│       │   ├── rocblas.py  
-│       │   ├── rocm.py  
-│       │   ├── rpc.py  
-│       │   ├── sdaccel.py  
-│       │   ├── sparse.py  
-│       │   ├── spirv.py  
-│       │   ├── tar.py  
-│       │   ├── util.py  
-│       │   ├── verilog.py  
-│       │   └── xcode.py  
+│       ├── ***contrib*** 一些非核心特性的API，类似于一个小工具库，其中包含一些对第三方工具的包装  
 │       ├── datatype.py  
 │       ├── error.py  
 │       ├── exec  
-│       │   ├── autotvm_log_editor.py  
-│       │   ├── __init__.py  
-│       │   ├── measure_peak.py  
-│       │   ├── query_rpc_tracker.py  
-│       │   ├── rpc_proxy.py  
-│       │   ├── rpc_server.py  
-│       │   └── rpc_tracker.py  
 │       ├── expr.py  
 │       ├── _ffi **在这里tvm实现了对python的包装**  
-│       │   ├── base.py  
-│       │   ├── _ctypes  
-│       │   │   ├── function.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── ndarray.py  
-│       │   │   ├── node.py  
-│       │   │   └── types.py  
-│       │   ├── function.py  
-│       │   ├── __init__.py  
-│       │   ├── libinfo.py  
-│       │   ├── ndarray.py  
-│       │   ├── node_generic.py  
-│       │   ├── node.py  
-│       │   └── runtime_ctypes.py  
 │       ├── generic.py  
 │       ├── hybrid  
-│       │   ├── calls.py  
-│       │   ├── __init__.py  
-│       │   ├── module.py  
-│       │   ├── parser.py  
-│       │   ├── preprocessor.py  
-│       │   ├── runtime.py  
-│       │   └── util.py  
 │       ├── __init__.py  
 │       ├── intrin.py  
 │       ├── ir_builder.py  
 │       ├── ir_pass.py  
 │       ├── make.py  
 │       ├── module.py **实现了tvm.module的定义， module包含了一个编译好的func,可以使用函数调用语法进行调用**  
-│       ├── ndarray.py  
+│       ├── **ndarray.py** 实现了NDarray类，但实际上文件的大多数method与ctx有关，用于创建不同的ctx实例，估计后续会有命名优化
 │       ├── node.py  
 │       ├── _pyversion.py  
 │       ├── relay  
-│       │   ├── adt.py  
-│       │   ├── _analysis.py  
-│       │   ├── analysis.py  
-│       │   ├── annotation.py  
-│       │   ├── backend  
-│       │   │   ├── _backend.py  
-│       │   │   ├── compile_engine.py  
-│       │   │   ├── graph_runtime_codegen.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── interpreter.py  
-│       │   │   ├── _vm.py  
-│       │   │   └── vm.py  
+│       │   ├── ***backend***  
 │       │   ├── _base.py  
 │       │   ├── base.py  
 │       │   ├── _build_module.py  
-│       │   ├── build_module.py  
+│       │   ├── **build_module.py** relay 的build入口
 │       │   ├── contrib.py  
 │       │   ├── debug.py  
 │       │   ├── expr_functor.py  
 │       │   ├── _expr.py  
-│       │   ├── expr.py  
+│       │   ├── **expr.py**  The expression nodes of Relay 以及各种各样的expr  
 │       │   ├── expr.pyi  
 │       │   ├── feature.py  
-│       │   ├── frontend  
-│       │   │   ├── caffe2.py  
-│       │   │   ├── common.py  
-│       │   │   ├── coreml.py  
-│       │   │   ├── darknet.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── keras.py  
-│       │   │   ├── mxnet.py  
-│       │   │   ├── nnvm_common.py  
-│       │   │   ├── onnx.py  
-│       │   │   ├── tensorflow_parser.py  
-│       │   │   ├── tensorflow.py  
-│       │   │   └── tflite.py  
+│       │   ├── ***frontend*** relay前端，包含tensorflow, caffe, mxnet 等网络  
 │       │   ├── grammar  
-│       │   │   ├── __init__.py  
-│       │   │   ├── py3  
-│       │   │   │   ├── Relay.interp  
-│       │   │   │   ├── RelayLexer.interp  
-│       │   │   │   ├── RelayLexer.py  
-│       │   │   │   ├── RelayLexer.tokens  
-│       │   │   │   ├── RelayParser.py  
-│       │   │   │   ├── Relay.tokens  
-│       │   │   │   └── RelayVisitor.py  
-│       │   │   └── Relay.g4  
 │       │   ├── image.py  
 │       │   ├── __init__.py  
 │       │   ├── _make.py  
@@ -226,59 +87,13 @@
 │       │   ├── module.py  
 │       │   ├── _module.pyi  
 │       │   ├── nn.py  
-│       │   ├── op  
-│       │   │   ├── _algorithm.py  
-│       │   │   ├── algorithm.py  
-│       │   │   ├── annotation  
-│       │   │   │   ├── annotation.py  
-│       │   │   │   ├── __init__.py  
-│       │   │   │   └── _make.py  
-│       │   │   ├── contrib  
-│       │   │   │   ├── _contrib.py  
-│       │   │   │   ├── contrib.py  
-│       │   │   │   ├── __init__.py  
-│       │   │   │   └── _make.py  
-│       │   │   ├── image  
-│       │   │   │   ├── _image.py  
-│       │   │   │   ├── image.py  
-│       │   │   │   ├── __init__.py  
-│       │   │   │   └── _make.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── _make.py  
-│       │   │   ├── nn  
-│       │   │   │   ├── __init__.py  
-│       │   │   │   ├── _make.py  
-│       │   │   │   ├── _nn.py  
-│       │   │   │   └── nn.py  
-│       │   │   ├── op_attrs.py  
-│       │   │   ├── op.py  
-│       │   │   ├── _reduce.py  
-│       │   │   ├── reduce.py  
-│       │   │   ├── _tensor_grad.py  
-│       │   │   ├── _tensor.py  
-│       │   │   ├── tensor.py  
-│       │   │   ├── _transform.py  
-│       │   │   ├── transform.py  
-│       │   │   └── vision  
-│       │   │       ├── __init__.py  
-│       │   │       ├── _make.py  
-│       │   │       ├── multibox.py  
-│       │   │       ├── nms.py  
-│       │   │       ├── _rcnn.py  
-│       │   │       ├── rcnn.py  
-│       │   │       ├── _vision.py  
-│       │   │       ├── _yolo.py  
-│       │   │       └── yolo.py  
+│       │   ├── ***op***  
 │       │   ├── param_dict.py  
 │       │   ├── _parser.py  
 │       │   ├── parser.py  
 │       │   ├── prelude.py  
 │       │   ├── prelude.rly  
 │       │   ├── quantize  
-│       │   │   ├── _annotate.py  
-│       │   │   ├── __init__.py  
-│       │   │   ├── _quantize.py  
-│       │   │   └── quantize.py  
 │       │   ├── scope_builder.py  
 │       │   ├── _transform.py  
 │       │   ├── transform.py  
@@ -286,14 +101,7 @@
 │       │   ├── ty.py  
 │       │   ├── ty.pyi  
 │       │   └── vision.py  
-│       ├── rpc  
-│       │   ├── base.py  
-│       │   ├── client.py  
-│       │   ├── __init__.py  
-│       │   ├── proxy.py  
-│       │   ├── server.py  
-│       │   ├── tornado_util.py  
-│       │   └── tracker.py  
+│       ├── ***rpc***  
 │       ├── schedule.py **包含class schedule的定义，create_schedule通过node机制来实现c++类型到python类型的转换并返回一个schedule对象,c++中也有一个对应的schedule定义**  
 │       ├── stmt.py  
 │       ├── tag.py  
@@ -625,97 +433,33 @@
 │   │   ├── c_dsl_api.cc  
 │   │   ├── cpu_device_api.cc  
 │   │   ├── c_runtime_api.cc  
-│   │   ├── cuda  
-│   │   │   ├── cuda_common.h  
-│   │   │   ├── cuda_device_api.cc  
-│   │   │   ├── cuda_module.cc  
-│   │   │   └── cuda_module.h  
+│   │   ├── ***cuda*** cuda runtime 接口实现  
 │   │   ├── dsl_api.h  
 │   │   ├── dso_module.cc  
 │   │   ├── file_util.cc  
 │   │   ├── file_util.h  
-│   │   ├── graph  
-│   │   │   ├── debug  
-│   │   │   │   └── graph_runtime_debug.cc  
-│   │   │   ├── graph_runtime.cc  
-│   │   │   └── graph_runtime.h  
+│   │   ├── ***graph***  
 │   │   ├── meta_data.h  
-│   │   ├── metal  
-│   │   │   ├── metal_common.h  
-│   │   │   ├── metal_device_api.mm  
-│   │   │   ├── metal_module.h  
-│   │   │   └── metal_module.mm  
+│   │   ├── ***metal***  
 │   │   ├── module.cc  
 │   │   ├── module_util.cc  
 │   │   ├── module_util.h  
 │   │   ├── ndarray.cc  
-│   │   ├── opencl  
-│   │   │   ├── aocl  
-│   │   │   │   ├── aocl_common.h  
-│   │   │   │   ├── aocl_device_api.cc  
-│   │   │   │   ├── aocl_module.cc  
-│   │   │   │   └── aocl_module.h  
-│   │   │   ├── opencl_common.h  
-│   │   │   ├── opencl_device_api.cc  
-│   │   │   ├── opencl_module.cc  
-│   │   │   ├── opencl_module.h  
-│   │   │   └── sdaccel  
-│   │   │       ├── sdaccel_common.h  
-│   │   │       ├── sdaccel_device_api.cc  
-│   │   │       ├── sdaccel_module.cc  
-│   │   │       └── sdaccel_module.h  
-│   │   ├── opengl  
-│   │   │   ├── opengl_common.h  
-│   │   │   ├── opengl_device_api.cc  
-│   │   │   ├── opengl_module.cc  
-│   │   │   └── opengl_module.h  
-│   │   ├── pack_args.h  
-│   │   ├── registry.cc  
-│   │   ├── rocm  
-│   │   │   ├── rocm_common.h  
-│   │   │   ├── rocm_device_api.cc  
-│   │   │   ├── rocm_module.cc  
-│   │   │   └── rocm_module.h  
-│   │   ├── rpc  
-│   │   │   ├── rpc_device_api.cc  
-│   │   │   ├── rpc_event_impl.cc  
-│   │   │   ├── rpc_module.cc  
-│   │   │   ├── rpc_server_env.cc  
-│   │   │   ├── rpc_session.cc  
-│   │   │   ├── rpc_session.h  
-│   │   │   └── rpc_socket_impl.cc  
+│   │   ├── ***opencl*** opencl runtime 接口实现  
+│   │   ├── ***opengl*** opengl runtime 接口实现
+│   │   ├── **pack_func.h**  PackedFunc 定义与实现
+│   │   ├── **registry.cc** PackedFunc 相关
+│   │   ├── ***rocm*** rocm runtime 接口实现
+│   │   ├── ***rpc*** rpc runtime接口实现  
 │   │   ├── runtime_base.h  
-│   │   ├── sgx  
-│   │   │   ├── common.h  
-│   │   │   ├── trusted  
-│   │   │   │   ├── ecall_registry.h  
-│   │   │   │   ├── runtime.cc  
-│   │   │   │   ├── runtime.h  
-│   │   │   │   └── threading_backend.cc  
-│   │   │   ├── tvm.edl  
-│   │   │   └── untrusted  
-│   │   │       └── sgx_module.cc  
-│   │   ├── stackvm  
-│   │   │   ├── stackvm.cc  
-│   │   │   ├── stackvm.h  
-│   │   │   ├── stackvm_module.cc  
-│   │   │   └── stackvm_module.h  
+│   │   ├── ***sgx***  
+│   │   ├── ***stackvm***  
 │   │   ├── system_lib_module.cc  
 │   │   ├── threading_backend.cc  
 │   │   ├── thread_pool.cc  
 │   │   ├── thread_storage_scope.h  
-│   │   ├── vm  
-│   │   │   ├── memory_manager.cc  
-│   │   │   ├── memory_manager.h  
-│   │   │   ├── naive_allocator.h  
-│   │   │   ├── object.cc  
-│   │   │   ├── pooled_allocator.h  
-│   │   │   └── vm.cc  
-│   │   ├── vulkan  
-│   │   │   ├── vulkan_common.h  
-│   │   │   ├── vulkan_device_api.cc  
-│   │   │   ├── vulkan_module.cc  
-│   │   │   └── vulkan_module.h  
+│   │   ├── ***vm***  
+│   │   ├── ***vulkan***  
 │   │   ├── workspace_pool.cc  
 │   │   └── workspace_pool.h  
 │   └── schedule  

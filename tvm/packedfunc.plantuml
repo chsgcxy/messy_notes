@@ -1,0 +1,33 @@
+@startuml PackedFunc
+
+class Registry {
+    {field} -std::string name_;
+    {field} -PackedFunc func_;
+    {field} +struct Manager;
+
+    {method} +TVM_DLL Registry& set_body(PackedFunc f);
+    {method} +Registry& set_body(PackedFunc::FType f);
+    {method} +TVM_DLL static Registry& Register(const std::string& name, bool override = false);
+    {method} +TVM_DLL static const PackedFunc* Get(const std::string& name);
+}
+
+class PackedFunc {
+    {field} -FType body_;
+    
+    +using FType = std::function<void (TVMArgs args, TVMRetValue* rv)>;
+
+    {method} +explicit PackedFunc(FType body) : body_(body) {}
+    {method} +template<typename... Args> 
+    inline TVMRetValue operator()(Args&& ...args) const;
+    {method} +inline void CallPacked(TVMArgs args, TVMRetValue* rv) const;
+}
+
+class manager {
+    {field} +std::unordered_map<std::string, Registry*> fmap;
+    {method} +static Manager* Global();
+}
+
+Registry --> PackedFunc
+Registry --> manager
+
+@enduml

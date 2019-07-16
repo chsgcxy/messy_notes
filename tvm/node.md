@@ -7,6 +7,8 @@
 - be able to serialize any language object and IRs
 - be able to explore, print, and manipulate the IR objects in front-end language to do quick prototyping.
 
+Node 和 NodeRef 至关重要， 这两个base有很多subclass，每一个Node的subclass都对应一个NodeRef的subclass，用来返回对应的Node
+
 ## Class-Diagram
 
 ![class diagram](../out/tvm/node-class/tvm-class-diagram.png)
