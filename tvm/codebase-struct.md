@@ -51,11 +51,11 @@
 │       ├── ***contrib*** 一些非核心特性的API，类似于一个小工具库，其中包含一些对第三方工具的包装  
 │       ├── datatype.py  
 │       ├── error.py  
-│       ├── exec  
+│       ├── ***exec***  
 │       ├── expr.py  
-│       ├── _ffi **在这里tvm实现了对python的包装**  
+│       ├── ***_ffi*** 在这里tvm实现了对python的包装,_LIB实现包含在这里面  
 │       ├── generic.py  
-│       ├── hybrid  
+│       ├── ***hybrid***  
 │       ├── __init__.py  
 │       ├── intrin.py  
 │       ├── ir_builder.py  
@@ -139,7 +139,7 @@
 │   │   ├── pattern_match.h  
 │   │   ├── rewrite_simplify.cc  
 │   │   ├── rewrite_simplify.h  
-│   │   └── stmt_simplify.cc  
+│   │   └── stmt_simplify.cc  CDLL
 │   ├── autotvm  
 │   │   ├── feature_visitor.cc  
 │   │   ├── feature_visitor.h  
@@ -294,7 +294,7 @@
 │   │   ├── inject_copy_intrin.cc  
 │   │   ├── inject_double_buffer.cc  
 │   │   ├── inject_prefetch.cc  
-│   │   ├── inject_virtual_thread.cc  
+│   │   ├── inject_virtual_thread.cCDLLc  
 │   │   ├── inline.cc  
 │   │   ├── ir_deep_compare.cc  
 │   │   ├── ir_mutator.cc  
