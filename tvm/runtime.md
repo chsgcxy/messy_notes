@@ -31,6 +31,20 @@ def create(graph_json_str, libmod, ctx, dump_root=None):
 
 fcreate 返回包含c++代码中creat方法的handle的Function, 调用fcreate则陷入到c++中执行， c++的代码主要集中在**src/runtime/graph/graph_runtime.cc中**
 
+## Module
+
+![tvm-runtime-module](../out/tvm/module/tvm-runtime-module.png)
+
+对于runtime输入Module来讲，它有很多子类，对应每一种target,除此之外RelayBuildModule和GraphRuntimeCodeGenModule也是module子类，==这两个子类的作用后续补充==
+
+## graph
+
+官方文档有比较明确的介绍，其中attr中的storage_id是在编译时创建的存储ID，一个storage_id对应一块内存，storage_id与Tensor是一对多的关系。
+
+## param
+
+a dict
+
 ## deviceAPI
 
 deviceAPI是一个接口，每种target都对应实现了该接口，deviceAPI 更多的是针对内存管理，部分API封装在**c_runtime_api.cc**中供上层调用，在python端可以通过_LIB.xxxx的方式进行调用
