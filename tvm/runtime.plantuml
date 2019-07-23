@@ -2,6 +2,10 @@
 
 rectangle greaph_runtime.creat {
     (根据python传入的ctx, 构建c++内部定义的TVMContext vector) as creat_step1
+    note left
+        从python/tvm/contrib/graph_runtime.py
+        进入src/runtime/graph/graph_runtime.cc
+    endnote
     
     (实例化第三方软件dmlc的JSONReader) as creat_step2
     note right

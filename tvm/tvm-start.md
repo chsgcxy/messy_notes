@@ -112,7 +112,7 @@ relay-build-flow![relay-build-flow](../out/tvm/relay-build-flow/relay-build-flow
 
 ### build过程
 
-创建module实例
+#### 创建module实例
 
 ```python
 # tvm/tutorials/frontend/from_mxnet.py
@@ -122,6 +122,9 @@ def from_mxnet(symbol,
                arg_params=None,
                aux_params=None):
     mod = _module.Module()
+    func = _from_mxnet_impl(symbol, shape, dtype, mod)
+    mod["main"] = func
+    return mod, params
 ```
 
 Module是一个python类，通过register_relay_node注册到了一个python全局的node字典中。
@@ -185,6 +188,52 @@ def __init_handle_by_constructor__(fconstructor, args):
     if _LIB.TVMFuncCall(
             fconstructor.handle, values, tcodes, ctypes.c_int(num_args),
             ctypes.byref(ret_val), ctypes.byref(ret_tcode)) != 0:
+```
+
+#### 转换原始graph
+
+创建完成modudle实例之后，_from_mxnet_impl 遍历了原始graph的node, 根据op名称的不同，填充不同的expr实例到node_map
+并且把最终输出节点对应的Function实例返回，module实例的'main'节点安装为该func
+
+```python
+# python/tvm/relay/frontend/mxnet.py
+def _from_mxnet_impl(symbol, shape_dict, dtype_info, mod=None):
+    jgraph = json.loads(symbol.tojson())
+    jnodes = jgraph["nodes"]
+    node_map = {}
+
+    for nid, node in enumerate(jnodes):
+        if op_name == "null":
+            node_map[nid] = [_expr.var(node_name, shape=shape, dtype=dtype)]
+        elif op_name in _convert_map:
+            res = _convert_map[op_name](children, attrs)
+    outputs = [node_map[e[0]][e[1]] for e in jgraph["heads"]]
+    func = _expr.Function(analysis.free_vars(outputs), outputs)
+    return func
+```
+
+其中_convert_map是relay 的 mxnet前端准备好的一个字典，记录着每个op对应的relay的表达。null node代表占位/变量或者输入节点，被实例化为Var(A local variable in Relay)
+
+```python
+# python/tvm/relay/expr.py
+@register_relay_node
+class Var(Expr):
+    def __init__(self, name_hint, type_annotation=None):
+        self.__init_handle_by_constructor__(
+            _make.Var, name_hint, type_annotation)
+
+class Expr(RelayNode):
+    def __call__(self, *args):
+        return Call(self, args)
+
+@register_relay_node
+class Call(Expr):
+    def __init__(self, op, args, attrs=None, type_args=None):
+        if not type_args:
+            type_args = []
+        self.__init_handle_by_constructor__(
+            _make.Call, op, args, attrs, type_args)
+
 ```
 
 
