@@ -1,0 +1,441 @@
+<!DOCTYPE html><html><head>
+      <title>node</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/hao.chen/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.4.3/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+
+      
+      
+      
+      
+      
+      
+
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="node-subsystem">Node-SubSystem</h1>
+
+<p>&#x7F16;&#x8BD1;&#x6808;&#x91CC;&#x9762;&#x4EFB;&#x4F55;&#x4E00;&#x4E2A;&#x8BED;&#x8A00;&#x5BF9;&#x8C61;&#x90FD;&#x662F;Node&#x7684;&#x5B50;&#x7C7B;</p>
+<blockquote>
+<p>We faced a constant changing of the compiler API for the need of research. We need a new language object or IR node whenever we want to test out new primitives. However, we don&#x2019;t want to change our API from time to time. Besides that, we also want to</p>
+</blockquote>
+<ul>
+<li>be able to serialize any language object and IRs</li>
+<li>be able to explore, print, and manipulate the IR objects in front-end language to do quick prototyping.</li>
+</ul>
+<p>Node &#x548C; NodeRef &#x81F3;&#x5173;&#x91CD;&#x8981;&#xFF0C; &#x8FD9;&#x4E24;&#x4E2A;base&#x6709;&#x5F88;&#x591A;subclass&#xFF0C;&#x6BCF;&#x4E00;&#x4E2A;Node&#x7684;subclass&#x90FD;&#x5BF9;&#x5E94;&#x4E00;&#x4E2A;NodeRef&#x7684;subclass&#xFF0C;&#x7528;&#x6765;&#x8FD4;&#x56DE;&#x5BF9;&#x5E94;&#x7684;Node</p>
+<h2 class="mume-header" id="class-diagram">Class-Diagram</h2>
+
+<p><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="1080px" preserveAspectRatio="none" style="width:2174px;height:1080px;" version="1.1" viewBox="0 0 2174 1080" width="2174px" zoomAndPan="magnify"><defs><filter height="300%" id="fm64756s3kcy8" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--class AttrVisitor--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="188.8516" id="AttrVisitor" style="stroke: #A80036; stroke-width: 1.5;" width="387" x="1269" y="270"/><ellipse cx="1427.25" cy="286" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1430.2188,291.6406 Q1429.6406,291.9375 1429,292.0781 Q1428.3594,292.2344 1427.6563,292.2344 Q1425.1563,292.2344 1423.8281,290.5938 Q1422.5156,288.9375 1422.5156,285.8125 Q1422.5156,282.6875 1423.8281,281.0313 Q1425.1563,279.375 1427.6563,279.375 Q1428.3594,279.375 1429,279.5313 Q1429.6563,279.6875 1430.2188,279.9844 L1430.2188,282.7031 Q1429.5938,282.125 1429,281.8594 Q1428.4063,281.5781 1427.7813,281.5781 Q1426.4375,281.5781 1425.75,282.6563 Q1425.0625,283.7188 1425.0625,285.8125 Q1425.0625,287.9063 1425.75,288.9844 Q1426.4375,290.0469 1427.7813,290.0469 Q1428.4063,290.0469 1429,289.7813 Q1429.5938,289.5 1430.2188,288.9219 L1430.2188,291.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="62" x="1447.75" y="290.1543">AttrVisitor</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1270" x2="1655" y1="302" y2="302"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="1270" x2="1655" y1="310" y2="310"/><ellipse cx="1280" cy="321.9023" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="301" x="1289" y="324.2104">virtual void Visit(const char* key, double* value) = 0;</text><ellipse cx="1280" cy="334.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="301" x="1289" y="337.0151">virtual void Visit(const char* key, int64_t* value) = 0;</text><ellipse cx="1280" cy="347.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="308" x="1289" y="349.8198">virtual void Visit(const char* key, uint64_t* value) = 0;</text><ellipse cx="1280" cy="360.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="277" x="1289" y="362.6245">virtual void Visit(const char* key, int* value) = 0;</text><ellipse cx="1280" cy="373.1211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="287" x="1289" y="375.4292">virtual void Visit(const char* key, bool* value) = 0;</text><ellipse cx="1280" cy="385.9258" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="322" x="1289" y="388.2339">virtual void Visit(const char* key, std::string* value) = 0;</text><ellipse cx="1280" cy="398.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="292" x="1289" y="401.0386">virtual void Visit(const char* key, void** value) = 0;</text><ellipse cx="1280" cy="411.5352" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="290" x="1289" y="413.8433">virtual void Visit(const char* key, Type* value) = 0;</text><ellipse cx="1280" cy="424.3398" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="310" x="1289" y="426.6479">virtual void Visit(const char* key, NodeRef* value) = 0;</text><ellipse cx="1280" cy="437.1445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="361" x="1289" y="439.4526">virtual void Visit(const char* key, runtime::NDArray* value) = 0;</text><ellipse cx="1280" cy="449.9492" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="351" x="1289" y="452.2573">virtual void Visit(const char* key, runtime::Object* value) = 0;</text><!--class NodeIndexer--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="201.6563" id="NodeIndexer" style="stroke: #A80036; stroke-width: 1.5;" width="497" x="589" y="8"/><ellipse cx="793.75" cy="24" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M796.7188,29.6406 Q796.1406,29.9375 795.5,30.0781 Q794.8594,30.2344 794.1563,30.2344 Q791.6563,30.2344 790.3281,28.5938 Q789.0156,26.9375 789.0156,23.8125 Q789.0156,20.6875 790.3281,19.0313 Q791.6563,17.375 794.1563,17.375 Q794.8594,17.375 795.5,17.5313 Q796.1563,17.6875 796.7188,17.9844 L796.7188,20.7031 Q796.0938,20.125 795.5,19.8594 Q794.9063,19.5781 794.2813,19.5781 Q792.9375,19.5781 792.25,20.6563 Q791.5625,21.7188 791.5625,23.8125 Q791.5625,25.9063 792.25,26.9844 Q792.9375,28.0469 794.2813,28.0469 Q794.9063,28.0469 795.5,27.7813 Q796.0938,27.5 796.7188,26.9219 L796.7188,29.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="79" x="814.25" y="28.1543">NodeIndexer</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="590" x2="1085" y1="40" y2="40"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="590" x2="1085" y1="48" y2="48"/><ellipse cx="600" cy="59.9023" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="609" y="62.2104">void Visit(const char* key, double* value);</text><ellipse cx="600" cy="72.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="609" y="75.0151">void Visit(const char* key, int64_t* value);</text><ellipse cx="600" cy="85.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="245" x="609" y="87.8198">void Visit(const char* key, uint64_t* value);</text><ellipse cx="600" cy="98.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="214" x="609" y="100.6245">void Visit(const char* key, int* value);</text><ellipse cx="600" cy="111.1211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="224" x="609" y="113.4292">void Visit(const char* key, bool* value);</text><ellipse cx="600" cy="123.9258" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="259" x="609" y="126.2339">void Visit(const char* key, std::string* value);</text><ellipse cx="600" cy="136.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="229" x="609" y="139.0386">void Visit(const char* key, void** value);</text><ellipse cx="600" cy="149.5352" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="227" x="609" y="151.8433">void Visit(const char* key, Type* value);</text><ellipse cx="600" cy="162.3398" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="471" x="609" y="164.6479">void Visit(const char* key, NodeRef* value) final {MakeIndex(value-&gt;node_.get());};</text><ellipse cx="600" cy="175.1445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="298" x="609" y="177.4526">void Visit(const char* key, runtime::NDArray* value);</text><ellipse cx="600" cy="187.9492" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="288" x="609" y="190.2573">void Visit(const char* key, runtime::Object* value);</text><ellipse cx="600" cy="200.7539" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="165" x="609" y="203.062">void MakeIndex(Node* node);</text><!--class NodeAttrSetter--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="188.8516" id="NodeAttrSetter" style="stroke: #A80036; stroke-width: 1.5;" width="324" x="1121.5" y="14.5"/><ellipse cx="1231.75" cy="30.5" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1234.7188,36.1406 Q1234.1406,36.4375 1233.5,36.5781 Q1232.8594,36.7344 1232.1563,36.7344 Q1229.6563,36.7344 1228.3281,35.0938 Q1227.0156,33.4375 1227.0156,30.3125 Q1227.0156,27.1875 1228.3281,25.5313 Q1229.6563,23.875 1232.1563,23.875 Q1232.8594,23.875 1233.5,24.0313 Q1234.1563,24.1875 1234.7188,24.4844 L1234.7188,27.2031 Q1234.0938,26.625 1233.5,26.3594 Q1232.9063,26.0781 1232.2813,26.0781 Q1230.9375,26.0781 1230.25,27.1563 Q1229.5625,28.2188 1229.5625,30.3125 Q1229.5625,32.4063 1230.25,33.4844 Q1230.9375,34.5469 1232.2813,34.5469 Q1232.9063,34.5469 1233.5,34.2813 Q1234.0938,34 1234.7188,33.4219 L1234.7188,36.1406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="95" x="1252.25" y="34.6543">NodeAttrSetter</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1122.5" x2="1444.5" y1="46.5" y2="46.5"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="1122.5" x2="1444.5" y1="54.5" y2="54.5"/><ellipse cx="1132.5" cy="66.4023" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="1141.5" y="68.7104">void Visit(const char* key, double* value);</text><ellipse cx="1132.5" cy="79.207" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="1141.5" y="81.5151">void Visit(const char* key, int64_t* value);</text><ellipse cx="1132.5" cy="92.0117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="245" x="1141.5" y="94.3198">void Visit(const char* key, uint64_t* value);</text><ellipse cx="1132.5" cy="104.8164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="214" x="1141.5" y="107.1245">void Visit(const char* key, int* value);</text><ellipse cx="1132.5" cy="117.6211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="224" x="1141.5" y="119.9292">void Visit(const char* key, bool* value);</text><ellipse cx="1132.5" cy="130.4258" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="259" x="1141.5" y="132.7339">void Visit(const char* key, std::string* value);</text><ellipse cx="1132.5" cy="143.2305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="229" x="1141.5" y="145.5386">void Visit(const char* key, void** value);</text><ellipse cx="1132.5" cy="156.0352" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="227" x="1141.5" y="158.3433">void Visit(const char* key, Type* value);</text><ellipse cx="1132.5" cy="168.8398" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="247" x="1141.5" y="171.1479">void Visit(const char* key, NodeRef* value);</text><ellipse cx="1132.5" cy="181.6445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="298" x="1141.5" y="183.9526">void Visit(const char* key, runtime::NDArray* value);</text><ellipse cx="1132.5" cy="194.4492" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="288" x="1141.5" y="196.7573">void Visit(const char* key, runtime::Object* value);</text><!--class JSONAttrGetter--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="201.6563" id="JSONAttrGetter" style="stroke: #A80036; stroke-width: 1.5;" width="324" x="1480.5" y="8"/><ellipse cx="1592.25" cy="24" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1595.2188,29.6406 Q1594.6406,29.9375 1594,30.0781 Q1593.3594,30.2344 1592.6563,30.2344 Q1590.1563,30.2344 1588.8281,28.5938 Q1587.5156,26.9375 1587.5156,23.8125 Q1587.5156,20.6875 1588.8281,19.0313 Q1590.1563,17.375 1592.6563,17.375 Q1593.3594,17.375 1594,17.5313 Q1594.6563,17.6875 1595.2188,17.9844 L1595.2188,20.7031 Q1594.5938,20.125 1594,19.8594 Q1593.4063,19.5781 1592.7813,19.5781 Q1591.4375,19.5781 1590.75,20.6563 Q1590.0625,21.7188 1590.0625,23.8125 Q1590.0625,25.9063 1590.75,26.9844 Q1591.4375,28.0469 1592.7813,28.0469 Q1593.4063,28.0469 1594,27.7813 Q1594.5938,27.5 1595.2188,26.9219 L1595.2188,29.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="92" x="1612.75" y="28.1543">JSONAttrGetter</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1481.5" x2="1803.5" y1="40" y2="40"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="1481.5" x2="1803.5" y1="48" y2="48"/><ellipse cx="1491.5" cy="59.9023" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="1500.5" y="62.2104">void Visit(const char* key, double* value);</text><ellipse cx="1491.5" cy="72.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="1500.5" y="75.0151">void Visit(const char* key, int64_t* value);</text><ellipse cx="1491.5" cy="85.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="245" x="1500.5" y="87.8198">void Visit(const char* key, uint64_t* value);</text><ellipse cx="1491.5" cy="98.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="214" x="1500.5" y="100.6245">void Visit(const char* key, int* value);</text><ellipse cx="1491.5" cy="111.1211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="224" x="1500.5" y="113.4292">void Visit(const char* key, bool* value);</text><ellipse cx="1491.5" cy="123.9258" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="259" x="1500.5" y="126.2339">void Visit(const char* key, std::string* value);</text><ellipse cx="1491.5" cy="136.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="229" x="1500.5" y="139.0386">void Visit(const char* key, void** value);</text><ellipse cx="1491.5" cy="149.5352" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="227" x="1500.5" y="151.8433">void Visit(const char* key, Type* value);</text><ellipse cx="1491.5" cy="162.3398" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="247" x="1500.5" y="164.6479">void Visit(const char* key, NodeRef* value);</text><ellipse cx="1491.5" cy="175.1445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="298" x="1500.5" y="177.4526">void Visit(const char* key, runtime::NDArray* value);</text><ellipse cx="1491.5" cy="187.9492" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="288" x="1500.5" y="190.2573">void Visit(const char* key, runtime::Object* value);</text><ellipse cx="1491.5" cy="200.7539" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="126" x="1500.5" y="203.062">void Get(Node* node);</text><!--class JSONAttrSetter--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="201.6563" id="JSONAttrSetter" style="stroke: #A80036; stroke-width: 1.5;" width="324" x="1839.5" y="8"/><ellipse cx="1951.75" cy="24" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1954.7188,29.6406 Q1954.1406,29.9375 1953.5,30.0781 Q1952.8594,30.2344 1952.1563,30.2344 Q1949.6563,30.2344 1948.3281,28.5938 Q1947.0156,26.9375 1947.0156,23.8125 Q1947.0156,20.6875 1948.3281,19.0313 Q1949.6563,17.375 1952.1563,17.375 Q1952.8594,17.375 1953.5,17.5313 Q1954.1563,17.6875 1954.7188,17.9844 L1954.7188,20.7031 Q1954.0938,20.125 1953.5,19.8594 Q1952.9063,19.5781 1952.2813,19.5781 Q1950.9375,19.5781 1950.25,20.6563 Q1949.5625,21.7188 1949.5625,23.8125 Q1949.5625,25.9063 1950.25,26.9844 Q1950.9375,28.0469 1952.2813,28.0469 Q1952.9063,28.0469 1953.5,27.7813 Q1954.0938,27.5 1954.7188,26.9219 L1954.7188,29.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="91" x="1972.25" y="28.1543">JSONAttrSetter</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1840.5" x2="2162.5" y1="40" y2="40"/><line style="stroke: #A80036; stroke-width: 1.5;" x1="1840.5" x2="2162.5" y1="48" y2="48"/><ellipse cx="1850.5" cy="59.9023" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="1859.5" y="62.2104">void Visit(const char* key, double* value);</text><ellipse cx="1850.5" cy="72.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="1859.5" y="75.0151">void Visit(const char* key, int64_t* value);</text><ellipse cx="1850.5" cy="85.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="245" x="1859.5" y="87.8198">void Visit(const char* key, uint64_t* value);</text><ellipse cx="1850.5" cy="98.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="214" x="1859.5" y="100.6245">void Visit(const char* key, int* value);</text><ellipse cx="1850.5" cy="111.1211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="224" x="1859.5" y="113.4292">void Visit(const char* key, bool* value);</text><ellipse cx="1850.5" cy="123.9258" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="259" x="1859.5" y="126.2339">void Visit(const char* key, std::string* value);</text><ellipse cx="1850.5" cy="136.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="229" x="1859.5" y="139.0386">void Visit(const char* key, void** value);</text><ellipse cx="1850.5" cy="149.5352" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="227" x="1859.5" y="151.8433">void Visit(const char* key, Type* value);</text><ellipse cx="1850.5" cy="162.3398" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="247" x="1859.5" y="164.6479">void Visit(const char* key, NodeRef* value);</text><ellipse cx="1850.5" cy="175.1445" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="298" x="1859.5" y="177.4526">void Visit(const char* key, runtime::NDArray* value);</text><ellipse cx="1850.5" cy="187.9492" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="288" x="1859.5" y="190.2573">void Visit(const char* key, runtime::Object* value);</text><ellipse cx="1850.5" cy="200.7539" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="125" x="1859.5" y="203.062">void Set(Node* node);</text><!--class Node--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="99.2188" id="Node" style="stroke: #A80036; stroke-width: 1.5;" width="314" x="996.5" y="824"/><ellipse cx="1132.75" cy="840" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1135.7188,845.6406 Q1135.1406,845.9375 1134.5,846.0781 Q1133.8594,846.2344 1133.1563,846.2344 Q1130.6563,846.2344 1129.3281,844.5938 Q1128.0156,842.9375 1128.0156,839.8125 Q1128.0156,836.6875 1129.3281,835.0313 Q1130.6563,833.375 1133.1563,833.375 Q1133.8594,833.375 1134.5,833.5313 Q1135.1563,833.6875 1135.7188,833.9844 L1135.7188,836.7031 Q1135.0938,836.125 1134.5,835.8594 Q1133.9063,835.5781 1133.2813,835.5781 Q1131.9375,835.5781 1131.25,836.6563 Q1130.5625,837.7188 1130.5625,839.8125 Q1130.5625,841.9063 1131.25,842.9844 Q1131.9375,844.0469 1133.2813,844.0469 Q1133.9063,844.0469 1134.5,843.7813 Q1135.0938,843.5 1135.7188,842.9219 L1135.7188,845.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="33" x="1153.25" y="844.1543">Node</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="997.5" x2="1309.5" y1="856" y2="856"/><ellipse cx="1007.5" cy="867.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="280" x="1016.5" y="870.2104">static constexpr const char* _type_key = &quot;Node&quot;;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="997.5" x2="1309.5" y1="876.8047" y2="876.8047"/><ellipse cx="1007.5" cy="888.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="244" x="1016.5" y="891.0151">virtual void VisitAttrs(AttrVisitor* visitor) {}</text><ellipse cx="1007.5" cy="901.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="242" x="1016.5" y="903.8198">inline NodePtr&lt;Node&gt; GetNodePtr() const;</text><ellipse cx="1007.5" cy="914.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="288" x="1016.5" y="916.6245">template&lt;typename T&gt; inline bool is_type() const;</text><!--class TensorNode--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="86.4141" id="TensorNode" style="stroke: #A80036; stroke-width: 1.5;" width="557" x="6" y="983"/><ellipse cx="242.25" cy="999" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M245.2188,1004.6406 Q244.6406,1004.9375 244,1005.0781 Q243.3594,1005.2344 242.6563,1005.2344 Q240.1563,1005.2344 238.8281,1003.5938 Q237.5156,1001.9375 237.5156,998.8125 Q237.5156,995.6875 238.8281,994.0313 Q240.1563,992.375 242.6563,992.375 Q243.3594,992.375 244,992.5313 Q244.6563,992.6875 245.2188,992.9844 L245.2188,995.7031 Q244.5938,995.125 244,994.8594 Q243.4063,994.5781 242.7813,994.5781 Q241.4375,994.5781 240.75,995.6563 Q240.0625,996.7188 240.0625,998.8125 Q240.0625,1000.9063 240.75,1001.9844 Q241.4375,1003.0469 242.7813,1003.0469 Q243.4063,1003.0469 244,1002.7813 Q244.5938,1002.5 245.2188,1001.9219 L245.2188,1004.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="76" x="262.75" y="1003.1543">TensorNode</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="562" y1="1015" y2="1015"/><ellipse cx="17" cy="1026.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="291" x="26" y="1029.2104">static constexpr const char* _type_key = &quot;Tensor&quot;;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="562" y1="1035.8047" y2="1035.8047"/><ellipse cx="17" cy="1047.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="162" x="26" y="1050.0151">void VisitAttrs(AttrVisitor* v);</text><ellipse cx="17" cy="1060.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="531" x="26" y="1062.8198">TVM_DLL static Tensor make(Array&lt;Expr&gt; shape, Type dtype, Operation op, int value_index);</text><!--class IterVarNode--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="86.4141" id="IterVarNode" style="stroke: #A80036; stroke-width: 1.5;" width="597" x="598" y="983"/><ellipse cx="854.75" cy="999" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M857.7188,1004.6406 Q857.1406,1004.9375 856.5,1005.0781 Q855.8594,1005.2344 855.1563,1005.2344 Q852.6563,1005.2344 851.3281,1003.5938 Q850.0156,1001.9375 850.0156,998.8125 Q850.0156,995.6875 851.3281,994.0313 Q852.6563,992.375 855.1563,992.375 Q855.8594,992.375 856.5,992.5313 Q857.1563,992.6875 857.7188,992.9844 L857.7188,995.7031 Q857.0938,995.125 856.5,994.8594 Q855.9063,994.5781 855.2813,994.5781 Q853.9375,994.5781 853.25,995.6563 Q852.5625,996.7188 852.5625,998.8125 Q852.5625,1000.9063 853.25,1001.9844 Q853.9375,1003.0469 855.2813,1003.0469 Q855.9063,1003.0469 856.5,1002.7813 Q857.0938,1002.5 857.7188,1001.9219 L857.7188,1004.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="75" x="875.25" y="1003.1543">IterVarNode</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="599" x2="1194" y1="1015" y2="1015"/><ellipse cx="609" cy="1026.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="289" x="618" y="1029.2104">static constexpr const char* _type_key = &quot;IterVar&quot;;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="599" x2="1194" y1="1035.8047" y2="1035.8047"/><ellipse cx="609" cy="1047.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="162" x="618" y="1050.0151">void VisitAttrs(AttrVisitor* v);</text><ellipse cx="609" cy="1060.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="571" x="618" y="1062.8198">TVM_DLL static IterVar make(Range dom, Var var, IterVarType iter_type, std::string thread_tag = &quot;&quot;);</text><!--class CommReducerNode--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="73.6094" id="CommReducerNode" style="stroke: #A80036; stroke-width: 1.5;" width="360" x="1230.5" y="989"/><ellipse cx="1344.75" cy="1005" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1347.7188,1010.6406 Q1347.1406,1010.9375 1346.5,1011.0781 Q1345.8594,1011.2344 1345.1563,1011.2344 Q1342.6563,1011.2344 1341.3281,1009.5938 Q1340.0156,1007.9375 1340.0156,1004.8125 Q1340.0156,1001.6875 1341.3281,1000.0313 Q1342.6563,998.375 1345.1563,998.375 Q1345.8594,998.375 1346.5,998.5313 Q1347.1563,998.6875 1347.7188,998.9844 L1347.7188,1001.7031 Q1347.0938,1001.125 1346.5,1000.8594 Q1345.9063,1000.5781 1345.2813,1000.5781 Q1343.9375,1000.5781 1343.25,1001.6563 Q1342.5625,1002.7188 1342.5625,1004.8125 Q1342.5625,1006.9063 1343.25,1007.9844 Q1343.9375,1009.0469 1345.2813,1009.0469 Q1345.9063,1009.0469 1346.5,1008.7813 Q1347.0938,1008.5 1347.7188,1007.9219 L1347.7188,1010.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="123" x="1365.25" y="1009.1543">CommReducerNode</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1231.5" x2="1589.5" y1="1021" y2="1021"/><ellipse cx="1241.5" cy="1032.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="334" x="1250.5" y="1035.2104">static constexpr const char* _type_key = &quot;CommReducer&quot;;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1231.5" x2="1589.5" y1="1041.8047" y2="1041.8047"/><ellipse cx="1241.5" cy="1053.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="162" x="1250.5" y="1056.0151">void VisitAttrs(AttrVisitor* v);</text><!--class BufferNode--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="86.4141" id="BufferNode" style="stroke: #A80036; stroke-width: 1.5;" width="312" x="1625.5" y="983"/><ellipse cx="1742.25" cy="999" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1745.2188,1004.6406 Q1744.6406,1004.9375 1744,1005.0781 Q1743.3594,1005.2344 1742.6563,1005.2344 Q1740.1563,1005.2344 1738.8281,1003.5938 Q1737.5156,1001.9375 1737.5156,998.8125 Q1737.5156,995.6875 1738.8281,994.0313 Q1740.1563,992.375 1742.6563,992.375 Q1743.3594,992.375 1744,992.5313 Q1744.6563,992.6875 1745.2188,992.9844 L1745.2188,995.7031 Q1744.5938,995.125 1744,994.8594 Q1743.4063,994.5781 1742.7813,994.5781 Q1741.4375,994.5781 1740.75,995.6563 Q1740.0625,996.7188 1740.0625,998.8125 Q1740.0625,1000.9063 1740.75,1001.9844 Q1741.4375,1003.0469 1742.7813,1003.0469 Q1743.4063,1003.0469 1744,1002.7813 Q1744.5938,1002.5 1745.2188,1001.9219 L1745.2188,1004.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="70" x="1762.75" y="1003.1543">BufferNode</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1626.5" x2="1936.5" y1="1015" y2="1015"/><ellipse cx="1636.5" cy="1026.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="286" x="1645.5" y="1029.2104">static constexpr const char* _type_key = &quot;Buffer&quot;;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1626.5" x2="1936.5" y1="1035.8047" y2="1035.8047"/><ellipse cx="1636.5" cy="1047.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="162" x="1645.5" y="1050.0151">void VisitAttrs(AttrVisitor* v);</text><ellipse cx="1636.5" cy="1060.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="182" x="1645.5" y="1062.8198">TVM_DLL static Buffer make(...);</text><!--class NodeRef--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="99.2188" id="NodeRef" style="stroke: #A80036; stroke-width: 1.5;" width="312" x="1306.5" y="519"/><ellipse cx="1431.75" cy="535" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1434.7188,540.6406 Q1434.1406,540.9375 1433.5,541.0781 Q1432.8594,541.2344 1432.1563,541.2344 Q1429.6563,541.2344 1428.3281,539.5938 Q1427.0156,537.9375 1427.0156,534.8125 Q1427.0156,531.6875 1428.3281,530.0313 Q1429.6563,528.375 1432.1563,528.375 Q1432.8594,528.375 1433.5,528.5313 Q1434.1563,528.6875 1434.7188,528.9844 L1434.7188,531.7031 Q1434.0938,531.125 1433.5,530.8594 Q1432.9063,530.5781 1432.2813,530.5781 Q1430.9375,530.5781 1430.25,531.6563 Q1429.5625,532.7188 1429.5625,534.8125 Q1429.5625,536.9063 1430.25,537.9844 Q1430.9375,539.0469 1432.2813,539.0469 Q1432.9063,539.0469 1433.5,538.7813 Q1434.0938,538.5 1434.7188,537.9219 L1434.7188,540.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="53" x="1452.25" y="539.1543">NodeRef</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1307.5" x2="1617.5" y1="551" y2="551"/><ellipse cx="1317.5" cy="562.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="134" x="1326.5" y="565.2104">NodePtr&lt;Node&gt; node_;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1307.5" x2="1617.5" y1="571.8047" y2="571.8047"/><ellipse cx="1317.5" cy="583.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="145" x="1326.5" y="586.0151">inline size_t hash() const;</text><ellipse cx="1317.5" cy="596.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="217" x="1326.5" y="598.8198">inline const Node* operator-&gt;() const;</text><ellipse cx="1317.5" cy="609.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="286" x="1326.5" y="611.6245">template&lt;typename T&gt; inline const T *as() const;</text><!--class NodePtr--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="86.4141" id="NodePtr" style="stroke: #A80036; stroke-width: 1.5;" width="296" x="1314.5" y="678"/><ellipse cx="1356.5" cy="694" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1359.4688,699.6406 Q1358.8906,699.9375 1358.25,700.0781 Q1357.6094,700.2344 1356.9063,700.2344 Q1354.4063,700.2344 1353.0781,698.5938 Q1351.7656,696.9375 1351.7656,693.8125 Q1351.7656,690.6875 1353.0781,689.0313 Q1354.4063,687.375 1356.9063,687.375 Q1357.6094,687.375 1358.25,687.5313 Q1358.9063,687.6875 1359.4688,687.9844 L1359.4688,690.7031 Q1358.8438,690.125 1358.25,689.8594 Q1357.6563,689.5781 1357.0313,689.5781 Q1355.6875,689.5781 1355,690.6563 Q1354.3125,691.7188 1354.3125,693.8125 Q1354.3125,695.9063 1355,696.9844 Q1355.6875,698.0469 1357.0313,698.0469 Q1357.6563,698.0469 1358.25,697.7813 Q1358.8438,697.5 1359.4688,696.9219 L1359.4688,699.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="204" x="1376.5" y="698.1543">template&lt;typename Y&gt; NodePtr</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1315.5" x2="1609.5" y1="710" y2="710"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="1322.5" y="718.9023"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="153" x="1334.5" y="724.2104">NodeBase* data_{nullptr};</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1315.5" x2="1609.5" y1="730.8047" y2="730.8047"/><ellipse cx="1325.5" cy="742.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="270" x="1334.5" y="745.0151">T* get() const {return static_cast&lt;T*&gt;(data_);}</text><ellipse cx="1325.5" cy="755.5117" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="206" x="1334.5" y="757.8198">NodePtr(const NodePtr&lt;T&gt;&amp; other);</text><!--class NodeBase--><rect fill="#FEFECE" filter="url(#fm64756s3kcy8)" height="73.6094" id="NodeBase" style="stroke: #A80036; stroke-width: 1.5;" width="233" x="1346" y="836.5"/><ellipse cx="1426.25" cy="852.5" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1429.2188,858.1406 Q1428.6406,858.4375 1428,858.5781 Q1427.3594,858.7344 1426.6563,858.7344 Q1424.1563,858.7344 1422.8281,857.0938 Q1421.5156,855.4375 1421.5156,852.3125 Q1421.5156,849.1875 1422.8281,847.5313 Q1424.1563,845.875 1426.6563,845.875 Q1427.3594,845.875 1428,846.0313 Q1428.6563,846.1875 1429.2188,846.4844 L1429.2188,849.2031 Q1428.5938,848.625 1428,848.3594 Q1427.4063,848.0781 1426.7813,848.0781 Q1425.4375,848.0781 1424.75,849.1563 Q1424.0625,850.2188 1424.0625,852.3125 Q1424.0625,854.4063 1424.75,855.4844 Q1425.4375,856.5469 1426.7813,856.5469 Q1427.4063,856.5469 1428,856.2813 Q1428.5938,856 1429.2188,855.4219 L1429.2188,858.1406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="64" x="1446.75" y="856.6543">NodeBase</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1347" x2="1578" y1="868.5" y2="868.5"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="1354" y="877.4023"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="196" x="1366" y="882.7104">std::atomic&lt;int&gt; ref_counter_{0};</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="1347" x2="1578" y1="889.3047" y2="889.3047"/><ellipse cx="1357" cy="901.207" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="207" x="1366" y="903.5151">NodeBase(const NodeBase&amp; other);</text><!--link NodeIndexer to AttrVisitor--><path d="M1084.9653,210.1638 C1139.5683,232.4855 1196.943,255.9403 1250.0155,277.6363 " fill="none" id="NodeIndexer-AttrVisitor" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1252.7328,271.1848,1268.5968,285.2324,1247.4351,284.1438,1252.7328,271.1848" style="stroke: #A80036; stroke-width: 1.0;"/><!--link NodeAttrSetter to AttrVisitor--><path d="M1349.8986,203.7757 C1361.2411,219.9656 1373.1149,236.914 1384.7212,253.4805 " fill="none" id="NodeAttrSetter-AttrVisitor" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1390.4659,249.4808,1396.2086,269.8774,1378.9998,257.5138,1390.4659,249.4808" style="stroke: #A80036; stroke-width: 1.0;"/><!--link JSONAttrGetter to AttrVisitor--><path d="M1571.1007,210.3473 C1561.1534,224.467 1550.8891,239.0366 1540.823,253.3248 " fill="none" id="JSONAttrGetter-AttrVisitor" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1546.3694,257.6064,1529.1283,269.9249,1534.9244,249.5434,1546.3694,257.6064" style="stroke: #A80036; stroke-width: 1.0;"/><!--link JSONAttrSetter to AttrVisitor--><path d="M1839.4676,201.4367 C1833.7643,204.3673 1828.0965,207.2303 1822.5,210 C1775.3404,233.339 1723.8057,256.6822 1674.8474,277.8954 " fill="none" id="JSONAttrSetter-AttrVisitor" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1677.362,284.4339,1656.2243,285.9168,1671.8237,271.5759,1677.362,284.4339" style="stroke: #A80036; stroke-width: 1.0;"/><!--link Node to BufferNode--><path d="M1330.3312,923.3231 C1455.3375,953.7952 1490.439,955.6859 1608.5,983 C1614.0781,984.2905 1619.7535,985.6191 1625.483,986.9735 " fill="none" id="Node-BufferNode" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1328.5251,930.0875,1310.7809,918.5054,1331.8749,916.4941,1328.5251,930.0875" style="stroke: #A80036; stroke-width: 1.0;"/><!--link Node to CommReducerNode--><path d="M1254.1868,933.2461 C1285.7588,951.9804 1319.6837,972.1109 1347.8336,988.8147 " fill="none" id="Node-CommReducerNode" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1250.5682,939.2385,1236.9405,923.0124,1257.7126,927.1986,1250.5682,939.2385" style="stroke: #A80036; stroke-width: 1.0;"/><!--link Node to IterVarNode--><path d="M1052.5457,933.4048 C1024.7018,949.9269 995.0473,967.5235 969.1502,982.8904 " fill="none" id="Node-IterVarNode" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1049.2874,927.1986,1070.0595,923.0124,1056.4318,939.2385,1049.2874,927.1986" style="stroke: #A80036; stroke-width: 1.0;"/><!--link Node to TensorNode--><path d="M976.5543,904.552 C847.9141,927.127 672.1428,957.9729 529.9366,982.9286 " fill="none" id="Node-TensorNode" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="975.4734,897.6348,996.3823,901.0724,977.8933,911.4241,975.4734,897.6348" style="stroke: #A80036; stroke-width: 1.0;"/><!--link Node to NodeBase--><path d="M1310.7158,873.5 C1315.7687,873.5 1320.8215,873.5 1325.8743,873.5 " fill="none" id="Node-NodeBase" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="1325.9938,866.4999,1345.9938,873.5,1325.9937,880.4999,1325.9938,866.4999" style="stroke: #A80036; stroke-width: 1.0;"/><!--link AttrVisitor to NodeRef--><path d="M1462.5,459.0352 C1462.5,479.6716 1462.5,500.7176 1462.5,518.7703 " fill="none" id="AttrVisitor-NodeRef" style="stroke: #A80036; stroke-width: 1.0;"/><!--link NodePtr to NodeBase--><path d="M1462.5,764.2925 C1462.5,785.2365 1462.5,810.2885 1462.5,831.1121 " fill="none" id="NodePtr-NodeBase" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1462.5,836.3101,1466.5,827.3101,1462.5,831.3101,1458.5,827.3101,1462.5,836.3101" style="stroke: #A80036; stroke-width: 1.0;"/><!--link NodeRef to NodePtr--><path d="M1462.5,618.0124 C1462.5,635.5098 1462.5,655.158 1462.5,672.5651 " fill="none" id="NodeRef-NodePtr" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1462.5,677.8904,1466.5,668.8904,1462.5,672.8904,1458.5,668.8904,1462.5,677.8904" style="stroke: #A80036; stroke-width: 1.0;"/><!--
+@startuml
+class AttrVisitor {
+    {method} +virtual void Visit(const char* key, double* value) = 0;
+    {method} +virtual void Visit(const char* key, int64_t* value) = 0;
+    {method} +virtual void Visit(const char* key, uint64_t* value) = 0;
+    {method} +virtual void Visit(const char* key, int* value) = 0;
+    {method} +virtual void Visit(const char* key, bool* value) = 0;
+    {method} +virtual void Visit(const char* key, std::string* value) = 0;
+    {method} +virtual void Visit(const char* key, void** value) = 0;
+    {method} +virtual void Visit(const char* key, Type* value) = 0;
+    {method} +virtual void Visit(const char* key, NodeRef* value) = 0;
+    {method} +virtual void Visit(const char* key, runtime::NDArray* value) = 0;
+    {method} +virtual void Visit(const char* key, runtime::Object* value) = 0;
+}
+
+class NodeIndexer {
+    {method} +void Visit(const char* key, double* value);
+    {method} +void Visit(const char* key, int64_t* value);
+    {method} +void Visit(const char* key, uint64_t* value);
+    {method} +void Visit(const char* key, int* value);
+    {method} +void Visit(const char* key, bool* value);
+    {method} +void Visit(const char* key, std::string* value);
+    {method} +void Visit(const char* key, void** value);
+    {method} +void Visit(const char* key, Type* value);
+    {method} +void Visit(const char* key, NodeRef* value) final {MakeIndex(value->node_.get());};
+    {method} +void Visit(const char* key, runtime::NDArray* value);
+    {method} +void Visit(const char* key, runtime::Object* value);
+    {method} +void MakeIndex(Node* node);
+}
+
+class NodeAttrSetter {
+    {method} +void Visit(const char* key, double* value);
+    {method} +void Visit(const char* key, int64_t* value);
+    {method} +void Visit(const char* key, uint64_t* value);
+    {method} +void Visit(const char* key, int* value);
+    {method} +void Visit(const char* key, bool* value);
+    {method} +void Visit(const char* key, std::string* value);
+    {method} +void Visit(const char* key, void** value);
+    {method} +void Visit(const char* key, Type* value);
+    {method} +void Visit(const char* key, NodeRef* value);
+    {method} +void Visit(const char* key, runtime::NDArray* value);
+    {method} +void Visit(const char* key, runtime::Object* value);
+}
+
+class JSONAttrGetter {
+    {method} +void Visit(const char* key, double* value);
+    {method} +void Visit(const char* key, int64_t* value);
+    {method} +void Visit(const char* key, uint64_t* value);
+    {method} +void Visit(const char* key, int* value);
+    {method} +void Visit(const char* key, bool* value);
+    {method} +void Visit(const char* key, std::string* value);
+    {method} +void Visit(const char* key, void** value);
+    {method} +void Visit(const char* key, Type* value);
+    {method} +void Visit(const char* key, NodeRef* value);
+    {method} +void Visit(const char* key, runtime::NDArray* value);
+    {method} +void Visit(const char* key, runtime::Object* value);
+    {method} +void Get(Node* node);
+}
+
+class JSONAttrSetter {
+    {method} +void Visit(const char* key, double* value);
+    {method} +void Visit(const char* key, int64_t* value);
+    {method} +void Visit(const char* key, uint64_t* value);
+    {method} +void Visit(const char* key, int* value);
+    {method} +void Visit(const char* key, bool* value);
+    {method} +void Visit(const char* key, std::string* value);
+    {method} +void Visit(const char* key, void** value);
+    {method} +void Visit(const char* key, Type* value);
+    {method} +void Visit(const char* key, NodeRef* value);
+    {method} +void Visit(const char* key, runtime::NDArray* value);
+    {method} +void Visit(const char* key, runtime::Object* value);
+    {method} +void Set(Node* node);
+}
+
+NodeIndexer - -|> AttrVisitor
+NodeAttrSetter - -|> AttrVisitor
+JSONAttrGetter - -|> AttrVisitor
+JSONAttrSetter - -|> AttrVisitor
+
+
+class Node {
+    {field} +static constexpr const char* _type_key = "Node";
+    {method} +virtual void VisitAttrs(AttrVisitor* visitor) {}
+    {method} +inline NodePtr<Node> GetNodePtr() const;
+    {method} +template<typename T> inline bool is_type() const;
+}
+
+class TensorNode {
+    {field} +static constexpr const char* _type_key = "Tensor";
+    {method} +void VisitAttrs(AttrVisitor* v);
+    {method} +TVM_DLL static Tensor make(Array<Expr> shape, Type dtype, Operation op, int value_index);
+}
+
+class IterVarNode {
+    {field} +static constexpr const char* _type_key = "IterVar";
+    {method} +void VisitAttrs(AttrVisitor* v);
+    {method} +TVM_DLL static IterVar make(Range dom, Var var, IterVarType iter_type, std::string thread_tag = "");
+}
+
+class CommReducerNode {
+    {field} +static constexpr const char* _type_key = "CommReducer";
+    {method} +void VisitAttrs(AttrVisitor* v);
+}
+
+class BufferNode {
+    {field} +static constexpr const char* _type_key = "Buffer";
+    {method} +void VisitAttrs(AttrVisitor* v);
+    {method} +TVM_DLL static Buffer make(...);
+}
+
+BufferNode -up-|> Node
+CommReducerNode -up-|> Node
+IterVarNode -up-|> Node
+TensorNode -up-|> Node
+
+class NodeRef {
+    {field} +NodePtr<Node> node_;
+    {method} +inline size_t hash() const;
+    {method} +inline const Node* operator->() const;
+    {method} +template<typename T> inline const T *as() const;
+}
+
+class "template<typename Y> NodePtr" as NodePtr{
+    {field} -NodeBase* data_{nullptr};
+    {method} +T* get() const {return static_cast<T*>(data_);}
+    {method} +NodePtr(const NodePtr<T>& other);
+}
+
+class NodeBase {
+    {field} -std::atomic<int> ref_counter_{0};
+    {method} +NodeBase(const NodeBase& other);
+}
+
+Node -right-|> NodeBase
+NodeRef -up- AttrVisitor
+NodePtr - -> NodeBase 
+NodeRef - -> NodePtr
+@enduml
+
+PlantUML version 1.2019.07(Tue Jun 25 03:59:20 CST 2019)
+(MIT source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 12.0.1+12
+Operating System: Linux
+OS Version: 4.15.0-54-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg></p>
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

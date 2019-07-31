@@ -1,0 +1,766 @@
+<!DOCTYPE html><html><head>
+      <title>tvm-start</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:////home/hao.chen/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.4.3/node_modules/@shd101wyy/mume/dependencies/katex/katex.min.css">
+      
+      
+
+      
+      
+      
+      
+      
+      
+
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="tvm">tvm</h1>
+
+<p>[TOP]</p>
+<h2 class="mume-header" id="concept">Concept</h2>
+
+<h3 class="mume-header" id="module">Module</h3>
+
+<p>&#x4E00;&#x4E2A;&#x7F16;&#x8BD1;&#x597D;&#x7684;&#x5BF9;&#x8C61;&#x3002;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;Module&#x4EE5;PackedFunc&#x7684;&#x5F62;&#x5F0F;&#x6765;&#x83B7;&#x53D6;&#x7F16;&#x8BD1;&#x540E;&#x7684;Func&#x3002;runtime&#x53EF;&#x4EE5;&#x52A8;&#x6001;&#x83B7;&#x53D6;Func</p>
+<h3 class="mume-header" id="pass">Pass</h3>
+
+<h3 class="mume-header" id="op">Op</h3>
+
+<h3 class="mume-header" id="tensor">Tensor</h3>
+
+<h3 class="mume-header" id="func">Func</h3>
+
+<h2 class="mume-header" id="packedfunc">PackedFunc</h2>
+
+<p>tvm&#x4F7F;&#x7528;c++&#x5B9E;&#x73B0;&#x4E86;&#x4E00;&#x5806;&#x63A5;&#x53E3;&#xFF0C;&#x8FD9;&#x4E9B;&#x63A5;&#x53E3;&#x901A;&#x8FC7;PackedFunc&#x5C01;&#x88C5;&#xFF0C;&#x4F7F;&#x5F97;python&#x8C03;&#x7528;c++&#x975E;&#x5E38;easy.</p>
+<p><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="354px" preserveAspectRatio="none" style="width:786px;height:354px;" version="1.1" viewBox="0 0 786 354" width="786px" zoomAndPan="magnify"><defs><filter height="300%" id="fipzalvktybfi" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--class Registry--><rect fill="#FEFECE" filter="url(#fipzalvktybfi)" height="137.6328" id="Registry" style="stroke: #A80036; stroke-width: 1.5;" width="501" x="166" y="8"/><ellipse cx="387.25" cy="24" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M390.2188,29.6406 Q389.6406,29.9375 389,30.0781 Q388.3594,30.2344 387.6563,30.2344 Q385.1563,30.2344 383.8281,28.5938 Q382.5156,26.9375 382.5156,23.8125 Q382.5156,20.6875 383.8281,19.0313 Q385.1563,17.375 387.6563,17.375 Q388.3594,17.375 389,17.5313 Q389.6563,17.6875 390.2188,17.9844 L390.2188,20.7031 Q389.5938,20.125 389,19.8594 Q388.4063,19.5781 387.7813,19.5781 Q386.4375,19.5781 385.75,20.6563 Q385.0625,21.7188 385.0625,23.8125 Q385.0625,25.9063 385.75,26.9844 Q386.4375,28.0469 387.7813,28.0469 Q388.4063,28.0469 389,27.7813 Q389.5938,27.5 390.2188,26.9219 L390.2188,29.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="50" x="407.75" y="28.1543">Registry</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="167" x2="666" y1="40" y2="40"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="174" y="48.9023"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="105" x="186" y="54.2104">std::string name_;</text><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="174" y="61.707"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="104" x="186" y="67.0151">PackedFunc func_;</text><ellipse cx="177" cy="77.5117" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="90" x="186" y="79.8198">struct Manager;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="167" x2="666" y1="86.4141" y2="86.4141"/><ellipse cx="177" cy="98.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="250" x="186" y="100.6245">TVM_DLL Registry&amp; set_body(PackedFunc f);</text><ellipse cx="177" cy="111.1211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="238" x="186" y="113.4292">Registry&amp; set_body(PackedFunc::FType f);</text><ellipse cx="177" cy="123.9258" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="475" x="186" y="126.2339">TVM_DLL static Registry&amp; Register(const std::string&amp; name, bool override = false);</text><ellipse cx="177" cy="136.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="371" x="186" y="139.0386">TVM_DLL static const PackedFunc* Get(const std::string&amp; name);</text><!--class PackedFunc--><rect fill="#FEFECE" filter="url(#fipzalvktybfi)" height="137.6328" id="PackedFunc" style="stroke: #A80036; stroke-width: 1.5;" width="419" x="6" y="206"/><ellipse cx="173.25" cy="222" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M176.2188,227.6406 Q175.6406,227.9375 175,228.0781 Q174.3594,228.2344 173.6563,228.2344 Q171.1563,228.2344 169.8281,226.5938 Q168.5156,224.9375 168.5156,221.8125 Q168.5156,218.6875 169.8281,217.0313 Q171.1563,215.375 173.6563,215.375 Q174.3594,215.375 175,215.5313 Q175.6563,215.6875 176.2188,215.9844 L176.2188,218.7031 Q175.5938,218.125 175,217.8594 Q174.4063,217.5781 173.7813,217.5781 Q172.4375,217.5781 171.75,218.6563 Q171.0625,219.7188 171.0625,221.8125 Q171.0625,223.9063 171.75,224.9844 Q172.4375,226.0469 173.7813,226.0469 Q174.4063,226.0469 175,225.7813 Q175.5938,225.5 176.2188,224.9219 L176.2188,227.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="76" x="193.75" y="226.1543">PackedFunc</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="424" y1="238" y2="238"/><rect fill="none" height="6" style="stroke: #C82930; stroke-width: 1.0;" width="6" x="14" y="246.9023"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="74" x="26" y="252.2104">FType body_;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="7" x2="424" y1="258.8047" y2="258.8047"/><ellipse cx="17" cy="270.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="393" x="26" y="273.0151">using FType = std::function&lt;void (TVMArgs args, TVMRetValue* rv)&gt;;</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="0" x="30" y="285.8198"/><ellipse cx="17" cy="296.3164" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="279" x="26" y="298.6245">explicit PackedFunc(FType body) : body_(body) {}</text><ellipse cx="17" cy="309.1211" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="166" x="26" y="311.4292">template&lt;typename... Args&gt;</text><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="302" x="26" y="324.2339">inline TVMRetValue operator()(Args&amp;&amp; ...args) const;</text><ellipse cx="17" cy="334.7305" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="349" x="26" y="337.0386">inline void CallPacked(TVMArgs args, TVMRetValue* rv) const;</text><!--class manager--><rect fill="#FEFECE" filter="url(#fipzalvktybfi)" height="73.6094" id="manager" style="stroke: #A80036; stroke-width: 1.5;" width="316" x="459.5" y="238"/><ellipse cx="585.25" cy="254" fill="#ADD1B2" rx="11" ry="11" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M588.2188,259.6406 Q587.6406,259.9375 587,260.0781 Q586.3594,260.2344 585.6563,260.2344 Q583.1563,260.2344 581.8281,258.5938 Q580.5156,256.9375 580.5156,253.8125 Q580.5156,250.6875 581.8281,249.0313 Q583.1563,247.375 585.6563,247.375 Q586.3594,247.375 587,247.5313 Q587.6563,247.6875 588.2188,247.9844 L588.2188,250.7031 Q587.5938,250.125 587,249.8594 Q586.4063,249.5781 585.7813,249.5781 Q584.4375,249.5781 583.75,250.6563 Q583.0625,251.7188 583.0625,253.8125 Q583.0625,255.9063 583.75,256.9844 Q584.4375,258.0469 585.7813,258.0469 Q586.4063,258.0469 587,257.7813 Q587.5938,257.5 588.2188,256.9219 L588.2188,259.6406 Z "/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacingAndGlyphs" textLength="56" x="605.75" y="258.1543">manager</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="460.5" x2="774.5" y1="270" y2="270"/><ellipse cx="470.5" cy="281.9023" fill="none" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="290" x="479.5" y="284.2104">std::unordered_map&lt;std::string, Registry*&gt; fmap;</text><line style="stroke: #A80036; stroke-width: 1.5;" x1="460.5" x2="774.5" y1="290.8047" y2="290.8047"/><ellipse cx="470.5" cy="302.707" fill="#84BE84" rx="3" ry="3" style="stroke: #038048; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacingAndGlyphs" textLength="142" x="479.5" y="305.0151">static Manager* Global();</text><!--link Registry to PackedFunc--><path d="M346.2,146.2508 C327.839,164.3377 307.9955,183.8851 289.4511,202.1527 " fill="none" id="Registry-PackedFunc" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="285.7604,205.7883,294.9791,202.322,289.3224,202.2794,289.3649,196.6227,285.7604,205.7883" style="stroke: #A80036; stroke-width: 1.0;"/><!--link Registry to manager--><path d="M486.8,146.2508 C516.5809,175.5871 550.262,208.7656 575.9739,234.0937 " fill="none" id="Registry-manager" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="579.7082,237.7722,576.1039,228.6066,576.1463,234.2633,570.4896,234.3057,579.7082,237.7722" style="stroke: #A80036; stroke-width: 1.0;"/><!--
+@startuml
+class Registry {
+    {field} -std::string name_;
+    {field} -PackedFunc func_;
+    {field} +struct Manager;
+
+    {method} +TVM_DLL Registry& set_body(PackedFunc f);
+    {method} +Registry& set_body(PackedFunc::FType f);
+    {method} +TVM_DLL static Registry& Register(const std::string& name, bool override = false);
+    {method} +TVM_DLL static const PackedFunc* Get(const std::string& name);
+}
+
+class PackedFunc {
+    {field} -FType body_;
+
+    +using FType = std::function<void (TVMArgs args, TVMRetValue* rv)>;
+
+    {method} +explicit PackedFunc(FType body) : body_(body) {}
+    {method} +template<typename... Args> 
+    inline TVMRetValue operator()(Args&& ...args) const;
+    {method} +inline void CallPacked(TVMArgs args, TVMRetValue* rv) const;
+}
+
+class manager {
+    {field} +std::unordered_map<std::string, Registry*> fmap;
+    {method} +static Manager* Global();
+}
+
+Registry - -> PackedFunc
+Registry - -> manager
+@enduml
+
+PlantUML version 1.2019.07(Tue Jun 25 03:59:20 CST 2019)
+(MIT source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 12.0.1+12
+Operating System: Linux
+OS Version: 4.15.0-54-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg></p><p>c++&#x4E2D;&#x5B9E;&#x73B0;&#x4E86;&#x5BF9;c++&#x51FD;&#x6570;&#x7684;&#x7BA1;&#x7406;</p>
+<p>python&#x4E2D;&#xFF0C;<strong>get_global_func</strong> &#x8C03;&#x7528;_LIB.TVMFuncGetGlobal&#x6765;&#x83B7;&#x53D6;PackedFunc&#x6307;&#x9488;&#xFF0C;&#x7136;&#x540E;&#x5C06;&#x5176;&#x4F5C;&#x4E3A;handle&#x5B9E;&#x4F8B;&#x5316;Function</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token keyword">class</span> <span class="token class-name">Function</span><span class="token punctuation">(</span>_FunctionBase<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+<span class="token keyword">class</span> <span class="token class-name">FunctionBase</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> handle<span class="token punctuation">,</span> is_global<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>handle <span class="token operator">=</span> handle
+        self<span class="token punctuation">.</span>is_global <span class="token operator">=</span> is_global
+
+    <span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        temp_args <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        values<span class="token punctuation">,</span> tcodes<span class="token punctuation">,</span> num_args <span class="token operator">=</span> _make_tvm_args<span class="token punctuation">(</span>args<span class="token punctuation">,</span> temp_args<span class="token punctuation">)</span>
+        ret_val <span class="token operator">=</span> TVMValue<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        ret_tcode <span class="token operator">=</span> ctypes<span class="token punctuation">.</span>c_int<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> _LIB<span class="token punctuation">.</span>TVMFuncCall<span class="token punctuation">(</span>
+                self<span class="token punctuation">.</span>handle<span class="token punctuation">,</span> values<span class="token punctuation">,</span> tcodes<span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>c_int<span class="token punctuation">(</span>num_args<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_val<span class="token punctuation">)</span><span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_tcode<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> get_last_ffi_error<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        _ <span class="token operator">=</span> temp_args
+        _ <span class="token operator">=</span> args
+        <span class="token keyword">return</span> RETURN_SWITCH<span class="token punctuation">[</span>ret_tcode<span class="token punctuation">.</span>value<span class="token punctuation">]</span><span class="token punctuation">(</span>ret_val<span class="token punctuation">)</span>
+</pre><p>&#x5728;python&#x7AEF;&#x8C03;&#x7528;Function&#x7684;&#x8FC7;&#x7A0B;&#x4E5F;&#x5C31;&#x662F;&#x8C03;&#x7528;&#x5176;__call__&#x65B9;&#x6CD5;&#xFF0C;&#x5176;&#x4E2D;&#x53C8;&#x8C03;&#x7528;&#x4E86;_LIB.TVMFuncCall&#x6765;&#x5B9E;&#x73B0;&#x5BF9;PackedFunc&#x7684;&#x5B9E;&#x9645;&#x8C03;&#x7528;</p>
+<p>&#x8C03;&#x7528;&#x8FC7;&#x7A0B;&#x5B9E;&#x9645;&#x4E0A;&#x662F;&#x8C03;&#x7528;&#x4E86;PackedFunc&#x7684;<strong>CallPacked</strong>&#x65B9;&#x6CD5;</p>
+<pre data-role="codeBlock" data-info="c++" class="language-cpp"><span class="token keyword">inline</span> <span class="token keyword">void</span> PackedFunc<span class="token operator">::</span><span class="token function">CallPacked</span><span class="token punctuation">(</span>TVMArgs args<span class="token punctuation">,</span> TVMRetValue<span class="token operator">*</span> rv<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+  <span class="token function">body_</span><span class="token punctuation">(</span>args<span class="token punctuation">,</span> rv<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p><strong>_LIB</strong>&#x662F;&#x76F4;&#x63A5;&#x4EE5;CDLL&#x7684;&#x65B9;&#x5F0F;&#x52A0;&#x8F7D;&#x4E86;libtvm.so&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;</p>
+<p>python/tvm/_ffi/base.py</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token keyword">def</span> <span class="token function">_load_lib</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">&quot;&quot;&quot;Load libary by searching possible path.&quot;&quot;&quot;</span>
+    lib_path <span class="token operator">=</span> libinfo<span class="token punctuation">.</span>find_lib_path<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    lib <span class="token operator">=</span> ctypes<span class="token punctuation">.</span>CDLL<span class="token punctuation">(</span>lib_path<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>RTLD_GLOBAL<span class="token punctuation">)</span>
+    <span class="token comment"># DMatrix functions</span>
+    lib<span class="token punctuation">.</span>TVMGetLastError<span class="token punctuation">.</span>restype <span class="token operator">=</span> ctypes<span class="token punctuation">.</span>c_char_p
+    <span class="token keyword">return</span> lib<span class="token punctuation">,</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>basename<span class="token punctuation">(</span>lib_path<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment"># version number</span>
+__version__ <span class="token operator">=</span> libinfo<span class="token punctuation">.</span>__version__
+<span class="token comment"># library instance of nnvm</span>
+_LIB<span class="token punctuation">,</span> _LIB_NAME <span class="token operator">=</span> _load_lib<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre><p>&#x7F16;&#x8BD1;&#x548C;&#x90E8;&#x7F72;&#x90FD;&#x7528;&#x5230;&#x4E86;PackedFunc</p>
+<ul>
+<li>All TVM&#x2019;s compiler pass functions are exposed to frontend as PackedFunc, see here</li>
+<li>The compiled module also returns the compiled function as PackedFunc</li>
+</ul>
+<h2 class="mume-header" id="node">Node</h2>
+
+<p><a href="./node.md">&#x8DF3;&#x8F6C;&#x5230;Node&#x5B50;&#x7CFB;&#x7EDF;&#x4ECB;&#x7ECD;</a></p>
+<h2 class="mume-header" id="relay">relay</h2>
+
+<h3 class="mume-header" id="relaybuild_modulebuild">relay.build_module.build</h3>
+
+<p><strong>relay.build_module.build</strong> returns three components:</p>
+<ul>
+<li>the execution graph in json format</li>
+<li>the TVM module library of compiled functions specifically for this graph on the target hardware</li>
+<li>the parameter blobs of the model</li>
+</ul>
+<p>about optimization</p>
+<blockquote>
+<p>During the compilation, Relay does the graph-level optimization while TVM does the tensor-level optimization, resulting in an optimized runtime module for model serving.</p>
+</blockquote>
+<p>about tvm schedule</p>
+<blockquote>
+<p>TVM asks the user to provide a description of the computation called a schedule. A schedule is a set of transformation of computation that transforms the loop of computations in the program</p>
+</blockquote>
+<h2 class="mume-header" id="%E6%B5%81%E7%A8%8B">&#x6D41;&#x7A0B;</h2>
+
+<p><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="1115px" preserveAspectRatio="none" style="width:1230px;height:1115px;" version="1.1" viewBox="0 0 1230 1115" width="1230px" zoomAndPan="magnify"><defs><filter height="300%" id="ffi0yvbej4ziw" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--cluster model-formats--><rect fill="#FFFFFF" filter="url(#ffi0yvbej4ziw)" height="64" style="stroke: #000000; stroke-width: 1.5;" width="526" x="231.5" y="16"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="115" x="437" y="30.9951">model-formats</text><ellipse cx="274.3198" cy="57.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="34.8198" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="45" x="251.8198" y="62.1721">MXNet</text><ellipse cx="404.5685" cy="57.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="59.5685" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="80" x="364.5685" y="62.1721">TensorFlow</text><ellipse cx="539.2696" cy="57.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="39.7696" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="52" x="513.2696" y="62.1721">CoreML</text><ellipse cx="646.2843" cy="57.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="31.2843" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="40" x="626.2843" y="62.1721">ONNX</text><ellipse cx="731.3492" cy="57.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="17.8492" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="21" x="720.8492" y="62.1721">***</text><ellipse cx="539.5368" cy="168.8074" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="87.0368" ry="19.8074" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="147" x="466.0368" y="173.4558">relay python frontend</text><path d="M661.5,156.5 L661.5,165 L626.791,169 L661.5,173 L661.5,181.6328 A0,0 0 0 0 661.5,181.6328 L895.5,181.6328 A0,0 0 0 0 895.5,181.6328 L895.5,166.5 L885.5,156.5 L661.5,156.5 A0,0 0 0 0 661.5,156.5 " fill="#FBFB77" filter="url(#ffi0yvbej4ziw)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M885.5,156.5 L885.5,166.5 L895.5,166.5 L885.5,156.5 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="213" x="667.5" y="173.5669">@&#x76EE;&#x5F55; python/tvm/relay/frontend/</text><ellipse cx="327.4203" cy="316.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="24.9203" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="31" x="311.9203" y="321.1721">mod</text><path d="M6,266 L6,366.7969 A0,0 0 0 0 6,366.7969 L267,366.7969 A0,0 0 0 0 267,366.7969 L267,320.5 L302.4767,316.5 L267,312.5 L267,276 L257,266 L6,266 A0,0 0 0 0 6,266 " fill="#FBFB77" filter="url(#ffi0yvbej4ziw)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M257,266 L257,276 L267,276 L257,266 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="221" x="12" y="283.0669">@&#x5305;&#x542B;&#x4E86;funcs&#x7684;&#x5168;&#x5C40;&#x7684;relay module</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="222" x="12" y="298.1997">@&#x76EE;&#x5F55; python/tvm/relay/module.py</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="240" x="12" y="313.3325">@&#x662F;&#x5BF9;src/relay/&#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x4E00;&#x4E9B;&#x63A5;&#x53E3;&#x7684;&#x5C01;&#x88C5;</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="188" x="12" y="328.4653">@module &#x672C;&#x8D28;&#x4E0A;&#x4E5F;&#x662F;&#x4E00;&#x4E2A;node</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="229" x="12" y="343.5981">@&#x6BCF;&#x4E00;&#x4E2A;global func &#x90FD;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x552F;&#x4E00;&#x7684;</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="165" x="12" y="358.731">tvm.relay.GlobalVar&#x6765;&#x533A;&#x522B;</text><ellipse cx="751.5624" cy="316.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="39.0624" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="51" x="726.0624" y="321.1721">params</text><path d="M387,281 L387,351.5313 A0,0 0 0 0 387,351.5313 L678,351.5313 A0,0 0 0 0 678,351.5313 L678,320.5 L712.3573,316.5 L678,312.5 L678,291 L668,281 L387,281 A0,0 0 0 0 387,281 " fill="#FBFB77" filter="url(#ffi0yvbej4ziw)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M668,281 L668,291 L678,291 L668,281 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="148" x="393" y="298.0669">@dict of str to NDArray</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="194" x="397" y="313.1997">Input parameters to the graph</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="266" x="397" y="328.3325">that do not change during inference time.</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="177" x="393" y="343.4653">@Used for constant folding.</text><ellipse cx="516.7132" cy="471.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="24.2132" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="30" x="501.7132" y="476.1721">func</text><path d="M196,444 L196,499.3984 A0,0 0 0 0 196,499.3984 L457,499.3984 A0,0 0 0 0 457,499.3984 L457,475.5 L492.3789,471.5 L457,467.5 L457,454 L447,444 L196,444 A0,0 0 0 0 196,444 " fill="#FBFB77" filter="url(#ffi0yvbej4ziw)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M447,444 L447,454 L457,454 L447,444 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="225" x="202" y="461.0669">@A function declaration expression</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="172" x="202" y="476.1997">@python/tvm/relay/expr.py</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="240" x="202" y="491.3325">@&#x7EE7;&#x627F;&#x4E8E;Expr, Expr &#x662F;RelayNode&#x7684;&#x5B50;&#x7C7B;</text><ellipse cx="631.2904" cy="619.0236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="51.7904" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="69" x="596.7904" y="623.6721">relay.build</text><ellipse cx="784.4914" cy="619.0236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="31.9914" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="41" x="763.9914" y="623.6721">target</text><path d="M852,576 L852,615 L816.8477,619 L852,623 L852,661.6641 A0,0 0 0 0 852,661.6641 L1081,661.6641 A0,0 0 0 0 1081,661.6641 L1081,586 L1071,576 L852,576 A0,0 0 0 0 852,576 " fill="#FBFB77" filter="url(#ffi0yvbej4ziw)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M1071,576 L1071,586 L1081,586 L1071,576 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="176" x="858" y="593.0669">{&quot;aocl&quot;, &quot;aocl_sw_emu&quot;, &quot;c&quot;,</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="170" x="858" y="608.1997">&quot;cuda&quot;, &quot;ext_dev&quot;, &quot;hybrid&quot;,</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="208" x="858" y="623.3325">&quot;llvm&quot;, &quot;metal&quot;, &quot;nvptx&quot;, &quot;opencl&quot;,</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="174" x="858" y="638.4653">&quot;opengl&quot;, &quot;rocm&quot;, &quot;sdaccel&quot;,</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="131" x="858" y="653.5981">&quot;stackvm&quot;, &quot;vulkan&quot;}</text><ellipse cx="451.3614" cy="619.0236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="58.8614" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="79" x="411.8614" y="623.6721">target_host</text><path d="M258,606.5 L258,631.6328 A0,0 0 0 0 258,631.6328 L357,631.6328 A0,0 0 0 0 357,631.6328 L357,624.5 L392.2452,619 L357,616.5 L357,616.5 L347,606.5 L258,606.5 A0,0 0 0 0 258,606.5 " fill="#FBFB77" filter="url(#ffi0yvbej4ziw)" style="stroke: #A80036; stroke-width: 1.0;"/><path d="M347,606.5 L347,616.5 L357,616.5 L347,606.5 " fill="#FBFB77" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="78" x="264" y="623.5669">can be:cuda</text><ellipse cx="547.2843" cy="753.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="31.2843" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="40" x="527.2843" y="758.1721">graph</text><ellipse cx="629.6489" cy="753.6191" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="15.6489" ry="13.1191" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="15" x="622.1489" y="758.2676">lib</text><ellipse cx="722.598" cy="753.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="42.598" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="694.598" y="758.1721">-params</text><ellipse cx="581.4744" cy="864.8949" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="87.4744" ry="19.8949" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="148" x="507.4744" y="869.5433">graph_runtime.create</text><ellipse cx="360.3237" cy="864.8647" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="64.8237" ry="15.3647" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="93" x="313.8237" y="869.5132">ctx: tvm.cpu0</text><ellipse cx="590.4767" cy="976.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="40.4767" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="53" x="563.9767" y="981.1721">runtime</text><ellipse cx="590.5637" cy="1086.0127" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="73.0637" ry="17.0127" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="114" x="533.5637" y="1090.6612">runtime.setinput</text><ellipse cx="458.7401" cy="976.5236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="56.7401" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="76" x="420.7401" y="981.1721">image data</text><ellipse cx="863.5685" cy="1086.0236" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="59.5685" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="80" x="823.5685" y="1090.6721">runtime.run</text><ellipse cx="1141.5262" cy="1086.0052" fill="#FEFECE" filter="url(#ffi0yvbej4ziw)" rx="78.0262" ry="18.0052" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="126" x="1078.5262" y="1090.6537">runtime.getoutput</text><!--link MXNet to rpf--><path d="M240.5199,61.5096 C193.0157,68.4214 115.7297,85.2129 145.5,119 C165.2995,141.471 339.7032,156.4711 449.7375,163.7907 " fill="none" id="MXNet-rpf" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="454.9277,164.1334,446.2108,159.5491,449.9386,163.804,445.6837,167.5317,454.9277,164.1334" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="171" x="146.5" y="115.0669">relay.frontend.from_mxnet</text><!--link TensorFlow to rpf--><path d="M370.7717,69.501 C344.3867,80.7685 314.6172,98.8693 330.5,119 C346.279,138.9991 404.6959,151.8895 455.7714,159.5643 " fill="none" id="TensorFlow-rpf" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="461.0058,160.3367,452.6862,155.0656,456.0594,159.6067,451.5182,162.9798,461.0058,160.3367" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="195" x="331.5" y="115.0669">relay.frontend.from_tensorflow</text><!--link CoreML to rpf--><path d="M538.2501,72.3207 C537.5835,80.9693 536.8335,92.0943 536.5,102 C536.0372,115.7462 536.6402,131.0719 537.424,143.5928 " fill="none" id="CoreML-rpf" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="537.7684,148.7743,541.1625,139.5288,537.4367,143.7853,533.1801,140.0595,537.7684,148.7743" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="174" x="537.5" y="115.0669">relay.frontend.from_coreml</text><!--link ONNX to rpf--><path d="M672.0081,66.3513 C687.9051,73.3478 707.0717,84.8341 716.5,102 C720.1373,108.6224 721.0589,112.9748 716.5,119 C709.5753,128.1518 654.6093,142.7929 607.7428,153.8719 " fill="none" id="ONNX-rpf" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="602.6547,155.0683,612.3314,156.9019,607.5219,153.9237,610.5001,149.1143,602.6547,155.0683" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="161" x="720.5" y="115.0669">relay.frontend.from_onnx</text><!--link *** to rpf--><path d="M749.7569,58.2746 C799.5808,61.0039 931.5074,72.6879 890.5,119 C853.9915,160.2313 698.9133,140.5096 644.5,149 C633.4496,150.7243 621.7825,152.7452 610.4017,154.8275 " fill="none" id="***-rpf" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="605.196,155.7877,614.7724,158.0885,610.113,154.8806,613.3209,150.2212,605.196,155.7877" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="151" x="898.5" y="115.0669">relay.frontend.from_***</text><!--link rpf to mod--><path d="M499.1397,186.9129 C462.973,204.1049 409.599,232.3775 369.5,266 C358.1842,275.4881 347.5693,288.2996 339.8418,298.6441 " fill="none" id="rpf-mod" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="336.7132,302.9096,345.2616,298.0184,339.6705,298.8779,338.8109,293.2867,336.7132,302.9096" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="436.5" y="232.0669">output</text><!--link rpf to params--><path d="M573.1862,187.6174 C605.565,206.0443 655.3626,235.8 695.5,266 C709.1027,276.2349 723.3347,289.1013 734.0472,299.2855 " fill="none" id="rpf-params" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="737.827,302.9063,734.0949,293.792,734.2164,299.4475,728.5608,299.569,737.827,302.9063" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="650.5" y="232.0669">output</text><!--link mod to func--><path d="M337.3365,330.1899 C345.3463,340.848 357.2901,355.6819 369.5,367 C391.1475,387.0664 460.6398,434.2552 495.7636,457.7334 " fill="none" id="mod-func" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="500.2793,460.7478,495.0147,452.4241,496.1207,457.9718,490.5731,459.0779,500.2793,460.7478" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="139" x="430.5" y="410.0669">mod[mod.entry_func]</text><!--link rb to target--><path d="M688.8248,619 C710.2118,619 733.7363,619 752.1067,619 " fill="none" id="rb-target" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="683.726,619,692.726,623,688.726,619,692.726,615,683.726,619" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="702" y="612.0669">input</text><!--link th to rb--><path d="M510.9376,619 C531.3285,619 554.0944,619 574.3038,619 " fill="none" id="th-rb" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="579.3837,619,570.3837,615,574.3837,619,570.3837,623,579.3837,619" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="529" y="612.0669">input</text><!--link func to rb--><path d="M526.9083,484.8498 C547.4605,511.2102 593.3001,570.0045 616.8762,600.2434 " fill="none" id="func-rb" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="620.1875,604.4904,617.8081,594.9333,617.1131,600.5473,611.4991,599.8523,620.1875,604.4904" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="574.5" y="542.0669">input</text><!--link params to rb--><path d="M745.7122,331.0902 C725.9887,380.8097 661.3972,543.6341 639.128,599.771 " fill="none" id="params-rb" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="637.2298,604.5562,644.2667,597.6654,639.0735,599.9086,636.8304,594.7154,637.2298,604.5562" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="699.5" y="476.0669">input</text><!--link rb to graph--><path d="M619.717,633.2698 C608.1841,647.6005 590.5021,670.5709 577.5,692 C569.2308,705.6286 561.388,721.8672 555.7964,734.2351 " fill="none" id="rb-graph" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="553.693,738.9405,561.0175,732.3564,555.7334,734.3758,553.714,729.0917,553.693,738.9405" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="578.5" y="705.0669">output</text><!--link rb to lib--><path d="M631.2822,633.6499 C630.9139,658.4158 630.1694,708.4848 629.7691,735.4034 " fill="none" id="rb-lib" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="629.6938,740.4641,633.8273,731.5246,629.7682,735.4647,625.8282,731.4056,629.6938,740.4641" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="630.5" y="705.0669">output</text><!--link rb to -params--><path d="M641.2386,633.3939 C657.8641,657.9667 691.6982,707.9742 710.0278,735.0658 " fill="none" id="rb--params" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="712.8314,739.2096,711.1009,729.514,710.0295,735.0684,704.475,733.997,712.8314,739.2096" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="690.5" y="705.0669">output</text><!--link graph to grc--><path d="M546.1913,768.0218 C545.5174,780.7139 545.6693,799.4862 550.5,815 C553.3183,824.0508 558.1677,833.111 563.2051,840.9841 " fill="none" id="graph-grc" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="566.0113,845.2283,564.3841,835.5148,563.2536,841.0575,557.7109,839.927,566.0113,845.2283" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="551.5" y="811.0669">input</text><!--link lib to grc--><path d="M624.1798,765.8585 C616.4774,783.7504 602.0574,817.2468 592.126,840.3168 " fill="none" id="lib-grc" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="590.0788,845.0721,597.3117,838.3874,592.056,840.4796,589.9637,835.2239,590.0788,845.0721" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="610.5" y="811.0669">input</text><!--link ctx: tvm.cpu0 to grc--><path d="M425.612,865 C445.4147,865 467.5714,865 488.8245,865 " fill="none" id="ctx: tvm.cpu0-grc" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="493.9169,865,484.9169,861,488.9169,865,484.9169,869,493.9169,865" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="443.75" y="858.0669">input</text><!--link grc to runtime--><path d="M583.1298,885.1918 C584.7666,905.4699 587.2729,936.5202 588.8993,956.6693 " fill="none" id="grc-runtime" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="589.313,961.7943,592.5759,952.5017,588.9107,956.8105,584.6019,953.1453,589.313,961.7943" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="587.5" y="928.0669">output</text><!--link -params to rs--><path d="M726.1685,768.2396 C736.5128,813.4732 761.3738,952.4167 700.5,1038 C688.5315,1054.8267 669.3449,1065.8188 650.3224,1072.9721 " fill="none" id="-params-rs" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="645.4942,1074.7092,655.317,1075.4258,650.1989,1073.0163,652.6084,1067.8983,645.4942,1074.7092" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="739.5" y="928.0669">input</text><!--link image data to rs--><path d="M475.2179,990.3683 C498.2657,1009.4874 539.942,1044.0598 566.3673,1065.9808 " fill="none" id="image data-rs" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="570.4722,1069.386,566.0993,1060.5612,566.624,1066.1936,560.9915,1066.7183,570.4722,1069.386" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="532.5" y="1034.0669">input</text><!--link runtime to rs--><path d="M590.5,991.2677 C590.5,1009.888 590.5,1042.0746 590.5,1063.6975 " fill="none" id="runtime-rs" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="590.5,1068.9526,594.5,1059.9526,590.5,1063.9526,586.5,1059.9526,590.5,1068.9526" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="104" x="591.5" y="1034.0669">runtime method</text><!--link rs to rr--><path d="M663.659,1086 C705.68,1086 757.9914,1086 798.5519,1086 " fill="none" id="rs-rr" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="803.9421,1086,794.9421,1082,798.9421,1086,794.9421,1090,803.9421,1086" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="104" x="681.75" y="1079.0669">runtime method</text><!--link rr to rg--><path d="M923.138,1086 C962.5386,1086 1014.7333,1086 1058.2129,1086 " fill="none" id="rr-rg" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1063.4707,1086,1054.4707,1082,1058.4707,1086,1054.4707,1090,1063.4707,1086" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="104" x="941.25" y="1079.0669">runtime method</text><!--
+@startuml
+(relay python frontend) as rpf
+note right
+    @目录 python/tvm/relay/frontend/
+end note
+
+rectangle model-formats {
+    (MXNet) -down-> rpf: relay.frontend.from_mxnet
+    (TensorFlow) -down->rpf: relay.frontend.from_tensorflow
+    (CoreML) -down->rpf: relay.frontend.from_coreml
+    (ONNX) -down->rpf: relay.frontend.from_onnx
+    (***) -down->rpf: relay.frontend.from_***
+}
+
+rpf -down-> (mod): output
+note left
+    @包含了funcs的全局的relay module
+    @目录 python/tvm/relay/module.py
+    @是对src/relay/目录下的一些接口的封装
+    @module 本质上也是一个node
+    @每一个global func 都通过一个唯一的
+    tvm.relay.GlobalVar来区别
+end note
+
+rpf -down-> (params): output
+note left
+    @dict of str to NDArray
+     Input parameters to the graph
+     that do not change during inference time.
+    @Used for constant folding.
+end note
+
+(mod) -down-> (func): mod[mod.entry_func]
+note left
+    @A function declaration expression
+    @python/tvm/relay/expr.py
+    @继承于Expr, Expr 是RelayNode的子类
+end note
+
+(relay.build) as rb
+(target) as target
+note right 
+    {"aocl", "aocl_sw_emu", "c",
+    "cuda", "ext_dev", "hybrid",
+    "llvm", "metal", "nvptx", "opencl",
+    "opengl", "rocm", "sdaccel",
+    "stackvm", "vulkan"}
+end note
+
+target -left-> rb: input
+(target_host) as th
+note left: can be:cuda
+th -> rb: input
+(func) -down-> rb: input
+(params) -down-> rb: input
+
+rb -down-> (graph): output
+rb -down-> (lib): output
+rb -down-> (-params): output
+
+(graph_runtime.create) as grc
+(graph) -down-> grc: input
+(lib) -down-> grc: input
+(ctx: tvm.cpu0) -> grc: input
+
+grc -down-> (runtime): output
+(runtime.setinput) as rs
+(-params) -down-> rs: input
+(image data) -down-> rs: input
+(runtime) -down-> rs: runtime method
+(runtime.run) as rr
+(runtime.getoutput) as rg
+rs -> rr: runtime method
+rr -> rg: runtime method
+@enduml
+
+PlantUML version 1.2019.07(Tue Jun 25 03:59:20 CST 2019)
+(MIT source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 12.0.1+12
+Operating System: Linux
+OS Version: 4.15.0-54-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg></p><p><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="858px" preserveAspectRatio="none" style="width:1326px;height:858px;" version="1.1" viewBox="0 0 1326 858" width="1326px" zoomAndPan="magnify"><defs><filter height="300%" id="fslsbepz5vjwy" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--cluster input--><rect fill="#FFFFFF" filter="url(#fslsbepz5vjwy)" height="83" style="stroke: #000000; stroke-width: 1.5;" width="325" x="41.5" y="16"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="40" x="184" y="30.9951">input</text><!--cluster output--><rect fill="#FFFFFF" filter="url(#fslsbepz5vjwy)" height="83" style="stroke: #000000; stroke-width: 1.5;" width="242" x="482.5" y="764"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="52" x="577.5" y="778.9951">output</text><!--entity func--><ellipse cx="65.5" cy="59" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="53.5" x2="77.5" y1="73" y2="73"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="30" x="50.5" y="87.9951">func</text><!--entity target--><ellipse cx="137.5" cy="59" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="125.5" x2="149.5" y1="73" y2="73"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="41" x="117" y="87.9951">target</text><!--entity target_host--><ellipse cx="232.5" cy="59" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="220.5" x2="244.5" y1="73" y2="73"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="79" x="193" y="87.9951">target_host</text><!--entity params--><ellipse cx="332.5" cy="59" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="320.5" x2="344.5" y1="73" y2="73"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="51" x="307" y="87.9951">params</text><!--entity graph--><ellipse cx="577.5" cy="807" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="565.5" x2="589.5" y1="821" y2="821"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="40" x="557.5" y="835.9951">graph</text><!--entity np--><ellipse cx="674.5" cy="807" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="662.5" x2="686.5" y1="821" y2="821"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="84" x="632.5" y="835.9951">new params</text><!--entity mod--><ellipse cx="506.5" cy="807" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="12" ry="12" style="stroke: #A80036; stroke-width: 2.0;"/><line style="stroke: #A80036; stroke-width: 2.0;" x1="494.5" x2="518.5" y1="821" y2="821"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="31" x="491" y="835.9951">mod</text><ellipse cx="191.3528" cy="204.131" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="148.3528" ry="33.631" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="232" x="75.3528" y="198.4702">python/tvm/relay/build_module.py</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="193.3528" y="214.7671"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="33" x="174.8528" y="231.064">build</text><ellipse cx="742.4489" cy="204.0996" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="152.9489" ry="34.5996" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="232" x="626.4489" y="196.8725">python/tvm/relay/build_module.py</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="744.4489" y="213.1694"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="122" x="681.4489" y="229.4662">BuildModule.build</text><ellipse cx="1146.7487" cy="204.0518" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="165.2487" ry="36.0518" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="240" x="1026.7487" y="194.6035">src/relay/backend/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="1148.7487" y="210.9004"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="192" x="1050.7487" y="227.1972">RelayBuildModule.SetParam</text><ellipse cx="1146.3596" cy="354.7596" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="161.3596" ry="35.2596" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="240" x="1026.3596" y="346.5063">src/relay/backend/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="1148.3596" y="362.8032"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="160" x="1066.3596" y="379.1001">RelayBuildModule.Build</text><ellipse cx="656.4322" cy="355.1911" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="165.9322" ry="36.1911" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="240" x="536.4322" y="345.5364">src/relay/backend/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="658.4322" y="361.8332"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="197" x="557.9322" y="378.1301">RelayBuildModule.BuildRelay</text><ellipse cx="190.4521" cy="355.1904" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="178.9521" ry="38.1904" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="240" x="70.4521" y="342.2508">src/relay/backend/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="192.4521" y="358.5477"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="265" x="57.9521" y="374.8446">RelayBuildModule.BindParamsByName</text><ellipse cx="765.5861" cy="509.4168" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="164.5861" ry="35.9168" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="240" x="645.5861" y="500.1695">src/relay/backend/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="767.5861" y="516.4664"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="187" x="672.0861" y="532.7633">RelayBuildModule.Optimize</text><ellipse cx="190.6285" cy="509.3257" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="184.6285" ry="39.3257" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="354" x="13.6285" y="513.9741">relay::ModuleNode::FromExpr creat a relay::module</text><ellipse cx="1125.4123" cy="509.5666" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="160.4123" ry="35.0666" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="240" x="1005.4123" y="501.6103">src/relay/backend/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="1127.4123" y="517.9072"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="151" x="1049.9123" y="534.2041">new a GraphCodegen</text><ellipse cx="1125.4363" cy="667.4873" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="190.4363" ry="40.4873" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="317" x="966.9363" y="660.274">src/relay/backend/graph_runtime_codegen.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="1127.4363" y="676.5709"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="239" x="1005.9363" y="692.8678">GraphRuntimeCodegenModule.init</text><ellipse cx="674.6279" cy="667.7256" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="196.6279" ry="41.7256" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="317" x="516.1279" y="658.2788">src/relay/backend/graph_runtime_codegen.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="676.6279" y="674.5757"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="281" x="534.1279" y="690.8725">GraphRuntimeCodegenModule.codegen</text><ellipse cx="159.3363" cy="667.4648" fill="#FEFECE" filter="url(#fslsbepz5vjwy)" rx="132.8363" ry="33.9648" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="205" x="56.8363" y="661.2552">src/codegen/build_module.cc</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="0" x="161.3363" y="677.5521"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="125.3363" y="693.849">tvm::build</text><!--link func to ptrbb--><path d="M81.5962,90.9214 C91.582,105.1347 105.039,123.2127 118.5,138 C127.8215,148.2399 138.5575,158.6113 148.8781,168.0045 " fill="none" id="func-ptrbb" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="152.6583,171.4188,148.6606,162.4178,148.9478,168.0673,143.2983,168.3545,152.6583,171.4188" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="119.5" y="134.0669">input</text><!--link target to ptrbb--><path d="M147.0298,91.1775 C155.1765,111.8459 167.0418,141.9488 176.4676,165.8624 " fill="none" id="target-ptrbb" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="178.3184,170.5579,178.7393,160.718,176.4848,165.9062,171.2967,163.6517,178.3184,170.5579" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="165.5" y="134.0669">input</text><!--link target_host to ptrbb--><path d="M225.2644,91.1775 C219.1047,111.7598 210.1451,141.6981 203.003,165.5631 " fill="none" id="target_host-ptrbb" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="201.5082,170.5579,207.9207,163.0826,202.9418,165.7678,200.2566,160.7889,201.5082,170.5579" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="217.5" y="134.0669">input</text><!--link params to ptrbb--><path d="M307.6166,91.1775 C285.7641,112.41 253.6645,143.599 228.7505,167.8063 " fill="none" id="params-ptrbb" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="225.1288,171.3252,234.3712,167.9224,228.7149,167.841,228.7964,162.1847,225.1288,171.3252" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="276.5" y="134.0669">input</text><!--link ptrbb to bmb--><path d="M340.2455,204 C415.721,204 507.4267,204 584.2049,204 " fill="none" id="ptrbb-bmb" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="589.2403,204,580.2403,200,584.2403,204,580.2403,208,589.2403,204" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="213" x="358.25" y="197.0669">func, target, target_host, params</text><!--link bmb to rbmsp--><path d="M895.5231,204 C921.7998,204 949.2531,204 975.9548,204 " fill="none" id="bmb-rbmsp" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="981.2845,204,972.2845,200,976.2845,204,972.2845,208,981.2845,204" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="49" x="914" y="197.0669">params</text><!--link rbmsp to rbmb--><path d="M1146.5,240.1683 C1146.5,262.475 1146.5,291.1369 1146.5,314.2451 " fill="none" id="rbmsp-rbmb" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1146.5,319.3877,1150.5,310.3877,1146.5,314.3877,1142.5,310.3877,1146.5,319.3877" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="156" x="1147.5" y="283.0669">func, target, target_host</text><!--link rbmbr to rbmb--><path d="M827.962,355 C878.8745,355 934.4565,355 984.7319,355 " fill="none" id="rbmbr-rbmb" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="822.7334,355,831.7334,359,827.7334,355,831.7334,351,822.7334,355" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="126" x="840.75" y="348.0669">in RelayBuildModule</text><!--link rbmbpbn to rbmbr--><path d="M374.7889,355 C412.8922,355 452.8148,355 490.2302,355 " fill="none" id="rbmbpbn-rbmbr" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="369.6681,355,378.6681,359,374.6681,355,378.6681,351,369.6681,355" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="84" x="388" y="348.0669">func, params</text><!--link rbmbpbn to rmfe--><path d="M190.5,393.191 C190.5,414.8739 190.5,442.128 190.5,464.8028 " fill="none" id="rbmbpbn-rmfe" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="190.5,469.8645,194.5,460.8645,190.5,464.8645,186.5,460.8645,190.5,469.8645" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="27" x="191.5" y="436.0669">func</text><!--link rmfe to rbmo--><path d="M375.2023,509.5 C445.9349,509.5 526.2277,509.5 595.5195,509.5 " fill="none" id="rmfe-rbmo" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="600.9123,509.5,591.9123,505.5,595.9123,509.5,591.9123,513.5,600.9123,509.5" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="189" x="393.5" y="502.5669">relay::Module, target, params</text><!--link rbmo to nag--><path d="M930.0313,509.5 C939.8928,509.5 949.7543,509.5 959.6158,509.5 " fill="none" id="rbmo-nag" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="964.7728,509.5,955.7728,505.5,959.7728,509.5,955.7728,513.5,964.7728,509.5" style="stroke: #A80036; stroke-width: 1.0;"/><!--link nag to grcmi--><path d="M1125.5,544.5653 C1125.5,567.3123 1125.5,597.185 1125.5,621.7869 " fill="none" id="nag-grcmi" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="1125.5,626.9522,1129.5,617.9522,1125.5,621.9522,1121.5,617.9522,1125.5,626.9522" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="39" x="1126.5" y="592.0669">target</text><!--link grcmc to grcmi--><path d="M876.457,667.5 C895.8168,667.5 915.4106,667.5 934.6593,667.5 " fill="none" id="grcmc-grcmi" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="871.0032,667.5,880.0032,671.5,876.0032,667.5,880.0032,663.5,871.0032,667.5" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="27" x="889.5" y="660.5669">func</text><!--link grcmc to graph--><path d="M643.581,708.6236 C636.4749,718.4518 629.078,728.9969 622.5,739 C612.4215,754.3263 601.9361,771.9241 593.6247,786.324 " fill="none" id="grcmc-graph" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="591.118,790.6842,599.0715,784.8755,593.6101,786.3495,592.1361,780.8881,591.118,790.6842" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="623.5" y="752.0669">output</text><!--link grcmc to np--><path d="M674.5,709.373 C674.5,733.8164 674.5,764.0447 674.5,785.8927 " fill="none" id="grcmc-np" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="674.5,790.9784,678.5,781.9784,674.5,785.9784,670.5,781.9784,674.5,790.9784" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="675.5" y="752.0669">output</text><!--link tb to grcmc--><path d="M298.1059,667.5 C353.2905,667.5 417.8097,667.5 477.6867,667.5 " fill="none" id="tb-grcmc" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="292.795,667.5,301.795,671.5,297.795,667.5,301.795,663.5,292.795,667.5" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="149" x="310.75" y="660.5669">LowerFunc, target_host</text><!--link tb to mod--><path d="M228.056,696.6413 C308.066,730.6512 435.7698,784.9346 485.6135,806.1218 " fill="none" id="tb-mod" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="490.4684,808.1854,483.7504,800.9834,485.8669,806.2294,480.6208,808.3459,490.4684,808.1854" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="42" x="365.5" y="752.0669">output</text><!--
+@startuml
+(python/tvm/relay/build_module.py\n\n build) as ptrbb
+rectangle input {
+    entity func
+    entity target
+    entity target_host
+    entity params
+}
+func .down-> ptrbb: input
+target .down-> ptrbb: input
+target_host .down-> ptrbb: input
+params .down-> ptrbb: input
+
+(python/tvm/relay/build_module.py\n\n BuildModule.build) as bmb
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.SetParam) as rbmsp
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.Build) as rbmb
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.BuildRelay) as rbmbr
+ptrbb -right-> bmb: func, target, target_host, params
+bmb -right-> rbmsp: params
+rbmsp -down-> rbmb: func, target, target_host
+rbmb -left-> rbmbr: in RelayBuildModule
+
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.BindParamsByName) as rbmbpbn
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.Optimize) as rbmo
+(relay::ModuleNode::FromExpr creat a relay::module) as rmfe
+rbmbr -left-> rbmbpbn: func, params
+rbmbpbn -down-> rmfe: func
+rmfe -right-> rbmo: "relay::Module, target, params"
+
+(src/relay/backend/build_module.cc\n\n new a GraphCodegen) as nag
+rbmo -right-> nag
+
+(src/relay/backend/graph_runtime_codegen.cc\n\n GraphRuntimeCodegenModule.init) as grcmi
+(src/relay/backend/graph_runtime_codegen.cc\n\n GraphRuntimeCodegenModule.codegen) as grcmc
+nag -down-> grcmi: target
+grcmi -left-> grcmc: func
+
+(src/codegen/build_module.cc\n\n tvm::build) as tb
+rectangle output {
+    entity "graph" as graph
+    entity "new params" as np
+    entity "mod" as mod
+}
+grcmc .down-> graph: output
+grcmc .down-> np: output
+grcmc -left-> tb: LowerFunc, target_host
+tb .down-> mod: output
+@enduml
+
+PlantUML version 1.2019.07(Tue Jun 25 03:59:20 CST 2019)
+(MIT source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 12.0.1+12
+Operating System: Linux
+OS Version: 4.15.0-54-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg></p><h3 class="mume-header" id="build%E8%BF%87%E7%A8%8B">build&#x8FC7;&#x7A0B;</h3>
+
+<h4 class="mume-header" id="relay%E5%89%8D%E7%AB%AF">relay&#x524D;&#x7AEF;</h4>
+
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># tvm/tutorials/frontend/from_mxnet.py</span>
+<span class="token keyword">def</span> <span class="token function">from_mxnet</span><span class="token punctuation">(</span>symbol<span class="token punctuation">,</span>
+               shape<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>
+               dtype<span class="token operator">=</span><span class="token string">&quot;float32&quot;</span><span class="token punctuation">,</span>
+               arg_params<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>
+               aux_params<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    mod <span class="token operator">=</span> _module<span class="token punctuation">.</span>Module<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    func <span class="token operator">=</span> _from_mxnet_impl<span class="token punctuation">(</span>symbol<span class="token punctuation">,</span> shape<span class="token punctuation">,</span> dtype<span class="token punctuation">,</span> mod<span class="token punctuation">)</span>
+    mod<span class="token punctuation">[</span><span class="token string">&quot;main&quot;</span><span class="token punctuation">]</span> <span class="token operator">=</span> func
+    <span class="token keyword">return</span> mod<span class="token punctuation">,</span> params
+</pre><p>Module&#x662F;&#x4E00;&#x4E2A;python&#x7C7B;&#xFF0C;&#x901A;&#x8FC7;register_relay_node&#x6CE8;&#x518C;&#x5230;&#x4E86;&#x4E00;&#x4E2A;python&#x5168;&#x5C40;&#x7684;node&#x5B57;&#x5178;&#x4E2D;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/relay/module.py</span>
+<span class="token decorator annotation punctuation">@register_relay_node</span>
+<span class="token keyword">class</span> <span class="token class-name">Module</span><span class="token punctuation">(</span>RelayNode<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> functions<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> type_definitions<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>__init_handle_by_constructor__<span class="token punctuation">(</span>_make<span class="token punctuation">.</span>Module<span class="token punctuation">,</span> functions<span class="token punctuation">,</span> type_definitions<span class="token punctuation">)</span>
+</pre><p>_make.Module&#x662F;&#x83B7;&#x53D6;&#x4E86;c++&#x5B9E;&#x73B0;&#x7684;&#x4E00;&#x4E2A;Module&#x6784;&#x5EFA;&#x65B9;&#x6CD5;&#x3002;_init_api&#x5C06;c++&#x4E2D;&#x7684;global_func&#x6309;&#x7167;&#x6A21;&#x5757;&#x52A8;&#x6001;&#x7EC4;&#x6210;&#x4E86;python&#x4E2D;&#x5404;&#x4E2A;&#x6A21;&#x5757;&#x7684;&#x65B9;&#x6CD5;&#x3002;_init_api &#x4E3B;&#x8981;&#x8C03;&#x7528;&#x4E86;_init_api_prefix&#x6765;&#x5B9E;&#x73B0;&#x529F;&#x80FD;&#xFF0C;&#x5176;&#x4E2D;get_global_func&#x8FD4;&#x56DE;&#x4E86;&#x4E00;&#x4E2A;Function&#x5B9E;&#x4F8B;&#xFF0C;<br>
+Function&#x7EE7;&#x627F;&#x4E8E;FunctionBase&#xFF0C;&#x5176;&#x4E2D;&#x5B9E;&#x73B0;&#x4E86;__call__&#x65B9;&#x6CD5;&#xFF0C;&#x6240;&#x4EE5;Python&#x4E2D;module&#x7C7B;&#x7684;&#x65B9;&#x6CD5;&#x4E2D;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x7C7B;&#x4F3C;_module.Module_ContainGlobalVar(self, var)&#x7684;&#x64CD;&#x4F5C;&#x6765;&#x5B9E;&#x73B0;&#x5BF9;c++&#x7684;&#x8C03;&#x7528;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/relay/_make.py</span>
+_init_api<span class="token punctuation">(</span><span class="token string">&quot;relay._make&quot;</span><span class="token punctuation">,</span> __name__<span class="token punctuation">)</span>
+
+<span class="token comment"># python/tvm/_ffi/function.py</span>
+<span class="token keyword">def</span> <span class="token function">_init_api_prefix</span><span class="token punctuation">(</span>module_name<span class="token punctuation">,</span> prefix<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> name <span class="token keyword">in</span> list_global_func_names<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        f <span class="token operator">=</span> get_global_func<span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+        ff <span class="token operator">=</span> _get_api<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+        ff<span class="token punctuation">.</span>__name__ <span class="token operator">=</span> fname
+        <span class="token builtin">setattr</span><span class="token punctuation">(</span>target_module<span class="token punctuation">,</span> ff<span class="token punctuation">.</span>__name__<span class="token punctuation">,</span> ff<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">get_global_func</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> allow_missing<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    handle <span class="token operator">=</span> FunctionHandle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    check_call<span class="token punctuation">(</span>_LIB<span class="token punctuation">.</span>TVMFuncGetGlobal<span class="token punctuation">(</span>c_str<span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>handle<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> handle<span class="token punctuation">.</span>value<span class="token punctuation">:</span>
+        <span class="token keyword">return</span> Function<span class="token punctuation">(</span>handle<span class="token punctuation">,</span> <span class="token boolean">False</span><span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Function</span><span class="token punctuation">(</span>_FunctionBase<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+<span class="token keyword">class</span> <span class="token class-name">FunctionBase</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> _LIB<span class="token punctuation">.</span>TVMFuncCall<span class="token punctuation">(</span>
+                self<span class="token punctuation">.</span>handle<span class="token punctuation">,</span> values<span class="token punctuation">,</span> tcodes<span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>c_int<span class="token punctuation">(</span>num_args<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_val<span class="token punctuation">)</span><span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_tcode<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> get_last_ffi_error<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> RETURN_SWITCH<span class="token punctuation">[</span>ret_tcode<span class="token punctuation">.</span>value<span class="token punctuation">]</span><span class="token punctuation">(</span>ret_val<span class="token punctuation">)</span>
+</pre><p>c++&#x4E2D;&#x7684;&#x63A5;&#x53E3;&#x901A;&#x8FC7;TVM_REGISTER_API&#x8FDB;&#x884C;&#x6CE8;&#x518C;,&#x5176;&#x4E2D;ModuleNode::make&#x8FD4;&#x56DE;&#x4E86;Module&#x5B9E;&#x4F8B;</p>
+<pre data-role="codeBlock" data-info="c++" class="language-cpp"><span class="token comment">// src/relay/ir/module.cc</span>
+<span class="token function">TVM_REGISTER_API</span><span class="token punctuation">(</span><span class="token string">&quot;relay._make.Module&quot;</span><span class="token punctuation">)</span>
+<span class="token punctuation">.</span><span class="token function">set_body_typed</span><span class="token punctuation">(</span>ModuleNode<span class="token operator">::</span>make<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+Module ModuleNode<span class="token operator">::</span><span class="token function">make</span><span class="token punctuation">(</span>tvm<span class="token operator">::</span>Map<span class="token operator">&lt;</span>GlobalVar<span class="token punctuation">,</span> Function<span class="token operator">&gt;</span> global_funcs<span class="token punctuation">,</span>
+                        tvm<span class="token operator">::</span>Map<span class="token operator">&lt;</span>GlobalTypeVar<span class="token punctuation">,</span> TypeData<span class="token operator">&gt;</span> global_type_defs<span class="token punctuation">)</span>
+</pre><p>self.__init_handle_by_constructor__&#x6700;&#x7EC8;&#x901A;&#x8FC7;_LIB.TVMFuncCall&#x5B8C;&#x6210;&#x771F;&#x6B63;&#x7684;c++&#x51FD;&#x6570;&#x6267;&#x884C;&#xFF0C;&#x8FD9;&#x4E2A;&#x8C03;&#x7528;&#x662F;&#x4E0D;&#x662F;&#x5F88;&#x719F;&#x6089;&#xFF1F;&#x5BF9;&#x7684;&#xFF0C;&#x5728;FunctionBase&#x7684;__call__&#x65B9;&#x6CD5;&#x4E2D;&#x4E5F;&#x662F;&#x8FD9;&#x6837;&#x5B9E;&#x73B0;&#x7684;PackedFunc&#x7684;&#x7531;Python&#x5230;c++&#x7684;&#x8C03;&#x7528;</p>
+<p>&#x5176;&#x4E2D;RETURN_SWITCH&#x662F;&#x4E00;&#x4E2A;&#x5B57;&#x5178;&#xFF0C;&#x5B9E;&#x73B0;&#x4E86;c++&#x53D8;&#x91CF;&#x7C7B;&#x578B;&#x5230;python&#x53D8;&#x91CF;&#x7C7B;&#x578B;&#x7684;&#x8F6C;&#x6362;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/_ffi/_ctypes/function.py</span>
+<span class="token keyword">def</span> <span class="token function">__init_handle_by_constructor__</span><span class="token punctuation">(</span>fconstructor<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> _LIB<span class="token punctuation">.</span>TVMFuncCall<span class="token punctuation">(</span>
+            fconstructor<span class="token punctuation">.</span>handle<span class="token punctuation">,</span> values<span class="token punctuation">,</span> tcodes<span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>c_int<span class="token punctuation">(</span>num_args<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_val<span class="token punctuation">)</span><span class="token punctuation">,</span> ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_tcode<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> RETURN_SWITCH<span class="token punctuation">[</span>ret_tcode<span class="token punctuation">.</span>value<span class="token punctuation">]</span><span class="token punctuation">(</span>ret_val<span class="token punctuation">)</span>
+
+RETURN_SWITCH<span class="token punctuation">[</span>TypeCode<span class="token punctuation">.</span>FUNC_HANDLE<span class="token punctuation">]</span> <span class="token operator">=</span> _handle_return_func
+RETURN_SWITCH<span class="token punctuation">[</span>TypeCode<span class="token punctuation">.</span>MODULE_HANDLE<span class="token punctuation">]</span> <span class="token operator">=</span> _return_module
+
+<span class="token comment"># python/tvm/_ffi/_ctypes/types.py</span>
+RETURN_SWITCH <span class="token operator">=</span> <span class="token punctuation">{</span>
+    TypeCode<span class="token punctuation">.</span>INT<span class="token punctuation">:</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x<span class="token punctuation">.</span>v_int64<span class="token punctuation">,</span>
+    TypeCode<span class="token punctuation">.</span>FLOAT<span class="token punctuation">:</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span> x<span class="token punctuation">.</span>v_float64<span class="token punctuation">,</span>
+    TypeCode<span class="token punctuation">.</span>HANDLE<span class="token punctuation">:</span> _return_handle<span class="token punctuation">,</span>
+    TypeCode<span class="token punctuation">.</span>NULL<span class="token punctuation">:</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span> <span class="token boolean">None</span><span class="token punctuation">,</span>
+    TypeCode<span class="token punctuation">.</span>STR<span class="token punctuation">:</span> <span class="token keyword">lambda</span> x<span class="token punctuation">:</span> py_str<span class="token punctuation">(</span>x<span class="token punctuation">.</span>v_str<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    TypeCode<span class="token punctuation">.</span>BYTES<span class="token punctuation">:</span> _return_bytes<span class="token punctuation">,</span>
+    TypeCode<span class="token punctuation">.</span>TVM_CONTEXT<span class="token punctuation">:</span> _return_context
+<span class="token punctuation">}</span>
+</pre><h4 class="mume-header" id="%E8%BD%AC%E6%8D%A2%E5%8E%9F%E5%A7%8Bgraph%E4%B8%BAexper">&#x8F6C;&#x6362;&#x539F;&#x59CB;graph&#x4E3A;exper</h4>
+
+<p>&#x521B;&#x5EFA;&#x5B8C;&#x6210;modudle&#x5B9E;&#x4F8B;&#x4E4B;&#x540E;&#xFF0C;_from_mxnet_impl &#x904D;&#x5386;&#x4E86;&#x539F;&#x59CB;graph&#x7684;node, &#x6839;&#x636E;op&#x540D;&#x79F0;&#x7684;&#x4E0D;&#x540C;&#xFF0C;&#x586B;&#x5145;&#x4E0D;&#x540C;&#x7684;expr&#x5B9E;&#x4F8B;&#x5230;node_map<br>
+&#x5E76;&#x4E14;&#x628A;&#x6700;&#x7EC8;&#x8F93;&#x51FA;&#x8282;&#x70B9;&#x5BF9;&#x5E94;&#x7684;Function&#x5B9E;&#x4F8B;&#x8FD4;&#x56DE;&#xFF0C;module&#x5B9E;&#x4F8B;&#x7684;&apos;main&apos;&#x8282;&#x70B9;&#x5B89;&#x88C5;&#x4E3A;&#x8BE5;func</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/relay/frontend/mxnet.py</span>
+<span class="token keyword">def</span> <span class="token function">_from_mxnet_impl</span><span class="token punctuation">(</span>symbol<span class="token punctuation">,</span> shape_dict<span class="token punctuation">,</span> dtype_info<span class="token punctuation">,</span> mod<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    jgraph <span class="token operator">=</span> json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>symbol<span class="token punctuation">.</span>tojson<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    jnodes <span class="token operator">=</span> jgraph<span class="token punctuation">[</span><span class="token string">&quot;nodes&quot;</span><span class="token punctuation">]</span>
+    node_map <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+    <span class="token keyword">for</span> nid<span class="token punctuation">,</span> node <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>jnodes<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> op_name <span class="token operator">==</span> <span class="token string">&quot;null&quot;</span><span class="token punctuation">:</span>
+            node_map<span class="token punctuation">[</span>nid<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>_expr<span class="token punctuation">.</span>var<span class="token punctuation">(</span>node_name<span class="token punctuation">,</span> shape<span class="token operator">=</span>shape<span class="token punctuation">,</span> dtype<span class="token operator">=</span>dtype<span class="token punctuation">)</span><span class="token punctuation">]</span>
+        <span class="token keyword">elif</span> op_name <span class="token keyword">in</span> _convert_map<span class="token punctuation">:</span>
+            res <span class="token operator">=</span> _convert_map<span class="token punctuation">[</span>op_name<span class="token punctuation">]</span><span class="token punctuation">(</span>children<span class="token punctuation">,</span> attrs<span class="token punctuation">)</span>
+    outputs <span class="token operator">=</span> <span class="token punctuation">[</span>node_map<span class="token punctuation">[</span>e<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>e<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token keyword">for</span> e <span class="token keyword">in</span> jgraph<span class="token punctuation">[</span><span class="token string">&quot;heads&quot;</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+    func <span class="token operator">=</span> _expr<span class="token punctuation">.</span>Function<span class="token punctuation">(</span>analysis<span class="token punctuation">.</span>free_vars<span class="token punctuation">(</span>outputs<span class="token punctuation">)</span><span class="token punctuation">,</span> outputs<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> func
+</pre><p>&#x5176;&#x4E2D;_convert_map&#x662F;relay &#x7684; mxnet&#x524D;&#x7AEF;&#x51C6;&#x5907;&#x597D;&#x7684;&#x4E00;&#x4E2A;&#x5B57;&#x5178;&#xFF0C;&#x8BB0;&#x5F55;&#x7740;&#x6BCF;&#x4E2A;op&#x5BF9;&#x5E94;&#x7684;relay&#x7684;&#x8868;&#x8FBE;&#x3002;null node&#x4EE3;&#x8868;&#x5360;&#x4F4D;/&#x53D8;&#x91CF;&#x6216;&#x8005;&#x8F93;&#x5165;&#x8282;&#x70B9;&#xFF0C;&#x88AB;&#x5B9E;&#x4F8B;&#x5316;&#x4E3A;Var(A local variable in Relay)</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/relay/expr.py</span>
+<span class="token decorator annotation punctuation">@register_relay_node</span>
+<span class="token keyword">class</span> <span class="token class-name">Var</span><span class="token punctuation">(</span>Expr<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name_hint<span class="token punctuation">,</span> type_annotation<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>__init_handle_by_constructor__<span class="token punctuation">(</span>
+            _make<span class="token punctuation">.</span>Var<span class="token punctuation">,</span> name_hint<span class="token punctuation">,</span> type_annotation<span class="token punctuation">)</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Expr</span><span class="token punctuation">(</span>RelayNode<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> <span class="token operator">*</span>args<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> Call<span class="token punctuation">(</span>self<span class="token punctuation">,</span> args<span class="token punctuation">)</span>
+
+@register_relay_node
+<span class="token keyword">class</span> <span class="token class-name">Call</span><span class="token punctuation">(</span>Expr<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> op<span class="token punctuation">,</span> args<span class="token punctuation">,</span> attrs<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> type_args<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token keyword">not</span> type_args<span class="token punctuation">:</span>
+            type_args <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        self<span class="token punctuation">.</span>__init_handle_by_constructor__<span class="token punctuation">(</span>
+            _make<span class="token punctuation">.</span>Call<span class="token punctuation">,</span> op<span class="token punctuation">,</span> args<span class="token punctuation">,</span> attrs<span class="token punctuation">,</span> type_args<span class="token punctuation">)</span>
+
+</pre><h4 class="mume-header" id="relay%E5%B1%82build">Relay&#x5C42;Build</h4>
+
+<p>&#x901A;&#x8FC7;&#x8C03;&#x7528; relay.build_module._BuildModule &#x521B;&#x5EFA;RelayBuildModule&#xFF0C;&#x8BE5;&#x51FD;&#x6570;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;c++&#x7684;Module&#x7C7B;&#x5B9E;&#x4F8B;&#xFF0C;<br>
+&#x5728;python&#x7AEF;&#x8F6C;&#x6362;&#x8BE5;&#x5B9E;&#x4F8B;&#x4E3A;Pthon Module&#x7C7B;&#x5B9E;&#x4F8B;&#xFF08;_init_api()&#x63A5;&#x53E3;&#x4E2D;&#x4F1A;&#x8FDB;&#x884C;&#x5904;&#x7406;&#xFF09;</p>
+<pre data-role="codeBlock" data-info="c++" class="language-cpp"><span class="token comment">// src/relay/backend/build_module.cc</span>
+runtime<span class="token operator">::</span>Module <span class="token function">RelayBuildCreate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  std<span class="token operator">::</span>shared_ptr<span class="token operator">&lt;</span>RelayBuildModule<span class="token operator">&gt;</span> exec <span class="token operator">=</span> std<span class="token operator">::</span>make_shared<span class="token operator">&lt;</span>RelayBuildModule<span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> runtime<span class="token operator">::</span><span class="token function">Module</span><span class="token punctuation">(</span>exec<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/module.py</span>
+_init_api<span class="token punctuation">(</span><span class="token string">&quot;tvm.module&quot;</span><span class="token punctuation">)</span>
+_set_class_module<span class="token punctuation">(</span>Module<span class="token punctuation">)</span>
+</pre><p>python&#x4E2D; class Module&#x5BF9;&#x5E94;&#x4E8E;c++&#x4E2D;&#x7684;class Module, ModuleBase &#x63D0;&#x4F9B;&#x4E86;__getitem__&#x65B9;&#x6CD5;&#xFF0C;&#x53EF;&#x4EE5;&#x4F7F;&#x5F97;<br>
+module[func_string] &#x80FD;&#x591F;&#x8C03;&#x7528;&#x5230;c++&#x4E2D;&#x7684;ModuleNode&#x5BF9;&#x5E94;&#x7684;function.</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/module.py</span>
+<span class="token keyword">class</span> <span class="token class-name">Module</span><span class="token punctuation">(</span>ModuleBase<span class="token punctuation">)</span><span class="token punctuation">:</span>
+
+<span class="token comment"># python/tvm/_ffi/function.py</span>
+<span class="token keyword">class</span> <span class="token class-name">ModuleBase</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">get_function</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">,</span> query_imports<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        ret_handle <span class="token operator">=</span> FunctionHandle<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        check_call<span class="token punctuation">(</span>_LIB<span class="token punctuation">.</span>TVMModGetFunction<span class="token punctuation">(</span>
+            self<span class="token punctuation">.</span>handle<span class="token punctuation">,</span> c_str<span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            ctypes<span class="token punctuation">.</span>c_int<span class="token punctuation">(</span>query_imports<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            ctypes<span class="token punctuation">.</span>byref<span class="token punctuation">(</span>ret_handle<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> Function<span class="token punctuation">(</span>ret_handle<span class="token punctuation">,</span> <span class="token boolean">False</span><span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">__getitem__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> name<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> <span class="token keyword">not</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> string_types<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">raise</span> ValueError<span class="token punctuation">(</span><span class="token string">&quot;Can only take string as function name&quot;</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>get_function<span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+</pre><p>&#x5728;c++&#x4E2D;&#xFF0C;module&#x7684;GetFunction&#x5B9E;&#x9645;&#x4E0A;&#x4F1A;&#x8C03;&#x7528;ModuleNode&#x7684;GetFunction</p>
+<pre data-role="codeBlock" data-info="c++" class="language-cpp"><span class="token comment">// src/runtime/c_runtime_api.cc</span>
+<span class="token keyword">int</span> <span class="token function">TVMModGetFunction</span><span class="token punctuation">(</span>TVMModuleHandle mod<span class="token punctuation">,</span>
+                      <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> func_name<span class="token punctuation">,</span>
+                      <span class="token keyword">int</span> query_imports<span class="token punctuation">,</span>
+                      TVMFunctionHandle <span class="token operator">*</span>func<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    PackedFunc pf <span class="token operator">=</span> <span class="token keyword">static_cast</span><span class="token operator">&lt;</span>Module<span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>mod<span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token function">GetFunction</span><span class="token punctuation">(</span>
+        func_name<span class="token punctuation">,</span> query_imports <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">*</span>func <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">PackedFunc</span><span class="token punctuation">(</span>pf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// include/tvm/runtime/packed_func.h</span>
+<span class="token keyword">inline</span> PackedFunc Module<span class="token operator">::</span><span class="token function">GetFunction</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> name<span class="token punctuation">,</span> <span class="token keyword">bool</span> query_imports<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    PackedFunc pf <span class="token operator">=</span> node_<span class="token operator">-&gt;</span><span class="token function">GetFunction</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> node_<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> pf<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><p>&#x53EF;&#x4EE5;&#x53C2;&#x8003;&#x5982;&#x4E0B;&#x7C7B;&#x56FE;</p>
+<p><!--?xml version="1.0" encoding="UTF-8" standalone="no"?--><svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" height="414px" preserveAspectRatio="none" style="width:825px;height:414px;" version="1.1" viewBox="0 0 825 414" width="825px" zoomAndPan="magnify"><defs><filter height="300%" id="f19fphduiqhwu9" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><ellipse cx="698.614" cy="264.8228" fill="#FEFECE" filter="url(#f19fphduiqhwu9)" rx="114.614" ry="25.3228" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="87" x="655.114" y="257.062">host module</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="188" x="604.614" y="273.3589">class tvm::runtime::Module</text><ellipse cx="698.7153" cy="130.5431" fill="#FEFECE" filter="url(#f19fphduiqhwu9)" rx="115.7153" ry="25.5431" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="101" x="648.2153" y="123.186">device module</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="188" x="604.7153" y="139.4829">class tvm::runtime::Module</text><ellipse cx="154.3278" cy="265.0656" fill="#FEFECE" filter="url(#f19fphduiqhwu9)" rx="148.3278" ry="32.0656" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="43" x="132.8278" y="253.4171">param</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="279" x="14.8278" y="269.714">&#x4EE5;graph&#x4E2D;&#x7684;node&#x7684;name&#x4E3A;key&#x7684;&#x53C2;&#x6570;&#x5B57;&#x5178;</text><ellipse cx="443.6042" cy="265.0208" fill="#FEFECE" filter="url(#f19fphduiqhwu9)" rx="105.6042" ry="23.5208" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="40" x="423.6042" y="257.6905">graph</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="163" x="362.1042" y="273.9874">&#x5305;&#x542B;&#x6240;&#x6709;node&#x7684;json&#x8868;&#x8FBE;</text><!--entity device.so--><rect fill="#FEFECE" filter="url(#f19fphduiqhwu9)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="86" x="655.5" y="8"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="650.5" y="13"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="650.5" y="34.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="665.5" y="30.9951">device.so</text><ellipse cx="443.4472" cy="388.5236" fill="#FEFECE" filter="url(#f19fphduiqhwu9)" rx="57.4472" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="77" x="404.9472" y="393.1721">runtime Init</text><!--link device.so to dm--><path d="M698.5,44.2025 C698.5,59.3589 698.5,81.2851 698.5,99.2431 " fill="none" id="device.so-dm" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="698.5,104.6769,702.5,95.6769,698.5,99.6769,694.5,95.6769,698.5,104.6769" style="stroke: #A80036; stroke-width: 1.0;"/><!--link hm to runtime Init--><path d="M650.5365,288.2294 C599.0325,313.1735 518.6984,352.0804 474.7769,373.3522 " fill="none" id="hm-runtime Init" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="470.1239,375.6057,479.9675,375.2825,474.6239,373.4262,476.4802,368.0826,470.1239,375.6057" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="563.5" y="340.0669">input</text><!--link dm to hm--><path d="M698.5,161.3272 C698.5,184.9867 698.5,217.2592 698.5,239.4804 " fill="none" id="dm-hm" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="698.5,156.115,694.5,165.115,698.5,161.115,702.5,165.115,698.5,156.115" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="21" x="699.5" y="199.0669">call</text><!--link param to runtime Init--><path d="M221.5288,293.6438 C280.37,318.7887 363.5439,354.3319 409.5583,373.9955 " fill="none" id="param-runtime Init" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="414.1652,375.9642,407.4611,368.7493,409.5674,373.9994,404.3174,376.1057,414.1652,375.9642" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="333.5" y="340.0669">input</text><!--link graph to runtime Init--><path d="M443.5,288.5201 C443.5,311.7464 443.5,346.8695 443.5,368.7078 " fill="none" id="graph-runtime Init" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="443.5,373.9584,447.5,364.9584,443.5,368.9584,439.5,364.9584,443.5,373.9584" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="32" x="444.5" y="340.0669">input</text><!--
+@startuml
+(host module\nclass tvm::runtime::Module) as hm
+(device module\nclass tvm::runtime::Module) as dm
+
+(param \n以graph中的node的name为key的参数字典) as param
+
+(graph \n包含所有node的json表达) as graph
+
+[device.so] - -> dm
+
+hm - -> (runtime Init): input
+dm <- - hm : call
+(param) - -> (runtime Init): input
+(graph) - -> (runtime Init): input
+@enduml
+
+PlantUML version 1.2019.07(Tue Jun 25 03:59:20 CST 2019)
+(MIT source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 12.0.1+12
+Operating System: Linux
+OS Version: 4.15.0-54-generic
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg></p><p>&#x8FD9;&#x6837;&#xFF0C;&#x5728;python&#x4E2D;&#x8C03;&#x7528;self.mod[&quot;build&quot;]&#xFF0C;&#x5219;&#x771F;&#x6B63;&#x6267;&#x884C;&#x4E86;c++&#x4E2D;&#x7684;RelayBuildModule&#x7684;build&#x529F;&#x80FD;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token comment"># python/tvm/relay/build_module.py</span>
+<span class="token keyword">class</span> <span class="token class-name">BuildModule</span><span class="token punctuation">(</span><span class="token builtin">object</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>mod <span class="token operator">=</span> _build_module<span class="token punctuation">.</span>_BuildModule<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>_build <span class="token operator">=</span> self<span class="token punctuation">.</span>mod<span class="token punctuation">[</span><span class="token string">&quot;build&quot;</span><span class="token punctuation">]</span>
+    <span class="token keyword">def</span> <span class="token function">build</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> func<span class="token punctuation">,</span> target<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> target_host<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> params<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>_build<span class="token punctuation">(</span>func<span class="token punctuation">,</span> target<span class="token punctuation">,</span> target_host<span class="token punctuation">)</span>
+</pre><p>RelayBuildModule &#x7684; build, &#x5FC5;&#x987B;&#x8981;&#x6CE8;&#x610F;&#x7684;&#x662F;&#xFF0C;<em><strong>Module</strong></em> &#x548C; <em><strong>ModuleNode</strong></em> &#x5B58;&#x5728;&#x4E8E;&#x591A;&#x4E2A;&#x547D;&#x540D;&#x7A7A;&#x95F4;&#x4E2D;&#xFF0C;&#x8981;&#x6CE8;&#x610F;&#x533A;&#x5206;&#xFF0C;&#x8FD9;&#x91CC;&#x8FD4;&#x56DE;&#x7684;&#x662F;&#x5305;&#x542B; <strong>runtime::ModuleNode</strong> &#x7684; <strong>runtime::Module</strong></p>
+<pre data-role="codeBlock" data-info="c++" class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">RelayBuildModule</span> <span class="token operator">:</span> <span class="token keyword">public</span> runtime<span class="token operator">::</span>ModuleNode <span class="token punctuation">{</span>
+    PackedFunc <span class="token function">GetFunction</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>string<span class="token operator">&amp;</span> name<span class="token punctuation">,</span>
+                            <span class="token keyword">const</span> std<span class="token operator">::</span>shared_ptr<span class="token operator">&lt;</span>ModuleNode<span class="token operator">&gt;</span><span class="token operator">&amp;</span> sptr_to_self<span class="token punctuation">)</span> final <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>name <span class="token operator">==</span> <span class="token string">&quot;build&quot;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token function">PackedFunc</span><span class="token punctuation">(</span><span class="token punctuation">[</span>sptr_to_self<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">]</span><span class="token punctuation">(</span>TVMArgs args<span class="token punctuation">,</span> TVMRetValue<span class="token operator">*</span> rv<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">this</span><span class="token operator">-&gt;</span><span class="token function">Build</span><span class="token punctuation">(</span>args<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> args<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> args<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><h2 class="mume-header" id="codebase-structure-overview">codebase-structure-overview</h2>
+
+<p><a href="./codebase-struct.md">&#x8DF3;&#x8F6C;&#x5230;&#x8F6F;&#x4EF6;&#x76EE;&#x5F55;&#x7ED3;&#x6784;</a></p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>
