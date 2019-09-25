@@ -104,3 +104,7 @@ tvm的算子优化包括operator fusion, pruning, layout transformation, and mem
 ### XLA
 
 XLA
+
+### LSTM
+
+参考[LSTM详解](https://blog.csdn.net/zhangbaoanhadoop/article/details/81952284)
