@@ -1,5 +1,7 @@
 # riscv-torture 总结
 
+[TOC]
+
 ## 简介
 
 老外说话有意思，把测试当做一种严刑拷打。riscv-torture使用scala编写，同时带有Makefile和链接脚本用来编译生成的测试汇编文件。为什么要使用scala呢，原因是有人用scala实现了一个名为Chisel的库，利用Chisel编译出.fir文件，再通过firrtl工具就能转换成verilog，也就是说scala能够直接转换成verilog。再说的直白一点儿就是，IC团队完全可以使用scala来设计芯片。RISCV开源社区就是这么干的！？
