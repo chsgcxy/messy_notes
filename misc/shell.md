@@ -142,6 +142,35 @@ for arg in "$@"; do
 done
 ```
 
+## 自动交互
+
+使用如下的格式完成自动交互，结尾的delimiter要顶格写，前面不能有任何字符，后面也不能有任何字符，包括空格和 tab 缩进;
+开始的delimiter前后的空格会被忽略掉
+
+```shell
+command << delimiter
+    document
+delimiter
+```
+
+实例如下
+
+```shell
+ftp -n -p 172.16.10.103 << EOF
+    user chsgcxy 123456
+    cd xxxx
+    lcd xxxx
+    put xxxx
+    close
+    bye
+EOF
+```
+
+## ftp
+
+ftp 要注意主动模式和被动模式（-p选项）
+如果把FTP服务器部署在防火墙或者NAT服务器的背 后，则采用主动操作模式的客户端只能够建立命令连接而无法进行文件传输。如果部署完FTP服务器后，系统管理员发现用户可以连接上FTP服务器，可以查看 目录下的文件，但是却无法下载或者上传文件，如果排除权限方面的限制外，那么很有可能就是这个操作模式选择错误
+
 ## debug
 
 Shell Debugging Options
