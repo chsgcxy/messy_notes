@@ -1,0 +1,16 @@
+image:
+  name: 'messy notes image'
+  entrypoint: [""]
+
+stages:
+  - build
+
+build:
+  stage : build
+  script:
+    - mkdocs build
+  artifacts:
+    paths:
+      - site/
+    name: site
+
