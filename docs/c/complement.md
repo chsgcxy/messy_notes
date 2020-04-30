@@ -32,11 +32,11 @@ int tmp75_temp_get(struct i2c_client *client)
 
 具体温度与值的对应关系参考下表
 
-![tmp75 reg-value](../../picture/tmp75_data.png)
+![tmp75 reg-value](./../imgs/tmp75_data.png)
 
 16bit寄存器定义参考下表
 
-![tmp75 temp reg](../../picture/tmp75_register.png)
+![tmp75 temp reg](./../imgs/tmp75_register.png)
 
 
 那么我们可以看到内核在处理这个寄存器值到温度值转换的时候， 处理的非常简洁，LM75_TEMP_FROM_REG 没有任何判定，仅仅是通过一个强制转换就完成了由寄存器值到温度的转换， 不得不佩服高手就是高手
