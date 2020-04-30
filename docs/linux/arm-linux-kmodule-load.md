@@ -38,7 +38,7 @@ busybox 中提供了一系列的相关的操作工具
 为了帮助更好的理解模块符号导出，重定向等细节，有必要在这里对ELF文件做一些介绍，
 下面的ELF文件格式是KO文件的映像视图。
 
-![module-elf-layout.img](https://note.youdao.com/yws/public/resource/bf0b14cf626ea126c8cca2506e4b49ff/xmlnote/0F47D94F5DA84DD6B565F2A4FCE9AC26/7629)
+![module-elf-layout.img](./../imgs/elf_header.png)
 
 **使用 readelf 工具可以查看elf文件的详细信息**
 > 读取ko文件的ELF头,我们可以看到magic, 目标cpu架构，类型，还有一些其他信息,因为是KO文件，所以 程序头表长度为0，只有节区头表
@@ -237,7 +237,7 @@ struct module 实例所在的节区
 > 为了更容易讲明白内核模块的加载流程，这里从内存静态视图的角度粗略的来讲述ko在内存中的搬移过程，这样可能会有一个直观的感受，
 
 **arm virtual memory layout**
-![arm memory layout](https://note.youdao.com/yws/public/resource/bf0b14cf626ea126c8cca2506e4b49ff/xmlnote/3AD460BAC6EB4B0492BE5C7D8A68AF29/7825)
+![arm memory layout](./../imgs/arm_mem_layout.png)
 
 首先insmod会通过文件系统将ko读到 user space的一块内存中，然后调用系统调用sys_init_module,这时，内核在vmalloc区分配与ko文件大小相同的内存来暂存ko文件，暂存好之后解析ko文件，将文件中的各个section分配到init 段和core 段，在modules区为init段和core段分配内存，并把对应的section copy到modules区最终的运行地址，经过relocate函数地址等操作后，就可以执行ko的init操作了，这样一个ko的加载流程就结束了，同时，init段会被释放掉，仅留下core段来运行。
 
@@ -245,7 +245,7 @@ struct module 实例所在的节区
 ### 简要加载流程图
 > 通过简要加载流程，可以大致清楚软件都做了哪些工作
 
-![简要加载流程](https://note.youdao.com/yws/public/resource/bf0b14cf626ea126c8cca2506e4b49ff/xmlnote/009365A509564BC189F0D9809E75365D/7898)
+![简要加载流程](./../imgs/ko_load_flow.png)
 
 
 ### 详细加载过程
