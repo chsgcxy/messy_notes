@@ -1,9 +1,20 @@
-# gem5
+# GEM5 设计与实现分析
 
 [TOC]
 
 官网：http://www.gem5.org
 学习指导：http://www.gem5.org/documentation/learning_gem5/introduction
+
+## 分析点
+
+- 单元的设计思路
+- 如何解决寄存器冲突
+- 流水线的实现方式
+- 时钟如何统一
+- 多核设计
+- 总线，端口的抽象
+- debug如何支持
+- 地址映射的处理方法
 
 ## 简介
 

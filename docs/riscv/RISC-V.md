@@ -108,3 +108,27 @@ main:
 > 大多数的函数是在库中，Intrinsic Function却内嵌在编译器中。Intrinsic Function作为内联函数，直接在调用的地方插入代码，即避免了函数调用的额外开销，又能够使用比较高效的机器指令对该函数进行优化。优化器（Optimizer）内置的一些Intrinsic Function行为信息，可以对Intrinsic进行一些不适用于内联汇编的优化，所以通常来说Intrinsic Function要比等效的内联汇编（inline assembly）代码快。优化器能够根据不同的上下文环境对Intrinsic Function进行调整，例如：以不同的指令展开Intrinsic Function，将buffer存放在合适的寄存器等
 
 转载自[SSE指令集学习：Compiler Intrinsic](https://www.cnblogs.com/wangguchangqing/p/5466301.html)
+
+## 区分exception,trap,interrupt
+
+exception, trap, interrupt概念容易混淆，特别是exception和trap。这这里明确的区分一下
+
+> We use the term exception to refer to an unusual condition occurring at run time associated with
+an instruction in the current RISC-V hart. We use the term interrupt to refer to an external
+asynchronous event that may cause a RISC-V hart to experience an unexpected transfer of control.
+We use the term trap to refer to the transfer of control to a trap handler caused by either an
+exception or an interrupt.
+
+但看这个官方文档中的描述，还是很难直观的区分exception和trap。从字面意思上看，exception更像是一个状态，trap更像是一个过程，而trap这个过程可能是由于exception或者interrupt触发。
+
+trap可以分为四类
+
+- Contained Trap
+    比如说在用户模式或者特权模式下，使用ecall指令
+- Requested Trap
+    比如system call, 正常的执行流程可能会因为这个调用而退出，也有可能恢复（这个例子似乎还是太抽象）
+- Invisible Trap
+    比如emulating missing instructions或者handling non-resident page faults（这种应该是软件无感的！？）
+- Fatal Trap
+    failing a virtual-memory page-protection check or allowing a watchdog timer to expire（这种算是致命的吗？）
+
