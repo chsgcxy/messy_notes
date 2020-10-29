@@ -132,3 +132,11 @@ trap可以分为四类
 - Fatal Trap
     failing a virtual-memory page-protection check or allowing a watchdog timer to expire（这种算是致命的吗？）
 
+## 开源cpu
+
+目前riscv有不少的完全开源的cpu设计
+
+- SiFive E31, E51, E54 网上资料不少，官网访问速度较慢，但是有不少论坛会有相关资料
+- ibex, 好评度很高，github上有代码托管，微架构介绍很详细
+- SweRV EH1， 好评度很高，还没具体看，看简介性能应该不错。
+- BOOM， 纯正Berkeley血统，还没看
