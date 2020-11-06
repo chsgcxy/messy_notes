@@ -57,13 +57,6 @@ gem5官网文档中已经包含了如何添加一个具体事件的详细说明�
 doSimLoop(EventQueue *eventq)
 {
     while (1) {
-        if (async_event && testAndClearAsyncEvent()) {
-            if (async_exit) {
-                async_exit = false;
-                exitSimLoop("user interrupt received");
-            }
-        }
-
         Event *exit_event = eventq->serviceOne();
         if (exit_event != NULL) {
             return exit_event;
@@ -97,7 +90,6 @@ class EventQueue
 
 初始化完成，一切就绪就绪之后，就会进入doSimLoop的while循环，然后会一直从一个event队列中挑选一个event来执行
 
-
 ```c++
 Event *
 EventQueue::serviceOne()
@@ -106,12 +98,141 @@ EventQueue::serviceOne()
 
     setCurTick(event->when());
     event->process();
-    event->release();
 
     return NULL;
 }
 ```
 
+## TimeBuffer 机制
+
+### 机制介绍
+
+TimeBuffer是gem5实现的一个循环buffer，这个循环buffer可以按照tick来推进，每advance()一次，buffer的指针就前进一个。
+TimeBuffer通过模板参数可以用来存放任何想要存放的数据，特别适合在流水前后传递数据，能够体现出流水的延时。
+
+TimeBuffer提供了一个past和future的概念。
+
+past/future| past2 | past1 | past0 | current | future0 | future1
+---|---|---|---|---|---|---
+data | 0 | 1 | 2 | 3 | 4 | 5
+index | 0 | 1 | 2 | 3 | 4 | 5
+
+从时间(tick)的角度,基于当前，往前推，有多个tick的延迟，就可以设置past值为多少。比如当前是fetch阶段,下一阶段为decode阶段，指令从fetch流到decode需要一个tick，那么就需要至少设置past为1。同理future。
+
+循环buffer会从future0开始被刷新，随着每次advance(), 从future0开始，data中的数据会被析构并重新构造。与此同时，内部名为base的数据指针也会循环增加。
+
+假设我们实例了一个TimeBuffer, past=3, future=3,那么随着tick的进行，大致会有如下的关系
+
+TimeBuffer 提供了wire来实现对Buffer数据的间接访问。在实现这个访问接口的时候，需要提供一个index，这个index是一个tick的概念。比如我们实例两个wire，wire0的index为0, wire1的index为-2, 那么就意味着wire0改写的buffer单元在两个tick之后，wire1才能访问到。
+
+tick | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+---|---|---|---|---|---|---|---|---|---|---
+base | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 0 | 1 | 2 |
+ptr | | 4 | 5 | 6 | 0 | 1 | 2 | 3 | 4 | 5 | 
+wire0 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 0 | 1 | 2 
+wire1 | 5 | 6 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 0
+
+如上图所示，在tick0时，wire0可以访问data0, wire1可以访问data5。当t系统tick走到1时，调用advance(), 此时TimeBuffer内部指针base变为1,
+TimeBuffer重构了ptr所指向的data4（ptr = future + base)，此时wire0能够访问data1, wire1能够访问data6。
+
+加入在tick2, wire0更新了data2, 那么在tick4, wire1才能拿到更新后的data2, 体现出了延迟2个tick。
+
+### 代码分析
+
+```c++
+template <class T>
+class TimeBuffer
+{
+  protected:
+    int past;
+    int future;
+    unsigned size;
+
+    char *data;
+    std::vector<char *> index;
+    unsigned base;
+
+  public:
+    TimeBuffer(int p, int f)
+        : past(p), future(f), size(past + future + 1),
+          data(new char[size * sizeof(T)]), index(size), base(0)
+    {
+        assert(past >= 0 && future >= 0);
+        char *ptr = data;
+        for (unsigned i = 0; i < size; i++) {
+            index[i] = ptr;
+            std::memset(ptr, 0, sizeof(T));
+            new (ptr) T;
+            ptr += sizeof(T);
+        }
+    }
+```
+
+TimeBuffer通过new char[size * sizeof(T)]一次性的为所有元素开辟存储空间。通过palcement new来实现在已经开辟的空间上对buffer对象的构造。同时，为了访问的方便，提供了一个index的指针向量指向buffer中的每一个元素。
+
+```c++
+    void
+    advance()
+    {
+        if (++base >= size)
+            base = 0;
+
+        int ptr = base + future;
+        if (ptr >= (int)size)
+            ptr -= size;
+        (reinterpret_cast<T *>(index[ptr]))->~T();
+        std::memset(index[ptr], 0, sizeof(T));
+        new (index[ptr]) T;
+    }
+```
+
+每次advance都去更新base， base通过size控制来实现循环，进而实现循环buffer。每次advance都会析构并重构当前base对应的future数据。
+
+```c++
+class wire
+{
+    TimeBuffer<T> *buffer;
+    int index;
+
+    wire(TimeBuffer<T> *buf, int i)
+        : buffer(buf), index(i)
+    { }
+
+    T &operator*() const { return *buffer->access(index); }
+    T *operator->() const { return buffer->access(index); }
+}
+
+class TimeBuffer
+{
+    inline int calculateVectorIndex(int idx) const
+    {
+        int vector_index = idx + base;
+        if (vector_index >= (int)size) {
+            vector_index -= size;
+        } else if (vector_index < 0) {
+            vector_index += size;
+        }
+
+        return vector_index;
+    }
+
+    T *access(int idx)
+    {
+        int vector_index = calculateVectorIndex(idx);
+
+        return reinterpret_cast<T *>(index[vector_index]);
+    }
+}
+```
+
+wire通过不同的index来实现对timebuffer中不同的元素的访问，其中calculateVectorIndex仍然是为了实现循环buffer。当然，wire的字段index的命名容易引发歧义，或许可以用一个更不容易混淆的名字。
+
+### TimerBuffer总结
+
+尽管TimeBuffer的核心是一个固定的数组，数据在buffer中实际上是不动的。但它通过base及一些辅助计数，实现了一个类似队列的功能，而且，数据移出队列就会消失。
+我们可以认为其中的数据是按照tick进行流动的，而且通过wire访问的方式，实现了信号传递及数据流动的延迟。
+
+## misc
 
 gem5能够模拟一块板卡
 
@@ -222,3 +343,94 @@ gem5官网Documentation的作者认为，gem5的python接口的亮点在于能�
 gem5使用Scons来组织编译，Scons类似于make。
 Scons需要使用名为SConstruct的文件来组织编译, Scons还提供了一系列的API，用于在SConstruct中方便的定制构建规则。
 我们可以认为，Scons是make的升级版，它能更简单，更容易的实现make实现的功能，Scons使用Python脚本来组织构建,有良好的跨平台性。
+
+## O3 CPU的ROB模块分析
+
+### ROB作用机制
+
+ 在乱序CPU中，指令在流水线中执行的时候是乱序的。但从程序员的角度，是不允许这种乱序发生的，在程序员看来，指令一定要顺序的执行。因此产生了ROB模块，ROB使得在流水线中乱序执行的指令在程序员看来是顺序的，即将乱序的指令结果“重排序”。
+
+ 显然，ROB模块必须有一个指令顺序的记录功能，在乱序执行之前应该做顺序记录，乱序执行后，应该按照记录的顺序完成指令的最终提交。只有这样，才能保证在程序员看来，指令仍然是顺序执行的。
+
+![rob_pos](../imgs/rob_pos.png)
+
+如上图，在乱序CPU的pipeline中，Rename及以前的流水都可以认为是顺序的，尽管它实际上可以在一个周期处理多条指令，但多条仍然是顺序的。但在Execute阶段就开始乱序了，所以，要在Rename之后，将指令顺序记录在ROB中。WriteBack阶段完成后，我们基本可以认为指令已经执行完成，那么在Commit阶段，就需要按照ROB中记录的指令的顺序来提交指令，这样就既加速了指令的运行，提高了流水线的利用率，又保证指令的顺序是正确的。
+**在gem5的实现中，是在commit的代码中将指令添加到ROB，乍看起来有些费解，但实际上仍然是基于Rename传递的指令队列，对整体效果没有影响**
+
+### ROB代码结构分析
+
+ROB的实现支持多硬线程(代码中应该把硬线程做抽象)。从硬件线程的角度来分析，ROB结构就比较好理解
+
+![rob_struct](../imgs/rob_struct.png)
+
+代码实现的核心是对list\<DynInstPtr>的访问， 猜测robStatus的本意是ROB中当前硬件线程的状态机，但实际上用doneSquashing来表示了。也就是说，实际上ROB只有两个状态，Squashing(因为Squashing操作有宽度限制，可能不能在一个tick完成)和running。通常来讲，当ROB的指令list满了之后，也应该有一个状态，不过，ROB代码的实现将这个状态的判断交给了ROB使用者。Rename模块需要通过maxEntries和threadEntries来判定ROB是否已经满了，不能再填入。这看起来有些奇怪。**实质上，ROB模块在gem5中的实现就是对一个双向链表的封装**
+
+### ROB操作
+
+ROB的代码实质是双向链表，对于ROB的操作，全部在Commit代码中完成，但这并不意味着它硬件对ROB的操作都是在Commit阶段完成的。软件只需要保证最终效果基本一致即可。**这是模拟器实现和真实硬件逻辑的区别**
+
+![rob_in_out](../imgs/rob_inout.png)
+
+#### 指令加入ROB
+
+如上图所示，ROB指令来源为Rename之后的指令，gem5中实现为一个名为RenameQueue的TimeBuffer，并且默认Rename的下一个tick即可拿到Rename后的指令。
+RenameQueue中的指令在Commit->tick()中加入到ROB(通过insertInst()加入到InstList的尾部)，这虽然不符合硬件逻辑，但Rename模块操作RenameQueue是通过wire(0), Commit模块操作RenameQueue是通过Wire(-1)。所以，在Commit中调用insertInst()并不影响流水线效果，这也简化了软件的实现。这是指令加入ROB的唯一方式。
+
+#### 指令移出ROB
+
+在Commit阶段，通过调用retireHead()来将指令移出ROB并完成提交。当然，是否能够移出的判断逻辑是在Commit中做的，具体逻辑可以在Commit章节中看到。这是指令移出ROB的唯一方式。
+
+#### squash的操作
+
+如果发生中断、异常或分支预测失败，那么ROB中的记录当然也需要被刷新。这个过程被成为squash（这似乎是一个业界通用术语）。ROB提供了squash()方法来支持这个功能，值得注意的是**squash()操作只是对指令状态进行标记，将指令标记为Squashed且CanCommit。真正的移出操作仍然是Commit阶段通过判断指令状态调用retireHead()来完成的**。
+
+由于没有基于真实硬件做分析，个人认为，这只是软件的一个讨巧的操作。因为在代码的实现逻辑中，标记指令状态时，由于有squash宽度的限制，可能在一个tick无法完成squash操作，就需要标记ROB为squashing状态，当ROB处于squashing状态时，图中指令9是不会被commit的。
+
+squash()的参数squash_num实际上是指令的一个唯一的seqNum(gem5中通过一个顺序增长的uint64变量为每一条指令分配一个号码，真实硬件也有类似实现吗？)这个seqNum被记录在squashedSeqNum中，这个number标识的指令及其之后加入ROB的指令都会被标记为Squash/CanCommit。
+
+```c++
+template <class Impl>
+void
+ROB<Impl>::squash(InstSeqNum squash_num, ThreadID tid)
+{
+    doneSquashing[tid] = false;
+
+    squashedSeqNum[tid] = squash_num;
+
+    if (!instList[tid].empty()) {
+        InstIt tail_thread = instList[tid].end();
+        tail_thread--;
+
+        squashIt[tid] = tail_thread;
+
+        doSquash(tid);
+    }
+}
+
+
+template <class Impl>
+void
+ROB<Impl>::doSquash(ThreadID tid)
+{
+    for (int numSquashed = 0;
+         numSquashed < squashWidth &&
+         squashIt[tid] != instList[tid].end() &&
+         (*squashIt[tid])->seqNum > squashedSeqNum[tid];
+         ++numSquashed)
+    {
+        (*squashIt[tid])->setSquashed();
+
+        (*squashIt[tid])->setCanCommit();
+
+    }
+}
+```
+
+如上为截取squash()处理，这里squashIt用来控制squash进度。那么这里有一个疑问，当已经有一个squash发生，但在一个tick中squash没有完成，那么下一个tick会调用doSquash继续进行squash操作。此时如果有新的squash()调用，那么可能上一个tick中的squash操作就浪费掉了，doSquash又会重新进行squash标记。可能会导致squash的周期数与实际硬件不一致，但真是硬件的处理逻辑是怎样的呢？
+
+## O3CPU的Commit阶段分析
+
+当已经了解TimeBuffer机制，Rename机制及ROB机制之后，再来理解O3CPU的Commit阶段就相对容易了
+
+Commit阶段主要是完成可以提交的指令，从程序员的角度，这表示指令执行的最终完成。
+

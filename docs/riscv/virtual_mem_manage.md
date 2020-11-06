@@ -61,5 +61,3 @@ CPU首先查看satp寄存器，从中获取PNN，即一级页表物理地址。
 二级页表项的 PPN 字段和虚拟地址中的offset组成了最
 终的该虚拟地址对应的物理地址LeafPTE.PPN × 4096 + offset
 
-
-/home/sw-nightly/ftp/upload/torture/2020-05-25_135749/pattern.ch.tar.gz

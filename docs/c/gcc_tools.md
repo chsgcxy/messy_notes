@@ -13,6 +13,48 @@
 -o <file>                Place the output into <file>.
 ```
 
+编译单个汇编文件
+
+汇编源码test.S
+
+```asm
+.section ".text.init"
+
+.globl _start
+
+_start:
+la x1, data1
+add x2, x1, x3
+sub x1, x3, x4
+mul x5, x1, x3
+
+.section ".data"
+data1: .word 0x00000001
+data2: .word 0x00000002
+```
+
+链接脚本link.ld如下
+
+```lds
+OUTPUT_ARCH( "riscv" )
+ENTRY(_start)
+
+SECTIONS
+{
+  . = 0x00000000;
+  .text.init : { *(.text.init) }
+  .text : { *(.text) }
+  .data : { *(.data) }
+  .bss : { *(.bss) }
+}
+```
+
+编译命令
+
+```shell
+riscv32-unknown-elf-gcc -march=rv32imafv -nostartfiles -T./link.ld test.S -o test
+```
+
 编译优化
 
 ```shell
