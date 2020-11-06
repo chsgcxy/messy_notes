@@ -434,3 +434,23 @@ ROB<Impl>::doSquash(ThreadID tid)
 
 Commit阶段主要是完成可以提交的指令，从程序员的角度，这表示指令执行的最终完成。
 
+### commit阶段数据结构
+
+![commit_struct](../imgs/commit_struct.png)
+
+commit内部仍然支持多硬件线程。每个硬件线程都有自己的一些运行状态与计数，commit根据硬件线程调度策略来执行相应的硬件线程，当然，很多时候，硬件线程是并行运行的。
+
+对于单个硬件线程来讲，它包含了trapSquash，tcSquash这样的squash标记，当收到这样的信号之后，会驱动ROB及自身进行squashing操作。
+
+commitStatus标识了该线程在commit阶段的状态，同时通过pc来保存及传递系统pc状态。同时自身还拥有status及nextstatus状态，用来标识自身运行状态。
+
+youngestSeqNum计数和lastCommitedSeqNum计数用来辅助控制ROB的squash操作及提交操作。
+
+同时，还有大量的统计信息用来查看及debug。
+
+commit需要iew阶段的一些状态，通过保留的iewStage指针实现。多个TimeBuffer的wire接口，用来实现与其他模块的数据交互。
+
+ROB模块在commit的控制下运行。
+
+### commit阶段流程
+
