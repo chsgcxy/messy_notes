@@ -454,3 +454,10 @@ ROB模块在commit的控制下运行。
 
 ### commit阶段流程
 
+为了更方便排版，将commit的流程分为了两大部分，一部分包含对squash状态的处理，另一部分包含指令添加到ROB以及指令的提交
+
+![commit_flow1](../imgs/commit_flow1.png)
+接上
+![commit_flow2](../imgs/commit_flow2.png)
+
+流程图涉及了commit阶段的绝大部分内容，但对于一些微小细节，比如对于store指令的特殊处理，硬件线程的调度策略等，没有涉及。
