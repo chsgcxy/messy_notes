@@ -31,9 +31,6 @@ markdown_extensions:
         custom_checkbox: true
     - pymdownx.tilde
     - plantuml_markdown:
-      server: http://www.plantuml.com/plantuml
+        server: http://www.plantuml.com/plantuml
     - markdown.extensions.toc:
-      permalink: true
-
-
-  
+        permalink: true
