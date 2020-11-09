@@ -28,9 +28,4 @@ markdown_extensions:
     - pymdownx.smartsymbols
     - pymdownx.superfences
     - pymdownx.tasklist
-        custom_checkbox: true
     - pymdownx.tilde
-    - plantuml_markdown:
-        server: http://www.plantuml.com/plantuml
-    - markdown.extensions.toc:
-        permalink: true
