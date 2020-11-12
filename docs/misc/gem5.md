@@ -460,4 +460,66 @@ ROB模块在commit的控制下运行。
 接上
 ![commit_flow2](../imgs/commit_flow2.png)
 
-流程图涉及了commit阶段的绝大部分内容，但对于一些微小细节，比如对于store指令的特殊处理，硬件线程的调度策略等，没有涉及。
+上面的流程图涉及了commit阶段的绝大部分内容，但对于一些微小细节，比如对于store指令的特殊处理，硬件线程的调度策略等，没有涉及。
+store指令的提交实际上在LSQ中实现，这会在IEW及LSQ的章节中详细描述。
+
+另外，关于trap的处理，是比较值得关注的细节。为了保持主体流程图能够清晰易懂，这部分细节没有添加到流程图中，这部分更合适在了解
+主体流程之后单独理解。下面的几个引用的代码都做了或多或少的特殊处理，包含一些对理解流程更方便的展开、拼凑和删除处理。但完全可以在源代码中找到下面的对应。
+
+```c++
+DefaultCommit<Impl>::commit()
+{
+    if (cpu->checkInterrupts(cpu->tcBase(0))) {
+        if (commitStatus[0] == TrapPending || interrupt || trapSquash[0] ||
+                tcSquash[0] || drainImminent)
+            return;
+
+        interrupt = cpu->getInterrupts();
+
+        if (interrupt != NoFault)
+            toIEW->commitInfo[0].interruptPending = true;
+        }
+    }
+}
+```
+
+或许将判断中断状态放在commit函数中让人费解，但不必较真。interrupt 保存了更新的中断状态。中断状态的类型是Fault，这也能解释的通，或许他们认为中断可以理解成正常流程中的错误。如果有中断，那么就会通过TimeStruct传递出去。
+
+```c++
+DefaultCommit<Impl>::getInsts()
+{
+    if (!inst->isSquashed() &&
+        commitStatus[tid] != ROBSquashing &&
+        commitStatus[tid] != TrapPending) {
+            rob->insertInst(inst);
+    }
+}
+```
+
+一但产生TrapPending状态，便不会再向ROB中添加指令，这是挂起的含义之一。那么必然存在一个由interrupt到TrapPending转换,看下面的代码，
+在提交指令的处理中，首先对interrupt进行了处理，转换成了TrapPending，并且发送了一个包含 trapSquash[tid] = true的schedule, 延迟为trapLatency，这也就意味着在延迟trapLatency个cycle后，trapSquash被置位，此时再结合前面流程图中讲述的squash处理流程，就能完全理解对于trap是如何进行处理的。当然，提交指令的操作也会被挂起，这也是挂起的含义之一。当然，这部分代码是在可提交线程的查找中处理的。
+
+```c++
+DefaultCommit<Impl>::commitInsts()
+{
+    // 发送trap
+    if (interrupt != NoFault) {
+        commitStatus[0] = TrapPending;
+            EventFunctionWrapper *trap = new EventFunctionWrapper(
+        [this, tid]{ trapSquash[tid] = true; },
+        "Trap", true, Event::CPU_Tick_Pri);
+
+        cpu->schedule(trap, cpu->clockEdge(trapLatency));
+    }
+
+    // 挂起也不会再提交指令
+    if (!rob->isEmpty(tid) &&
+        (commitStatus[tid] == Running ||
+            commitStatus[tid] == Idle ||
+            commitStatus[tid] == FetchTrapPending)) {
+        bool commit_success = commitHead(head_inst, num_committed);
+    }
+}
+```
+
+tcSquash也是类似的处理，这里不再赘述。
