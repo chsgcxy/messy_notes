@@ -159,8 +159,6 @@ store to the PTE may be perceived to have occurred in-between.
 
 接下来就看一下，CPU是如何具体执行指令的，这是业务逻辑核心。
 
-
-
 #### 内存访问
 
 #### 指令管理
