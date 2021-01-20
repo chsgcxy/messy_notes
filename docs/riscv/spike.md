@@ -67,6 +67,94 @@ spike运行的主体是host与target这两个用户线程。target线程包含�
 
 总结一下，如果是前期开发，我觉得不必考虑这种细节，直接一个大循环搞定好了；后期做优，这是一种很值得参考的方式。
 
+#### MMU
+
+如果我去实现一个功能模型，我不会第一时间考虑到实现MMU功能的重要性。尽管第一时间能考虑到必须有代码去处理虚拟地址到物理地址(host地址)的转换，但想象中这个转换可以实现的很简单。看了spike对于MMU的实现之后，才认识到实际上没这么简单。
+
+MMU包含了一系列的状态、权限的判断，与当前模式，status寄存器等有着密切的关系。当权限不够时，应该要抛出异常，有了这些spike才能算完整。
+
+为什么考虑简单了呢？是出发点的差异。当我在想着实现一个功能模型的时候，心里想的只是实现指令执行的模拟，一切的设计都围绕着指令执行去展开。现在看来，应该把实现一个能模拟程序员视角的每一个芯片行为的功能模型作为出发点。
+
+为了摸清MMU的行为，先罗列几个用到的架构知识：
+
+##### mstatus.MPRV & MXR & MPP
+
+> The MPRV (Modify PRiVilege) bit modifies the privilege level at which loads and stores exe￾cute. When MPRV=0, loads and stores behave as normal, using the translation and protection
+mechanisms of the current privilege mode. When MPRV=1, load and store memory addresses are
+translated and protected, and endianness is applied, as though the current privilege mode were set
+to MPP. Instruction address-translation and protection are unaffected by the setting of MPRV.
+MPRV is hardwired to 0 if U-mode is not supported.
+An MRET or SRET instruction that changes the privilege mode to a mode less privileged than M
+also sets MPRV=0.
+The MXR (Make eXecutable Readable) bit modifies the privilege with which loads access virtual
+memory. When MXR=0, only loads from pages marked readable (R=1 in Figure 4.17) will succeed.
+When MXR=1, loads from pages marked either readable or executable (R=1 or X=1) will succeed.
+MXR has no effect when page-based virtual memory is not in effect. MXR is hardwired to 0 if
+S-mode is not supported.
+The MPRV and MXR mechanisms were conceived to improve the efficiency of M-mode routines
+that emulate missing hardware features, e.g., misaligned loads and stores. MPRV obviates the
+need to perform address translation in software. MXR allows instruction words to be loaded
+from pages marked execute-only.
+The current privilege mode and the privilege mode specified by MPP might have different
+XLEN settings. When MPRV=1, load and store memory addresses are treated as though the
+current XLEN were set to MPP’s XLEN, following the rules in Section 3.1.6.2.
+The xPP fields can only hold
+privilege modes up to x, so MPP is two bits wide and SPP is one bit wide.
+xPP fields are WARL fields that can hold only privilege mode x and any implemented privilege
+mode lower than x. If privilege mode x is not implemented, then xPP must be hardwired to 0.
+M-mode software can determine whether a privilege mode is implemented by writing that mode
+to MPP then reading it back.
+If the machine provides only U and M modes, then only a single hardware storage bit is
+required to represent either 00 or 11 in MPP.
+
+更多资料可以查看riscv文档
+
+##### tvm bits
+
+> The TVM (Trap Virtual Memory) bit supports intercepting supervisor virtual-memory management operations. When TVM=1, attempts to read or write the satp CSR or execute the
+SFENCE.VMA instruction while executing in S-mode will raise an illegal instruction exception.
+When TVM=0, these operations are permitted in S-mode. TVM is hard-wired to 0 when S-mode
+is not supported.
+The TVM mechanism improves virtualization efficiency by permitting guest operating systems to
+execute in S-mode, rather than classically virtualizing them in U-mode. This approach obviates
+the need to trap accesses to most S-mode CSRs.
+Trapping satp accesses and the SFENCE.VMA instruction provides the hooks necessary to
+lazily populate shadow page tables.
+
+spike在MMU的实现过程中还借鉴了TLB的概念，实现了基于哈希表的简单的TLB，以此来加速地址转换，提高模拟效率。
+
+##### 32bit虚拟地址转换过程
+
+A virtual address va is translated into a physical address pa as follows:
+1. Let a be satp.ppn × PAGESIZE, and let i = LEVELS S 1. (For Sv32, PAGESIZE=212 and
+LEVELS=2.)
+2. Let pte be the value of the PTE at address a+va.vpn[i]×PTESIZE. (For Sv32, PTESIZE=4.)
+If accessing pte violates a PMA or PMP check, raise an access-fault exception corresponding
+to the original access type.
+3. If pte.v = 0, or if pte.r = 0 and pte.w = 1, stop and raise a page-fault exception corresponding
+to the original access type.
+76 Volume II: RISC-V Privileged Architectures V1.12-draft
+4. Otherwise, the PTE is valid. If pte.r = 1 or pte.x = 1, go to step 5. Otherwise, this PTE is a
+pointer to the next level of the page table. Let i = i ⟩ 1. If i < 0, stop and raise a page-fault
+exception corresponding to the original access type. Otherwise, let a = pte.ppn × PAGESIZE
+and go to step 2.
+5. A leaf PTE has been found. Determine if the requested memory access is allowed by the
+pte.r, pte.w, pte.x, and pte.u bits, given the current privilege mode and the value of the
+SUM and MXR fields of the mstatus register. If not, stop and raise a page-fault exception
+corresponding to the original access type.
+6. If i > 0 and pte.ppn[i ⟩ 1 : 0] = 0, this is a misaligned superpage; stop and raise a page-fault
+exception corresponding to the original access type.
+7. If pte.a = 0, or if the memory access is a store and pte.d = 0, either raise a page-fault
+exception corresponding to the original access type, or:
+• Set pte.a to 1 and, if the memory access is a store, also set pte.d to 1.
+• If this access violates a PMA or PMP check, raise an access-fault exception corresponding
+to the original access type.
+• This update and the loading of pte in step 2 must be atomic; in particular, no intervening
+store to the PTE may be perceived to have occurred in-between.
+8. The translation is successful. The translated physical address is given as follows:
+• pa.pgoff = va.pgoff. • If i > 0, then this is a superpage translation and pa.ppn[i ⟩ 1 : 0] = va.vpn[i ⟩ 1 : 0].
+• pa.ppn[LEVELS S 1 : i] = pte.ppn[LEVELS S 1 : i]
+
 #### CPU运行流程
 
 接下来就看一下，CPU是如何具体执行指令的，这是业务逻辑核心。
