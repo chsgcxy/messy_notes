@@ -46,12 +46,98 @@ gem5的核心内容（各个模块和机制的具体实现）使用c++编写，�
 
 ## 理解gem5事件机制
 
-gem5官网文档中已经包含了如何添加一个具体事件的详细说明。对此不再赘述，我们从设计者的角度来理解一下。
+gem5的运行是靠事件机制来完成的，事件按照tick和优先级进行排序，同一tick和优先级的事件被称为“InBin”, 按照栈的方式来管理
+事件管理的核心代码在src/sim/eventq.cc及eventq.hh中
 
-所谓的事件机制，实际上就是我们能够在事件应该被执行的时候执行该事件，并且能够动态的添加一些事件。
-而且事件应该还有一个优先级的逻辑。
+Event及EventQueue是核心的数据结构，显然，Event实现了对事件的抽象，EventQueue实现了对事件的封装和管理
 
-分析代码，首先需要一部分代码来处理事件
+```c++
+class Event : public EventBase, public Serializable
+{
+    friend class EventQueue;
+
+  private:
+    Event *nextBin;
+    Event *nextInBin;
+
+    Tick _when;         //!< timestamp when event should be processed
+    Priority _priority; //!< event priority
+}
+
+class EventQueue
+{
+  private:
+    Event *head;
+    Tick _curTick;
+}
+```
+
+上述代码罗列了Event的几个重要字段，其中nextBin指向下一个Event，并且下一个Event一定与当前Event的in bin不同(不同when或者不同priority)。
+nextInBin是指向下一个同when同priority的Event, nextInBin这个链表被作为栈的逻辑来管理。
+上述两点都是由Event的插入策略（insertBefore）决定的。
+EventQueue保存了Event链表的表头，这是遍历的起点，_curTick保存了当前的周期时间，这个时间总是被设置为head的_when,这是在执行的时候决定的。
+
+显然，EventQueue保存了一个事件队列，这个队列是一个单向链表，使用nextBin指针指向下一个Event,以_when+_priority的方式进行插入。
+同时，这个单向链表中的每一个Event都是当前相同_when + _priority的Event的栈顶，每插入一个相同_when + _priority的Event，当前这个Event就会被压栈，使用nextInBin进行管理，新的Event替代原有Event的位置，这是插入方法insertBefore决定的。
+
+```c++
+Event *
+Event::insertBefore(Event *event, Event *curr)
+{
+    // Either way, event will be the top element in the 'in bin' list
+    // which is the pointer we need in order to look into the list, so
+    // we need to insert that into the bin list.
+    if (!curr || *event < *curr) {
+        // Insert the event before the current list since it is in the future.
+        event->nextBin = curr;
+        event->nextInBin = NULL;
+    } else {
+        // Since we're on the correct list, we need to point to the next list
+        event->nextBin = curr->nextBin;  // curr->nextBin can now become stale
+
+        // Insert event at the top of the stack
+        event->nextInBin = curr;
+    }
+
+    return event;
+}
+```
+
+insertBefore负责插入待执行的事件，一般由schedule触发。
+
+serviceOne负责执行当前EventQueue中的一个事件，为了更方便理解，下面的代码做了一些删减。
+我们可以看到，每次都是执行头节点，而且如果当前头节点有相同_when + _priority的事件，那么按照
+出栈的顺序依次执行事件，直到当前相同_when + _priority执行完成后，再通过setCurTick(event->when())来
+修改当前系统的时间，最终event->process()执行Event回调函数。
+
+```c++
+Event *
+EventQueue::serviceOne()
+{
+    Event *event = head;
+    Event *next = head->nextInBin;
+
+    if (next) {
+        // update the next bin pointer since it could be stale
+        next->nextBin = head->nextBin;
+
+        // pop the stack
+        head = next;
+    } else {
+        // this was the only element on the 'in bin' list, so get rid of
+        // the 'in bin' list and point to the next bin list
+        head = head->nextBin;
+    }
+
+     setCurTick(event->when());
+    event->process();
+    event->release();
+
+    return NULL;
+}
+```
+
+从总入口上看来，整个事件机制的运行就是在一个大while循环中，不断调用eventQueue的serviceOne
 
 ```c++
 doSimLoop(EventQueue *eventq)
@@ -62,44 +148,6 @@ doSimLoop(EventQueue *eventq)
             return exit_event;
         }
     }
-}
-```
-
-```c++
-class EventQueue
-{
-  private:
-    std::string objName;
-    Event *head;
-    Tick _curTick;
-
-    void insert(Event *event);
-    void remove(Event *event);
-    void schedule(Event *event, Tick when, bool global = false);
-    void deschedule(Event *event);
-    void reschedule(Event *event, Tick when, bool always = false);
-
-    Tick nextTick() const { return head->when(); }
-    void setCurTick(Tick newVal) { _curTick = newVal; }
-    Tick getCurTick() const { return _curTick; }
-    Event *getHead() const { return head; }
-
-    Event *serviceOne();
-}
-```
-
-初始化完成，一切就绪就绪之后，就会进入doSimLoop的while循环，然后会一直从一个event队列中挑选一个event来执行
-
-```c++
-Event *
-EventQueue::serviceOne()
-{
-    Event *event = head;
-
-    setCurTick(event->when());
-    event->process();
-
-    return NULL;
 }
 ```
 
