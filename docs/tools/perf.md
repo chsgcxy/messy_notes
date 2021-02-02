@@ -29,11 +29,11 @@ perf record --call-graph dwarf,16384 -e cpu-clock -F 997 target/release/name-of-
 
 #### 权限问题
 
-因为我编译的时候使用了sudo权限，也没有把perf权限开放给普通用户，所以这里执行的时候也要sudo
+因为我编译的时候使用了sudo权限，也没有把perf权限开放给普通用户，所以这里执行的时候也要sudo。直接通过apt-get安装的perf不需要加sudo
 
 #### 路径问题
 
-target/release/name-of-binary 需要写绝对路径，相对路径会导致问题，或者需要把程序export到PATH中，当然这个方法我没试过
+target/release/name-of-binary 需要写绝对路径或者加./来解决
 
 #### perf_event_paranoid问题
 
