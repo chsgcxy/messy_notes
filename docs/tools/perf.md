@@ -29,11 +29,11 @@ perf record --call-graph dwarf,16384 -e cpu-clock -F 997 target/release/name-of-
 
 #### 权限问题
 
-因为我编译的时候使用了sudo权限，也没有把perf权限开放给普通用户，所以这里执行的时候也要sudo
+因为我编译的时候使用了sudo权限，也没有把perf权限开放给普通用户，所以这里执行的时候也要sudo。直接通过apt-get安装的perf不需要加sudo
 
 #### 路径问题
 
-target/release/name-of-binary 需要写绝对路径，相对路径会导致问题，或者需要把程序export到PATH中，当然这个方法我没试过
+target/release/name-of-binary 需要写绝对路径或者加./来解决
 
 #### perf_event_paranoid问题
 
@@ -87,6 +87,21 @@ sudo perf script | stackcollapse-perf.pl | stackcollapse-recursive.pl | c++filt 
 ```
 
 这样就可以根据火焰图来分析程序哪里比较耗时了
+
+## 遇到的其他问题
+
+### 内核符号unknow
+
+实际上我们在分析CPU占用型软件性能时，一般也不需要内核符号，但如果想要看到，那么需要修改kptr_restrict
+
+### app的函数行为无法记录
+
+现象为最终生成的火焰图只有程序名，没有程序中的函数名。通过熟悉perf record的命令参数，发现-b能够解决此问题
+
+### 符号被修改
+
+现象为最终生成的火焰图符号被修改，通过readelf查看生成的可执行文件，发现符号本身就是被修改的，被困扰了半天之后才明白，这是c++的name mangling机制，用来解决重载问题。
+实际上如果对C++理解比较多的人应该都知道这个，我半路出家还真是头一次知道。于是发现c++filt可以有效demangling这些符号，在perf script中加入c++filt即可。
 
 ## 总结
 
