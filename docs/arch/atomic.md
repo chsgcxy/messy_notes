@@ -22,9 +22,156 @@ A扩展提供了两种形式的原子操作指令，一种load-reserved/store-co
 
 ### load-reserved/store-conditional
 
-提供了LR.W/D 和 SC.W/D两组指令
+提供了LR.W/D 和 SC.W/D两组指令,LR指令从存储器读一个数值,同时处理器会监视这个存储器地址,看它是否会被其他处理器修改;
+SC指令发现在此期间没有其他处理器修改这个值,则将新值写入该地址。因此一个原子的LR/SC指令对,就是LR读取值,进行一些计算,
+然后试图保存新值。如果保存失败,那么需要重新开始整个序列。这样就保证了每一个处理器都能准确的执行完读改写流程
 
->如果aq位和rl位都被置为1,则原子性存储器操作是顺序一致性 的(sequentially consistent),在同样的RISC-V线程中,在任何前面的存储器操
-作完成之前,或者在任何后续的存储器操作完成之后,它们都是不可见的(cannot be observed to happen before any earlier memory operations or after any later memory operations in the same RISC-V thread),只能被任何其他按照同样全局顺序的线程看到,它们也全部使用了顺
-序一致性原子性存储器操作,对同一个地址域(can only be observed by any other thread in the same global order of all sequentially consistent atomic memory operations to the same address domain.)
+```asm
+# a0 holds address of memory location
+# a1 holds expected value
+# a2 holds desired value
+# a0 holds return value, 0 if successful, !0 otherwise
+cas:
+    lr.w t0, (a0) # Load original value.
+    bne t0, a1, fail # Doesn’t match, so fail.
+    sc.w t0, a2, (a0) # Try to update.
+    bnez t0, cas # Retry if store-conditional failed.
+    li a0, 0 # Set return to success.
+    jr ra # Return.
+fail:
+    li a0, 1 # Set return to failure.
+    jr ra # Return.
+```
 
+通过sc.w的返回值可以判定是否完成了原子操作，如果失败了，要从lr.w开始重新进行
+
+### Atomic Memory Operations
+
+- AMOSWAP.W/D
+- AMOADD.W/D
+- AMOAND.W/D
+- AMOOR.W/D
+- AMOXOR.W/D
+- AMOMAX[U].W/D
+- AMOMIN[U].W/D
+
+目前支持上述原子内存操作指令，来看一下spec中给出的用法，其中a0为锁所在地址
+
+```asm
+li t0, 1 # Initialize swap value.
+again:
+lw t1, (a0) # Check if lock is held.
+bnez t1, again # Retry if held.
+amoswap.w.aq t1, t0, (a0) # Attempt to acquire lock.
+bnez t1, again # Retry if held.
+# ...
+# Critical section.
+# ...
+amoswap.w.rl x0, x0, (a0) # Release lock by storing 0.
+```
+
+#### 实现分析
+
+举例amoadd.w来分析设计与实现
+
+spike实现
+
+```c++
+#define amo_func(type) \
+    template<typename op> \
+    type##_t amo_##type(reg_t addr, op f) { \
+      try { \
+        auto lhs = load_##type(addr, true); \
+        store_##type(addr, f(lhs)); \
+        return lhs; \
+      } catch (trap_load_address_misaligned& t) { \
+        /* AMO faults should be reported as store faults */ \
+        throw trap_store_address_misaligned(t.get_tval(), t.get_tval2(), t.get_tinst()); \
+      } catch (trap_load_page_fault& t) { \
+        /* AMO faults should be reported as store faults */ \
+        throw trap_store_page_fault(t.get_tval(), t.get_tval2(), t.get_tinst()); \
+      } catch (trap_load_access_fault& t) { \
+        /* AMO faults should be reported as store faults */ \
+        throw trap_store_access_fault(t.get_tval(), t.get_tval2(), t.get_tinst()); \
+      } \
+    }
+
+amo_func(uint32)
+
+// amoadd.w实现
+require_extension('A');
+WRITE_RD(sext32(MMU.amo_uint32(RS1, [&](uint32_t lhs) { return lhs + RS2; })));
+```
+
+我们可以看到，在spike中，直接将load和store组合起来实现了原子操作，这里spec的设计有些难以理解，
+amoadd.w返回的rd是加法运算之前的内存中的值，而不是加法之后的结果，或许后续我能理解这样设计的目的吧，
+现在总感觉是写错了。
+
+riscv-test中的测试case实现
+
+```asm
+    li a0, 0xffffffff80000000;
+    li a1, 0xfffffffffffff800;
+    la a3, amo_operand;
+    sd a0, 0(a3);
+    amoadd.d a4, a1, 0(a3);
+    li  x29, MASK_XLEN(0xffffffff80000000);
+    bne a4, x29, fail;
+
+    ld a5, 0(a3);
+    li  x29, MASK_XLEN(0xffffffff7ffff800);
+    bne a5, x29, fail;
+
+    # try again after a cache miss
+    amoadd.d a4, a1, 0(a3);
+    li  x29, MASK_XLEN(0xffffffff7ffff800);
+    bne a4, x29, fail;
+
+    ld a5, 0(a3);
+    li  x29, MASK_XLEN(0xffffffff7ffff000);
+    bne a5, x29, fail;
+
+  .bss
+  .align 3
+amo_operand:
+  .dword 0
+```
+
+也是认为返回值为累加之前的内存值
+
+## linux内核对于RISCV原子操作的支持
+
+在最新的linux5.11版本中，很容易在arch/riscv/include/asm/atomic.h中找到内存原子操作
+
+```c
+/*
+ * First, the atomic ops that have no ordering constraints and therefor don't
+ * have the AQ or RL bits set.  These don't return anything, so there's only
+ * one version to worry about.
+ */
+#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)		\
+static __always_inline							\
+void atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)		\
+{									\
+	__asm__ __volatile__ (						\
+		"	amo" #asm_op "." #asm_type " zero, %1, %0"	\
+		: "+A" (v->counter)					\
+		: "r" (I)						\
+		: "memory");						\
+}									\
+
+#ifdef CONFIG_GENERIC_ATOMIC64
+#define ATOMIC_OPS(op, asm_op, I)					\
+        ATOMIC_OP (op, asm_op, I, w, int,   )
+#else
+#define ATOMIC_OPS(op, asm_op, I)					\
+        ATOMIC_OP (op, asm_op, I, w, int,   )				\
+        ATOMIC_OP (op, asm_op, I, d, s64, 64)
+#endif
+
+ATOMIC_OPS(add, add,  i)
+ATOMIC_OPS(sub, add, -i)
+ATOMIC_OPS(and, and,  i)
+ATOMIC_OPS( or,  or,  i)
+ATOMIC_OPS(xor, xor,  i)
+```
