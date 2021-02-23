@@ -12,13 +12,18 @@
 
 ### open-pnp
 
-https://openpnp.org/
+[https://openpnp.org/](https://openpnp.org/)
 
 软件方面，openpnp使用java实现了一个跨平台的上位机软件，配置丰富。
-
-硬件方面，
+硬件方面，它列出了一些它支持的机器，以及零部件。当然其中OpenBuilds能生成它的开源硬件。但看起来，openpnp仍然侧重于软件。
 
 ### The Smoothie Project
+
+[http://smoothieware.org/](http://smoothieware.org/)
+
+Smoothie 是免费开源高性能的下位机控制系统，与上位机通过G-code进行通信。现在已经处于V2版本。
+
+这就是所谓的冰沙主板，TB有卖，B站上也有用此做成简单的贴片机的案例。
 
 ### PP4
 
