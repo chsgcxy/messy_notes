@@ -20,7 +20,7 @@
 
 A扩展提供了两种形式的原子操作指令，一种load-reserved/store-conditional， 另一种fetch-and-op memory instructions
 
-### load-reserved/store-conditional
+### load-reserved/store-conditional(加载保留/条件存储)
 
 提供了LR.W/D 和 SC.W/D两组指令,LR指令从存储器读一个数值,同时处理器会监视这个存储器地址,看它是否会被其他处理器修改;
 SC指令发现在此期间没有其他处理器修改这个值,则将新值写入该地址。因此一个原子的LR/SC指令对,就是LR读取值,进行一些计算,
@@ -43,9 +43,60 @@ fail:
     jr ra # Return.
 ```
 
-通过sc.w的返回值可以判定是否完成了原子操作，如果失败了，要从lr.w开始重新进行
+通过sc.w的返回值可以判定是否完成了原子操作，如果失败了，要从lr.w开始重新进行，在LR指令和SC指令之间执行的动态代码,只能
+来自于基本“I”的子集,不能包括load指令、store指令、向后跳转指令或者向后的分支指令、FENCE指令、SYSTEM指令，且必须由不超
+过16条整数指令的代码顺序存放在存储器中构成
 
-### Atomic Memory Operations
+通过spike的代码能够进一步理解spec中所谓的
+
+> An SC instruction can never be observed by another RISC-V hart before the LR instruction that established the reservation.
+
+```c++
+
+// lr.w
+require_extension('A');
+auto res = MMU.load_int32(RS1, true);
+MMU.acquire_load_reservation(RS1);
+WRITE_RD(res);
+
+// sc.w
+require_extension('A');
+
+bool have_reservation = MMU.check_load_reservation(RS1, 4);
+
+if (have_reservation)
+  MMU.store_uint32(RS1, RS2);
+
+MMU.yield_load_reservation();
+
+WRITE_RD(!have_reservation);
+```
+
+可以看出，lr.w会将当前要存储的地址记录在reservation中，在执行sc.w时，会检查之前的lr指令标记的reservation地址是否是sc指令要存储地址，如果是，那么执行存储操作，如果不是，那么跳过存储操作，复位该reservation地址，并返回失败。当然，spike只是一个功能模拟器，
+它在同一时间其实只有一个CPU在执行指令，所以它在step函数中在切换CPU时处理reservation标记即可。
+
+```c++
+void sim_t::step(size_t n)
+{
+  for (size_t i = 0, steps = 0; i < n; i += steps)
+  {
+    steps = std::min(n - i, INTERLEAVE - current_step);
+    procs[current_proc]->step(steps);
+
+    current_step += steps;
+    if (current_step == INTERLEAVE)
+    {
+      current_step = 0;
+      procs[current_proc]->get_mmu()->yield_load_reservation();
+      }
+    }
+  }
+}
+```
+
+但其实已经能够看出，LR/SC不会锁住总线，能够更高效的处理并发访问。
+
+### Atomic Memory Operations(AMO)
 
 - AMOSWAP.W/D
 - AMOADD.W/D
