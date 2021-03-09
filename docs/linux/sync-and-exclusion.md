@@ -25,6 +25,72 @@
 
 ![spinlock文件关系](../imgs/spinlock_files.png)
 
+以spin_lock_irqsave举例来分析内核的设计思路，与此同时，更加印证了所有计算机系统问题都可以通过增加一层来解决，如果不行，
+再加一层。
+
+spinlock.h中的定义如下
+
+```c
+#define spin_lock_irqsave(lock, flags)              \
+do { \
+    raw_spin_lock_irqsave(spinlock_check(lock), flags); \
+} while (0)
+```
+
+可以看出spin_lock_xxxx 是用户接口，我们在编程时可以直接使用，raw_spin_lock_xxxx是核心实现，多个用户接口可能都可以用该核心实现层来实现，这一层的作用是在去掉了代码冗余的同时提供了丰富的用户接口。
+
+```c
+#if defined(CONFIG_SMP) || defined(CONFIG_DEBUG_SPINLOCK)
+
+#define raw_spin_lock_irqsave(lock, flags)  \
+    do {    \
+        typecheck(unsigned long, flags);    \
+        flags = _raw_spin_lock_irqsave(lock);   \
+    } while (0)
+
+#else
+
+#define raw_spin_lock_irqsave(lock, flags)  \
+    do {            \
+        typecheck(unsigned long, flags);    \
+        _raw_spin_lock_irqsave(lock, flags);    \
+    } while (0)
+
+#endif
+```
+
+raw_spin_lock_xxxx 也屏蔽了SMP和UP以及DEBUG的差异，_raw_spin_lock_xxxx 是下一层的核心实现。
+
+```c
+#ifdef CONFIG_INLINE_SPIN_LOCK_IRQSAVE
+#define _raw_spin_lock_irqsave(lock) __raw_spin_lock_irqsave(lock)
+#endif
+
+#ifndef CONFIG_INLINE_SPIN_LOCK_IRQSAVE
+unsigned long __lockfunc _raw_spin_lock_irqsave(raw_spinlock_t *lock)
+{
+    return __raw_spin_lock_irqsave(lock);
+}
+EXPORT_SYMBOL(_raw_spin_lock_irqsave);
+#endif
+```
+
+_raw_spin_lock_xxxx屏蔽了inline的选择差异，真正的实现在__raw_spin_lock_xxxx里面，内核经常会有一道杠和两道杠的设计
+
+```c
+static inline void
+do_raw_spin_lock_flags(raw_spinlock_t *lock, unsigned long *flags) __acquires(lock)
+{
+    __acquire(lock);
+    arch_spin_lock_flags(&lock->raw_lock, *flags);
+    mmiowb_spin_lock();
+}
+```
+
+__raw_spin_lock_irqsave 会通过一系列封装到arch_spin_lock_xxxx, 这里arch开头的就要去各个arch目录中找对应架构的实现了。
+
+看完封装实现，再看看架构实现。
+
 arm的spinlock宝华老师以及众多网友已经分析的很透彻了，这里插入相关文档，以供自己后续回顾
 
 https://blog.csdn.net/zhoutaopower/article/details/86598839
@@ -88,7 +154,7 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
 
 以writelock来分析封装关系
 
-```text
+```c
 // include/linux/rwlock.h
 #define write_lock(lock)    _raw_write_lock(lock)
 
@@ -160,12 +226,65 @@ static inline int arch_read_trylock(arch_rwlock_t *lock)
 
 ## 信号量
 
+前面两种都可以在中断上下文中使用，适合轻量级的临界区。但这种的弊端在于无法在等锁的时候释放CPU，调度到其他任务中执行。
+信号量可以实现CPU的释放，它是一种会导致当前进程睡眠的锁，它适合用在临界区比较大的进程上下文中。
+
+在 [Linux 内核同步（五）：信号量（semaphore）](https://blog.csdn.net/zhoutaopower/article/details/86614945)一文中，已经详细描述了信号量的使用场景。的确，我们在编写代码的时候，有时候没得选，中断上下文就只能用自旋锁，不能选信号量；要和用户空间做同步的时候，只能选信号量； 有时候选信号量还是选自旋锁，取决与临近区大小，也就是预估调度的开销更大还是不调度更浪费CPU。
+信号量允许多个锁持有者，同时允许的持有者数量可以在声明信号的时候指定。绝大多数情况下，信号量允许一个锁的持有者，这种类型的信号量称之为二值信号量，也就是互斥信号量。
+
+```c
+struct semaphore {
+    raw_spinlock_t      lock;
+    unsigned int        count;
+    struct list_head    wait_list;
+};
+```
+
+从定义中就可以看出，信号量的基础仍然是自旋锁。对于信号量本身的访问，仍然需要自旋锁来保护。其中count就是所谓的允许持有者数量，当然绝大多少情况下它只允许有一个锁持有者(这里还需要就具体场景！)。
+
+信号量的术语是down和up,所谓down就是获取锁，即count--, 所谓up就是释放锁，就是count++。当然，这里面在不满足条件时会进行调度。
+
+down的调度函数如下
+
+```c
+static inline int __sched __down_common(struct semaphore *sem, long state,
+                                long timeout)
+{
+    struct semaphore_waiter waiter;
+
+    list_add_tail(&waiter.list, &sem->wait_list);
+    waiter.task = current;
+    waiter.up = false;
+
+    for (;;) {
+        if (signal_pending_state(state, current))
+            goto interrupted;
+        if (unlikely(timeout <= 0))
+            goto timed_out;
+        __set_current_state(state);
+        raw_spin_unlock_irq(&sem->lock);
+        timeout = schedule_timeout(timeout);
+        raw_spin_lock_irq(&sem->lock);
+        if (waiter.up)
+            return 0;
+    }
+
+ timed_out:
+    list_del(&waiter.list);
+    return -ETIME;
+
+ interrupted:
+    list_del(&waiter.list);
+    return -EINTR;
+}
+```
+
+这里有一处疑问，在调度之前raw_spin_unlock_irq(&sem->lock);是起到什么作用？
+
 ## 互斥量
 
 内核代码的注释质量真的是榜样，我们看include/linux/mutex.h中的描述Simple, straightforward mutexes with strict semantics
 点明了mutex的特点，简单直接严谨的锁
-互斥体是一种睡眠锁，也就是如果无法加锁，则会睡眠，引发调度。显然这不能用在中断上下文中。显然这可以应对
-临界区比较复杂的场景，因为等待锁的时候可以调度出去，让别人先走。
 
 include/linux/mutex.h中包含了mutex数据结构的定义以及相应API的声明
 
@@ -180,7 +299,13 @@ struct mutex {
 };
 ```
 
-从mutex的定义能够看出来，mutex是在spinlock的基础上进行实现的，具体的mutex的实现还是挺复杂的，这里不进行展开，值得一提的是现在的互斥锁已经可以支持自旋等待了，可以通过CONFIG_MUTEX_SPIN_ON_OWNER使能MCS锁机制。
+从mutex的定义能够看出来，mutex也是在spinlock的基础上进行实现的。
+互斥体是一种睡眠锁，也就是如果无法加锁，则会睡眠，引发调度。显然这不能用在中断上下文中。显然这可以应对
+临界区比较复杂的场景，因为等待锁的时候可以调度出去，让别人先走。
+
+互斥量和count=1的二值信号量类似，但它的使用条件更加严格，能用互斥量应该尽量用互斥量。
+
+具体的mutex的实现还是挺复杂的，这里不进行展开，值得一提的是现在的互斥锁已经可以支持自旋等待了，可以通过CONFIG_MUTEX_SPIN_ON_OWNER使能MCS锁机制。
 
 引用宝华老师的分析如下
 
