@@ -20,15 +20,156 @@ verilog编译后生成的是bitfile，C当然是elf（exe）。那么需要一�
 
 所以目前看下来，大家用的比较多的，比如quartus2 + modelsim是一个不错的选择，当然需要windows平台。
 
-作为一个linux开发者，显然更喜欢linux的开发环境，windows使用起来还是有些麻烦，所以发现大家基于linux的系统开发环境普遍是iverilog和gtkwave。
+作为一个linux开发者，显然更喜欢linux的开发环境，windows使用起来还是有些麻烦，所以发现大家基于linux的系统开发环境普遍是iverilog和gtkwave。初步了解，iverilog(Icarus Verilog)号称“全球第四大”数字芯片仿真器。因为开源，广受欢迎。GTKWave是波形文件察看工具，也是开源。
 
-好吧，工具之争就告一段落，iverilog+gtkwave搞起。
+好吧，工具之争就告一段落，本着拥抱开源的思路，iverilog+gtkwave搞起。
 朋友推荐了夏宇闻老师的verilog相关书籍，特此记录。
 
 ## 环境搭建
 
 [iverilog官网的源码安装指导](https://iverilog.fandom.com/wiki/Installation_Guide#Compiling_on_Linux.2FUnix)
 
+采用源码安装的方式（尽管要源码目前也不会去研究）,从github上获取源码
 
+[iverilog](https://github.com/steveicarus/iverilog.git)
 
+```shell
+git clone https://github.com/steveicarus/iverilog.git
+```
 
+选择最新稳定分支
+
+```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ git branch -a
+remotes/origin/v0_9-branch
+remotes/origin/v10-branch
+remotes/origin/v11-branch
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ git checkout -b br11 origin/v11-branch
+```
+
+安装依赖， 这些依赖我都安装过了( g++ and gcc也需要)
+
+```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ sudo apt-get install bison flex autoconf gperf
+```
+
+生成makefile
+
+```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ ./configure --prefix=/home/chsgcxy/opt/iverilog/
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ make -j4
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ make install
+```
+
+最后别忘了把安装路径加入到PATH中，用iverilog -h试一下是不是安装成功
+
+直接使用apt来按照gtkwave
+
+```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ sudo apt-get install gtkwave
+```
+
+这里给出gtkwave的资料
+
+https://iverilog.fandom.com/wiki/GTKWave
+
+http://gtkwave.sourceforge.net/
+
+## 尝试运行现有demo
+
+还是那个原则，有枣没枣先打三杆，虽然还不熟悉verilog，但先运行一个demo看看，把运行流程和调试方法熟悉起来。
+
+抄的一个加法器的实现（看起来写一个a+b也就是写一个a+b）
+
+```verilog
+module adder(clk, rst_n, a, b, c);
+    input [3:0] a;
+    input [3:0] b;
+    output [7:0] c;
+    input clk, rst_n;
+
+    wire [3:0] a;
+    wire [3:0] b;
+    reg [7:0] c;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (rst_n == 1'b0)
+            c <= 8'b0;
+        else
+            c <= a+b;
+    end
+endmodule
+```
+
+抄的一个测试case
+
+```verilog
+`timescale 1ns/1ns
+module adder_tb();
+    reg [3:0] a;
+    reg [3:0] b;
+    wire [7:0] c;
+
+    reg clk,rst_n;
+
+    adder DUT (
+        .clk(clk),
+        .rst_n(rst_n),
+        .a(a),
+        .b(b),
+        .c(c)
+    );
+
+    always begin
+        #10 clk = 0;
+        #10 clk = 1;
+    end
+
+    initial begin
+        rst_n = 1;
+        test(4'b1111, 4'b1111, 5'b11110);
+        $finish;
+    end
+
+    task test;
+        input [3:0] in;
+        input [3:0] in2;
+        input [7:0] e;
+        begin
+            a = in;
+            b = in2;
+            @(posedge clk);
+            @(negedge clk);
+            if (c == e) begin
+                $display("It works");
+            end else begin
+                $display("opps %d + %d ~= %d, expect %d", in, in2, c, e);
+            end
+        end
+    endtask
+
+    initial begin
+        $dumpfile("wave.vcd"); // 指定用作dumpfile的文件
+        $dumpvars; // dump all vars
+    end
+endmodule
+```
+
+像C一样也进行编译，iverilog编译后生成的是一个vpp格式的中间文件，默认也是a.out
+
+```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/misc$ iverilog test.v tb.v
+chsgcxy@chsgcxy-TM1703:~/workspace/misc$ file a.out
+a.out: a /home/chsgcxy/opt/iverilog/bin/vvp script, ASCII text executable
+```
+
+使用gtkwave查看波形
+ $dumpfile("wave.vcd"); $dumpvars; 完成了dump波形文件的动作
+
+```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/misc$ gtkwave wave.vcd
+```
+
+![波形文件](./gtkwave-demo.png)
+
+开篇就是这样，有了一个大致的了解。接下来就该尝试根据别人的更高级一些的代码进一步熟悉这套语言和环境了。
