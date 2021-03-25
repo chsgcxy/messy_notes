@@ -20,6 +20,15 @@ verilog编译后生成的是bitfile，C当然是elf（exe）。那么需要一�
 
 所以目前看下来，大家用的比较多的，比如quartus2 + modelsim是一个不错的选择，当然需要windows平台。
 
+作为一个linux开发者，显然更喜欢linux的开发环境，windows使用起来还是有些麻烦，所以发现大家基于linux的系统开发环境普遍是iverilog和gtkwave。
+
+好吧，工具之争就告一段落，iverilog+gtkwave搞起。
+朋友推荐了夏宇闻老师的verilog相关书籍，特此记录。
+
+## 环境搭建
+
+[iverilog官网的源码安装指导](https://iverilog.fandom.com/wiki/Installation_Guide#Compiling_on_Linux.2FUnix)
+
 
 
 
