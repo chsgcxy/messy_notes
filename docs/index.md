@@ -2,7 +2,7 @@
 
 技术总结，生活感悟，业余爱好，应有尽有
 
-- [arch](/messy_notes/arch): 架构相关总结
+- [arch](arch): 架构相关总结
 - [c](/c): 一些可能关于c语言的总结
 - [debug](/debug):一些与调试有关的总结
 - [deeplearning](/deeplearning): 深度学习相关总结
