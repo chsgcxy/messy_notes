@@ -121,6 +121,8 @@ sfence.vma 执行会受到一些状态的影响
 >caused the update, and the sequence is interruptible. However, the hart must not perform
 >the explicit memory access before the PTE update is globally visible.
 
+关于A/D位的详细用法，后续还应该补充
+
 ### 最终的物理地址的计算
 
 如果VPN[2] 或 VPN[1] 对应的页是叶子节点，那么就会产生比4KB更大的页，这时，对于最终物理地址的计算，就要将 VPN 和 PPN 进行对应

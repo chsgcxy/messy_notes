@@ -7,7 +7,9 @@ QEMU is a generic and open source machine emulator and virtualizer
 - 作为性能非常不错的模拟器，看起来这对于SOC开发的场景，在调试整套系统软件时是一个不错的选择
 - 作为虚拟机，qemu包含了虚拟化的一套内容，可以配合KVM来实现，这部分内容暂时不太了解
 
-本文只针对QEMU作为模拟器的场景，有一个中文wiki可以参考[https://wiki.archlinux.org/index.php/QEMU_(简体中文)]
+本文只针对QEMU作为模拟器的场景
+
+## 整体实现
 
 QEMU采取了动态转换机制，会将target代码翻译成名为TCG的IR，IR又会翻译成host代码，代码按照
 TranslationBlock分块进行转换和执行。
