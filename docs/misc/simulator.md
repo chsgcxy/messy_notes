@@ -135,8 +135,39 @@ RISCV社区官方行为级模拟器，这个不能算做是模拟器框架，毕
 
 ### FireSim
 
-socrocket
-Simflex, MARSSX86
+[https://fires.im/]
+
+开源的时钟精确的通过亚马逊云FPGA加速的全系统硬件模拟平台，又是博克利大学(不得不佩服这个大学的科研能力呀，他们怎么能这么厉害)的一个产物。
+
+抄一段官网的描述如下：
+
+> FireSim can simulate arbitrary hardware designs written in Chisel or designs that can be transformed into FIRRTL (including early work on supporting Verilog designs via Yosys’s Verilog to FIRRTL flow). With FireSim, you can write your own RTL (processors, accelerators, etc.) and run it at near-FPGA-prototype speeds on cloud FPGAs, while obtaining cycle-accurate performance results (i.e. matching what you would find if you taped-out a chip)
+
+它可以仿真(simulate)任意的硬件设计，不过这个设计要求是用Chisel写的，或者是FIRRTL（看来是它自己的一套RTL语法，当然也可以通过Yosys的 verlog转FIRRTL工具将RTL转换成FIRRTL）。这样看来它并不是一个模拟器框架，更像是一个仿真工具，用Chisel写好设计，然后通过这个在亚马逊云FPGA上快速运行，得到性能数据，这是不是类似与palladium?
+
+典型应用场景包括：
+
+- 评估自己实现的IC设计。比如写一个加速器，在上面实际的跑一下
+- 快速的定制或者评估riscv核。firesim 实现了Rocket Chip and BOOM，可以直接跑这俩CPU
+- 以FPGA的速度调试Chisel代码，这对于Chisel调试来讲应该是有用的
+- 模拟大型数据中心系统，因为它云端资源丰富
+- 高性能带外分析，比如想在实现的SOC上跑一个linux系统，用这个能比较快
+
+这样来看，不还是云端Palladium吗？粗略看了一下使用方法，类似于FPGA IDE，它会将Chisel代码编译成FPGA代码，然后在云端执行。因此不能把这个称为模拟器框架，而应该称为亚马逊云FPGA编译器。它实际上降低了FPGA的使用成本。
+
+当要把时钟级模拟器做的很细的话，工作量不亚于写Chisel代码，那么这个时候直接写Chisel，然后用FireSim来加速仿真，似乎也是一个不错的选择，运行起来肯定比Gem5要快，而且适合大规模。这就回归到了前面的世界观问题，当FPGA或者Palladium成本变得非常低的时候，当需要模拟的很精细的时候，Gem5这种纯软件的模拟器是不是还有它的价值？我目前仍认为Gem5这种纯软件的模拟器还是有它的优势
+
+- 类似gem5这种模拟器，模块化普遍做的较好，基于某一个类似的实现去改，可能会大大缩短开发周期
+- 毕竟是软件，可添加的功能和手段都更多更丰富
+
+当然，我现在的水平也无法看得清楚，只是一些碎碎念而已
+
+另外，这种利用FPGA加速的就是不知道它调试手段是不是足够丰富，是不是会导致代码泄漏。而且Chisel是不是真的有前途？
+后续有机会可以按照它的文档自己搭建一下环境，尝试运行一下，看看效果。目前不在这里展开。
+
+### socrocket
+
+, MARSSX86
 Simics
 PTLsim
 
