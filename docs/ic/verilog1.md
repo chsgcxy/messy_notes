@@ -170,7 +170,7 @@ a.out: a /home/chsgcxy/opt/iverilog/bin/vvp script, ASCII text executable
 chsgcxy@chsgcxy-TM1703:~/workspace/misc$ gtkwave wave.vcd
 ```
 
-![波形文件](./gtkwave-demo.png)
+![波形文件](../imgs/gtkwave-demo.png)
 
 开篇就是这样，有了一个大致的了解。接下来就该尝试根据别人的更高级一些的代码进一步熟悉这套语言和环境了。
 
