@@ -125,14 +125,6 @@ RISCV社区官方行为级模拟器，这个不能算做是模拟器框架，毕
 似乎是工程化的正统，作为芯片公司，似乎必须要有一个systemC的模拟器！？
 市面上有没有一些基于systemC的开发框架？
 
-### RISC-V-TLM
-
-一个外国大哥用systemC写的riscv模拟器，目前仅支持rv32imac，对于它到底实现了哪一个级别的模拟，这个还需要看一下它的代码。目前来讲，如果选择模拟器应该不会选择这款，毕竟它只支持rv32imac, 没有64bit，没有F扩展，更没有V扩展。
-
-那这个可以用来干啥？ 学习，是的，这是或许是学习SystemC的一个很好的参考，暂时把它归为时钟级好了
-
-[https://github.com/mariusmm/RISC-V-TLM]
-
 ### FireSim
 
 [https://fires.im/]
@@ -166,6 +158,23 @@ RISCV社区官方行为级模拟器，这个不能算做是模拟器框架，毕
 后续有机会可以按照它的文档自己搭建一下环境，尝试运行一下，看看效果。目前不在这里展开。
 
 ### socrocket
+
+Transaction-Level Modeling Framework for Space Applications
+
+直译为用于空间探索的事物级建模框架，那为什么说用于空间探索，什么又是Transaction-Level ? 一个以卫星为图标的框架，似乎是与航天有什么关系。
+这个框架用TLM和SystemC实现，介绍中讲到，TLM可以抽象层次很高，并且既可以用来写始终精确的也可以用来写功能型的。也就是说两种模型的要求都能满足，可盐可甜，真不戳。
+
+> To archive these goals, we designed the SoCRocket Framework. Written in SystemC/TLM, it is fitted to serve the space industry'sspecial needs and builds the foundation of space-domain ESL design.
+
+这个真是晕了，怎么真的扯到航天工业去了，到底啥意思，怎么就适合航天工业特殊需求了，怎么就为空间域ESL设计奠定基础了。SOC火箭到底是个啥？我觉得这部分描述应该是有一些理解上的歧义，或许是我还不了解IC开发的一些东西。
+
+关于TLM,应该是基于SystemC的一个库， ESL似乎是IC设计的未来？ 这两部分后续应该会单开章节来描述。
+
+### RISC-V-TLM
+
+有了Socrocket的了解，就知道这是一个用TLM写的riscv的模拟器。目前仅支持rv32imac。显然，这是学习TLM和SystemC的一个很好的参考，对基于TLM搭建自己的模拟器也具有指导意义，或许我应该尝试去跟他一起扩展这个实现
+
+[https://github.com/mariusmm/RISC-V-TLM]
 
 , MARSSX86
 Simics
