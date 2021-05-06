@@ -14,6 +14,25 @@ QEMU is a generic and open source machine emulator and virtualizer
 QEMU采取了动态转换机制，会将target代码翻译成名为TCG的IR，IR又会翻译成host代码，代码按照
 TranslationBlock分块进行转换和执行。
 
+## 代码结构
+
+整体代码结构如下
+
+目录 | 功能
+---|---
+accel | 加速相关，为了追求运行速度，增加的一些特性，比如KVM,XEN。TCG也在这个目录下，TCG中的很多东西要分发到target下面
+audio | 音频相关，这个和hw下面的那个audio有啥区别？
+bsd-user |
+linux-user |
+disas |
+hw |
+softmmu |
+target |
+tcg |
+
+
+
+
 ## 调试方法
 
 ctrl + A / X 退出
