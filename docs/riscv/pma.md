@@ -26,3 +26,51 @@ PMA一定是软件可以访问的，这样软件才能正确的访问某个设�
 [^2]: 也就是说RISCV的PMA和其他架构的不太一样，很多其他架构的PMA都可以管理虚拟地址空间，RISCV的设计者认为这样引入了不必要的麻烦，并且它将PMA集成到了一个叫做PMAChecker的独立单元中
 [^3]: 这里讲的是建议能够精确的捕获PMA触发的异常，如果通过总线中断的方式来上报，就不精确了，但有些时候也迫不得已，这里所谓的**discovery mechanism**是什么意思。
 [^4]: 这一段是比较别扭的，我认为，设计者想表达的是，软件要把PMA做成模块化，而且要做到特权模式中，应用层通过提供的接口来对PMA寄存器进行读写，放到特权模式中是因为有些操作必须在特权模式下执行
+
+### 区域的划分
+
+内存空间划分为**主内存区域**，**IO区域**和**空闲区域**。主内存区域需要有一些属性，IO设备有更宽泛的属性范围。那些不是通常意义的主内存的内存区域，比如设备RAM，也被划分为IO区域。空闲区域也被划分为IO区域，但携带不能访问的属性。
+
+### PMA支持的访问类型
+
+访问类型包含访存宽度，从8-bit到long multi-word burst, 都支持。也支持每种宽度下的对齐和非对齐访问。主存储器区域始终支持对所连接设备所需的所有访问宽度的读取和写入，并且可以指定是否支持指令提取。
+
+I/O 区域可以针对特定数据宽度，进行读、写、执行access的组合配置。基于页的虚拟内存，IO以及内存区域的系统，可以指定某个页表的读或者写的组合。
+
+### atomic PMA
+
+atomic PMAs 描述的是在这个地址区域支持哪个原子指令。对原子指令的支持被划分为两类，LR/SC和AMO内存指令
+
+#### AMO PMA
+
+AMO PMA分了四个等级
+
+等级 | 支持的操作
+------ | -------------
+AMONone | None 不支持任何AMO指令
+AMOSwap | 仅支持amoswap
+AMOLogical | 支持 above + amoand, amoor, amoxor
+AMOArithmetic | 支持above + amoadd, amomin, amomax, amominu, amomaxu
+
+对每一个支持的等级，如果内存区域支持一个给定宽度的读和写，对于这个给定宽度的对齐的AMO指令是支持的。主内存和IO区域可能只支持一个子集或者不支持原子操作。
+
+> AMOLogical support for I/O regions where possible
+
+#### LR/SC原子操作
+
+LR/SC分了三个等级
+
+等级 | 说明
+----- | ------
+RsrvNone | 不支持LR/SC指令
+RsrvNonEventual | 支持LR/SC操作，但是缺少特权指令文档中描述的最终成功保证
+RsrvEventual | 支持LR/SC操作，并且提供最终成功保证
+
+建议对主内存区域支持RsrvEventual，大多数IO区域不支持LR/SC访问，因为这些构建在cache一致性策略的上层最方便，但也有一些支持RsrvNonEventual或RsrvEventual。
+当内存区域的LR/SC标记为RsrvNonEventual， 软件应该提供额外的错误返回机制。
+
+#### 对齐
+
+## 总结
+
+spec中没有对PMA进行具体的设定，甚至没有寄存器，是因为它与整体设计紧密绑定，很难统一吗？所谓的PMA Checker到底要如何实现？
