@@ -1,0 +1,2080 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
+    
+    
+      
+        <title>transplant LZMA compression algo from linux2.6.32 to linux2.6.29 - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ca7ac06f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.f1a3b89f.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+  
+
+
+
+  
+  
+
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-36723568-3","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#transplant-lzma-compression-algo-from-linux2632-to-linux2629" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/chsgcxy/messy_notes/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/chsgcxy/messy_notes/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Arch
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/atomic.html" class="md-nav__link">
+        RISCV原子操作
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        C
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Debug
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Deeplearning
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        Design patterns
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        Gem5
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Gem5" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Gem5
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gem5/gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gem5/gem5.html" class="md-nav__link">
+        GEM5 设计与实现分析
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        Ic
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" checked>
+      
+      <label class="md-nav__link" for="__nav_9">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="lzma_transplant.html" class="md-nav__link md-nav__link--active">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    目标
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lzmainitramfs" class="md-nav__link">
+    如何选择LZMA来压缩initramfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    移植过程
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    后记
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      <label class="md-nav__link" for="__nav_10">
+        Mcu
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      <label class="md-nav__link" for="__nav_11">
+        Misc
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      <label class="md-nav__link" for="__nav_12">
+        Python
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      <label class="md-nav__link" for="__nav_13">
+        Riscv
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      <label class="md-nav__link" for="__nav_14">
+        Smt pnp
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      <label class="md-nav__link" for="__nav_15">
+        Tools
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_16" type="checkbox" id="__nav_16" >
+      
+      <label class="md-nav__link" for="__nav_16">
+        Tvm
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/codebase-struct.html" class="md-nav__link">
+        directory-structure
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/tvm-start.html" class="md-nav__link">
+        tvm
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    目标
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lzmainitramfs" class="md-nav__link">
+    如何选择LZMA来压缩initramfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    移植过程
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    后记
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/chsgcxy/messy_notes/edit/master/docs/linux/lzma_transplant.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="transplant-lzma-compression-algo-from-linux2632-to-linux2629">transplant LZMA compression algo from linux2.6.32 to linux2.6.29<a class="headerlink" href="#transplant-lzma-compression-algo-from-linux2632-to-linux2629" title="Permanent link">&para;</a></h1>
+<p>不同的压缩算法的压缩效率、压缩/解压缩时间不同。LZMA的压缩率要比gzip高的多。最近项目中遇到系统镜像超出分区大小的问题，这个问题可以通过改变内核压缩算法来解决。可惜项目中所使用的内核linux2.6.29版本太低，仅支持gzip压缩，不支持LZMA压缩，所以我们从高版本内核中移植LZMA和bzip2压缩算法来解决这一问题。</p>
+<h2 id="_1">目标<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>从linux2.6.32移植LZMA和bzip2到linux2.6.29</li>
+<li>目标架构为powerpc</li>
+<li>initramfs采用LZMA压缩，image镜像采用gzip压缩</li>
+</ul>
+<h2 id="lzmainitramfs">如何选择LZMA来压缩initramfs<a class="headerlink" href="#lzmainitramfs" title="Permanent link">&para;</a></h2>
+<p>在内核配置中,需要选择支持LZMA并且选择built-in initramfs compression mode 为LZMA</p>
+<div class="highlight"><pre><span></span><code>    General setup ---&gt;
+         [*] Initial RAM filesystem and RAM disk (initramfs/initrd) support
+         (../../../product/s3000gb/rootfs) Initramfs source file(s)
+         (0)     User ID to map to 0 (user root)
+         (0)     Group ID to map to 0 (group root)  
+         [*]   Support initial ramdisks compressed using gzip
+         [ ]   Support initial ramdisks compressed using bzip2
+         [*]   Support initial ramdisks compressed using LZMA
+               Built-in initramfs compression mode (LZMA)  ---&gt;
+</code></pre></div>
+<h2 id="_2">移植过程<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>我们先查找与Support initial ramdisks compressed using LZMA 相关的代码，我们可以通过查看此配置选项的help信息来找到具体的文件，help信息中有两个相关的宏</p>
+<div class="highlight"><pre><span></span><code>Symbol: RD_LZMA [=y]
+Depends on: BLK_DEV_INITRD [=y] &amp;&amp; EMBEDDED [=y]
+Selects: DECOMPRESS_LZMA
+</code></pre></div>
+<p>我们在2.6.32中搜索 <mark>RD_LZMA</mark>, 会发现大部分的引用都是在/arch/xx/config/xxx_defconfig文件中，我们不去关心，下面列出了我们需要关心的所有搜索结果</p>
+<div class="highlight"><pre><span></span><code>usr/Kconfig: config RD_LZMA
+usr/Kconfig:    depends on RD_LZMA
+</code></pre></div>
+<p>我们发现其实RD_LZMA仅在usr目录下有引用，其实在内核编译时，usr/built-in.o 主要就是initramfs的镜像，我们定制initramfs是通过创建一个cpio格式的档案文件来实现的，我们就是要实现用LZMA来压缩这个cpio文件。</p>
+<p>我们查看一下usr目录下的文件, 单从文件名已经能够推理出各个文件的关系，我们可以直接同步到linux2.6.29中</p>
+<div class="highlight"><pre><span></span><code>root@99-252:~/V2.1.5.67086/kernel/uClinux/linux-2.6.32.x/usr# ls -al
+
+-rw-r--r--  1 13448 6406 12543  5月 17  2016 gen_init_cpio.c
+-rw-r--r--  1 13448 6406  1024  5月 17  2016 initramfs_data.bz2.S
+-rw-r--r--  1 13448 6406  1023  5月 17  2016 initramfs_data.gz.S
+-rw-r--r--  1 13448 6406  1025  5月 17  2016 initramfs_data.lzma.S
+-rw-r--r--  1 13448 6406  1021  5月 17  2016 initramfs_data.S
+-rw-r--r--  1 13448 6406  4514  5月 17  2016 Kconfig
+-rw-r--r--  1 13448 6406  2154  5月 17  2016 Makefile
+</code></pre></div>
+<p>这些文件具体的功能是什么呢？具体到每个文件里面去看一下，发现其实这些文件里面没做什么有价值的操作，仅仅是根据kconfig指定了cpio的压缩格式。</p>
+<p>接下来我们再去找另一个宏==DECOMPRESS_LZMA==，找的方法和上一个一样，我们先在linux2.6.32中查找这个宏，同样的,会有很多arch/xx/configs/xxx_defconfig文件中有引用，这些我们不去关系，下面列出了除defconfig之外的引用。</p>
+<div class="highlight"><pre><span></span><code>// squashfs是压缩只读文件系统，能够压缩系统内的文档，inode以及目录，显然这个我们也无需关心
+fs/squashfs/Kconfig:    select DECOMPRESS_LZMA
+fs/squashfs/Kconfig:    select DECOMPRESS_LZMA_NEEDED
+
+// 头文件，显然这个必须移植
+include/linux/decompress/unlzma_mm.h:#elif defined(CONFIG_DECOMPRESS_LZMA_NEEDED)
+
+// 解压缩相关的文件，显然这个我们必须移植
+lib/decompress.c:#ifndef CONFIG_DECOMPRESS_LZMA
+lib/Makefile:lib-$(CONFIG_DECOMPRESS_LZMA) += decompress_unlzma.o
+lib/Kconfig:config DECOMPRESS_LZMA
+lib/Kconfig:config DECOMPRESS_LZMA_NEEDED
+lib/decompress_unlzma.c:#elif defined(CONFIG_DECOMPRESS_LZMA_NEEDED)
+
+// 已经同步过了，不再需要关心
+usr/Kconfig:    select DECOMPRESS_LZMA
+</code></pre></div>
+<p>我们发现其实我们只需要移植头文件和lib目录下的解压缩文件就可以了，移植的方法是对比相应的目录找到相关的代码，同步，需要注意makefile和kconfig也需要相应的修改。</p>
+<p>移植完成后咱们来尝试编译一下kernel, 先进入menuconfig设置一下新增的配置，勾选之前描述的选项，然后编译</p>
+<p>我们发现确实生成了lzma的cpio文件</p>
+<div class="highlight"><pre><span></span><code>make kernel
+scripts/kconfig/conf -s arch/powerpc/Kconfig
+  CHK     include/linux/version.h
+  CHK     include/linux/utsrelease.h
+  SYMLINK include/asm -&gt; include/asm-powerpc
+  CALL    scripts/checksyscalls.sh
+sed: can&#39;t read /home/chenhao/ros5.4/br_ros5.4_rsp_dev_20161214/rsp/kernel/linux-2.6.29.6-bmw/arch/x86/include/asm/unistd_32.h: No such file or directory
+  CHK     include/linux/compile.h
+  GEN     usr/initramfs_data.cpio.lzma
+  AS      usr/initramfs_data.lzma.o
+  LD      usr/built-in.o
+</code></pre></div>
+<p>但最终编译出的镜像大小没有改变，这是什么原因呢？</p>
+<p>我们相信LZMA的压缩率是比gzip高的多的，而且我们也可以实际验证这一点</p>
+<div class="highlight"><pre><span></span><code>root@ubuntu:~/test_lzma# lzma -k initramfs_data.cpio 
+root@ubuntu:~/test_lzma# gzip initramfs_data.cpio
+root@ubuntu:~/test_lzma# ls -al
+-rw-r--r--  <span class="m">1</span> root    root    <span class="m">63202304</span> Jul <span class="m">11</span> <span class="m">05</span>:10 initramfs_data.cpio
+-rw-r--r--  <span class="m">1</span> root    root    <span class="m">21340431</span> Jul <span class="m">11</span> <span class="m">05</span>:10 initramfs_data.cpio.gz
+-rw-r--r--  <span class="m">1</span> root    root    <span class="m">13816814</span> Jul <span class="m">11</span> <span class="m">05</span>:10 initramfs_data.cpio.lzma
+</code></pre></div>
+<p>那么极大可能是压缩时没有真正的使用LZMA压缩算法,我们先去看一下cpio压缩文件</p>
+<div class="highlight"><pre><span></span><code>root@ubuntu:~/ros5.4/br_ros5.4_rsp_dev_20161214/rsp/kernel/linux-2.6.29.6-bmw/usr# lzmainfo initramfs_data.cpio.lzma 
+
+lzmainfo: initramfs_data.cpio.lzma: Not a .lzma file
+</code></pre></div>
+<p>看来真的是这样，仅仅是压缩文件名变成了lzma，其实压缩算法没有改变。那么具体initramfs是怎样压缩的呢？还记得我们前面说的usr目录下的那几个文件吗？那几个文件不就是决定压缩算法的吗？一定是那个地方出了问题。</p>
+<p>我们先看一下linux2.6.32/usr目录下的==Makefile==文件</p>
+<div class="highlight"><pre><span></span><code> <span class="m">26</span> <span class="c1">#####</span>
+ <span class="m">27</span> <span class="c1"># Generate the initramfs cpio archive</span>
+ <span class="m">28</span>
+ <span class="m">29</span> hostprogs-y :<span class="o">=</span> gen_init_cpio
+ <span class="m">30</span> initramfs   :<span class="o">=</span> <span class="k">$(</span>CONFIG_SHELL<span class="k">)</span> <span class="k">$(</span>srctree<span class="k">)</span>/scripts/gen_initramfs_list.sh
+ <span class="m">31</span> ramfs-input :<span class="o">=</span> <span class="k">$(if</span> <span class="k">$(</span>filter-out <span class="s2">&quot;&quot;</span>,<span class="k">$(</span>CONFIG_INITRAMFS_SOURCE<span class="k">))</span>, <span class="se">\</span>
+ <span class="m">32</span>                         <span class="k">$(</span>shell <span class="nb">echo</span> <span class="k">$(</span>CONFIG_INITRAMFS_SOURCE<span class="k">))</span>,-d<span class="k">)</span>
+ <span class="m">33</span> ramfs-args  :<span class="o">=</span> <span class="se">\</span>
+ <span class="m">34</span>         <span class="k">$(if</span> <span class="k">$(</span>CONFIG_INITRAMFS_ROOT_UID<span class="k">)</span>, -u <span class="k">$(</span>CONFIG_INITRAMFS_ROOT_UID<span class="k">))</span> <span class="se">\</span>
+ <span class="m">35</span>         <span class="k">$(if</span> <span class="k">$(</span>CONFIG_INITRAMFS_ROOT_GID<span class="k">)</span>, -g <span class="k">$(</span>CONFIG_INITRAMFS_ROOT_GID<span class="k">))</span>
+ <span class="m">36</span> 
+ <span class="m">37</span> <span class="c1"># .initramfs_data.cpio.d is used to identify all files included</span>
+ <span class="m">38</span> <span class="c1"># in initramfs and to detect if any files are added/removed.</span>
+ <span class="m">39</span> <span class="c1"># Removed files are identified by directory timestamp being updated</span>
+ <span class="m">40</span> <span class="c1"># The dependency list is generated by gen_initramfs.sh -l</span>
+ <span class="m">41</span> ifneq <span class="o">(</span><span class="k">$(</span>wildcard <span class="k">$(</span>obj<span class="k">)</span>/.initramfs_data.cpio.d<span class="k">)</span>,<span class="o">)</span>
+ <span class="m">42</span>         include <span class="k">$(</span>obj<span class="k">)</span>/.initramfs_data.cpio.d
+ <span class="m">43</span> endif
+ <span class="m">44</span> 
+ <span class="m">45</span> <span class="nv">quiet_cmd_initfs</span> <span class="o">=</span> GEN     <span class="nv">$@</span>
+ <span class="m">46</span>       <span class="nv">cmd_initfs</span> <span class="o">=</span> <span class="k">$(</span>initramfs<span class="k">)</span> -o <span class="nv">$@</span> <span class="k">$(</span>ramfs-args<span class="k">)</span> <span class="k">$(</span>ramfs-input<span class="k">)</span>
+ <span class="m">47</span> 
+ <span class="m">48</span> targets :<span class="o">=</span> initramfs_data.cpio.gz initramfs_data.cpio.bz2 initramfs_data.cpio.lzma initramfs_data.cpio
+ <span class="m">49</span> <span class="c1"># do not try to update files included in initramfs</span>
+ <span class="m">50</span> <span class="k">$(</span>deps_initramfs<span class="k">)</span>: <span class="p">;</span>
+</code></pre></div>
+<p>我想大家也发现了，整个makefile没有说压缩什么事，但是==30行==和==46行==明显是在编译的时候调用了scripts目录下的gen_initramfs_list.sh 的脚本，很多资料都会讲到这个文件的作用，压缩算法一定在这个脚本中指定了，我们去linux2.6.32中看一下</p>
+<div class="highlight"><pre><span></span><code><span class="m">227</span> <span class="nv">is_cpio_compressed</span><span class="o">=</span>
+<span class="m">228</span> <span class="nv">compr</span><span class="o">=</span><span class="s2">&quot;gzip -9 -f&quot;</span>
+<span class="m">229</span>
+<span class="m">230</span> <span class="nv">arg</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="m">231</span> <span class="k">case</span> <span class="s2">&quot;</span><span class="nv">$arg</span><span class="s2">&quot;</span> <span class="k">in</span>
+<span class="m">232</span>         <span class="s2">&quot;-l&quot;</span><span class="o">)</span>   <span class="c1"># files included in initramfs - used by kbuild</span>
+<span class="m">233</span>                 <span class="nv">dep_list</span><span class="o">=</span><span class="s2">&quot;list_&quot;</span>
+<span class="m">234</span>                 <span class="nb">echo</span> <span class="s2">&quot;deps_initramfs := \\&quot;</span>
+<span class="m">235</span>                 <span class="nb">shift</span>
+<span class="m">236</span>                 <span class="p">;;</span>
+<span class="m">237</span>         <span class="s2">&quot;-o&quot;</span><span class="o">)</span>   <span class="c1"># generate compressed cpio image named $1</span>
+<span class="m">238</span>                 <span class="nb">shift</span>
+<span class="m">239</span>                 <span class="nv">output_file</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<span class="m">240</span>                 <span class="nv">cpio_list</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp <span class="si">${</span><span class="nv">TMPDIR</span><span class="k">:-</span><span class="p">/tmp</span><span class="si">}</span>/cpiolist.XXXXXX<span class="k">)</span><span class="s2">&quot;</span>
+<span class="m">241</span>                 <span class="nv">output</span><span class="o">=</span><span class="si">${</span><span class="nv">cpio_list</span><span class="si">}</span>
+<span class="m">242</span>                 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$output_file</span><span class="s2">&quot;</span> <span class="p">|</span> grep -q <span class="s2">&quot;\.gz</span>$<span class="s2">&quot;</span> <span class="o">&amp;&amp;</span> <span class="nv">compr</span><span class="o">=</span><span class="s2">&quot;gzip -9 -f&quot;</span>
+<span class="m">243</span>                 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$output_file</span><span class="s2">&quot;</span> <span class="p">|</span> grep -q <span class="s2">&quot;\.bz2</span>$<span class="s2">&quot;</span> <span class="o">&amp;&amp;</span> <span class="nv">compr</span><span class="o">=</span><span class="s2">&quot;bzip2 -9 -f&quot;</span>
+<span class="m">244</span>                 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$output_file</span><span class="s2">&quot;</span> <span class="p">|</span> grep -q <span class="s2">&quot;\.lzma</span>$<span class="s2">&quot;</span> <span class="o">&amp;&amp;</span> <span class="nv">compr</span><span class="o">=</span><span class="s2">&quot;lzma -9 -f&quot;</span>
+<span class="m">245</span>                 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$output_file</span><span class="s2">&quot;</span> <span class="p">|</span> grep -q <span class="s2">&quot;\.cpio</span>$<span class="s2">&quot;</span> <span class="o">&amp;&amp;</span> <span class="nv">compr</span><span class="o">=</span><span class="s2">&quot;cat&quot;</span>
+<span class="m">246</span>                 <span class="nb">shift</span>
+<span class="m">247</span>                 <span class="p">;;</span>
+<span class="m">248</span> <span class="k">esac</span>
+
+<span class="m">282</span> <span class="c1"># If output_file is set we will generate cpio archive and compress it</span>
+<span class="m">283</span> <span class="c1"># we are carefull to delete tmp files</span>
+<span class="m">284</span> <span class="k">if</span> <span class="o">[</span> ! -z <span class="si">${</span><span class="nv">output_file</span><span class="si">}</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<span class="m">285</span>         <span class="k">if</span> <span class="o">[</span> -z <span class="si">${</span><span class="nv">cpio_file</span><span class="si">}</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<span class="m">286</span>                 <span class="nv">cpio_tfile</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp <span class="si">${</span><span class="nv">TMPDIR</span><span class="k">:-</span><span class="p">/tmp</span><span class="si">}</span>/cpiofile.XXXXXX<span class="k">)</span><span class="s2">&quot;</span>
+<span class="m">287</span>                 usr/gen_init_cpio <span class="si">${</span><span class="nv">cpio_list</span><span class="si">}</span> &gt; <span class="si">${</span><span class="nv">cpio_tfile</span><span class="si">}</span>
+<span class="m">288</span>         <span class="k">else</span>
+<span class="m">289</span>                 <span class="nv">cpio_tfile</span><span class="o">=</span><span class="si">${</span><span class="nv">cpio_file</span><span class="si">}</span>
+<span class="m">290</span>         <span class="k">fi</span>
+<span class="m">291</span>         rm <span class="si">${</span><span class="nv">cpio_list</span><span class="si">}</span>
+<span class="m">292</span>         <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">is_cpio_compressed</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">=</span> <span class="s2">&quot;compressed&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<span class="m">293</span>                 cat <span class="si">${</span><span class="nv">cpio_tfile</span><span class="si">}</span> &gt; <span class="si">${</span><span class="nv">output_file</span><span class="si">}</span>
+<span class="m">294</span>         <span class="k">else</span>
+<span class="m">295</span>                 <span class="o">(</span>cat <span class="si">${</span><span class="nv">cpio_tfile</span><span class="si">}</span> <span class="p">|</span> <span class="si">${</span><span class="nv">compr</span><span class="si">}</span>  - &gt; <span class="si">${</span><span class="nv">output_file</span><span class="si">}</span><span class="o">)</span> <span class="se">\</span>
+<span class="m">296</span>                 <span class="o">||</span> <span class="o">(</span>rm -f <span class="si">${</span><span class="nv">output_file</span><span class="si">}</span> <span class="p">;</span> <span class="nb">false</span><span class="o">)</span>
+<span class="m">297</span>         <span class="k">fi</span>
+<span class="m">298</span>         <span class="o">[</span> -z <span class="si">${</span><span class="nv">cpio_file</span><span class="si">}</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> rm <span class="si">${</span><span class="nv">cpio_tfile</span><span class="si">}</span>
+<span class="m">299</span> <span class="k">fi</span>
+</code></pre></div>
+<p>确实这里面实现了cpio的压缩，那么不多说，把这些都同步过去。</p>
+<p>同步完成之后，再次编译，编译通过，镜像大小已经由23M变为15M,显然第一步压缩搞定；接下来我们就要启动一下这个镜像，看看启动时根文件系统解压缩是否有问题。</p>
+<p>很不幸，启动时内核报错</p>
+<div class="highlight"><pre><span></span><code>Kernel panic - not syncing: bad gzip magic numbers
+</code></pre></div>
+<p>不要慌，有错误打印就好办，从打印看很明显是内核还以为根文件系统是gzip压缩格式的。</p>
+<p>我们先找到具体打印的位置</p>
+<p>下述代码来源于2.6.32内核</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib/inflate.c</span>
+<span class="mi">1187</span> <span class="cm">/*</span>
+<span class="cm">1188  * Do the uncompression!</span>
+<span class="cm">1189  */</span>
+<span class="mi">1190</span> <span class="k">static</span> <span class="kt">int</span> <span class="n">INIT</span> <span class="n">gunzip</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="mi">1191</span> <span class="p">{</span>
+
+<span class="mi">1203</span>     <span class="k">if</span> <span class="p">(</span><span class="n">magic</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mo">037</span> <span class="o">||</span>
+<span class="mi">1204</span>         <span class="p">((</span><span class="n">magic</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mo">0213</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">magic</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mo">0236</span><span class="p">)))</span> <span class="p">{</span>
+<span class="mi">1205</span>             <span class="n">error</span><span class="p">(</span><span class="s">&quot;bad gzip magic numbers&quot;</span><span class="p">);</span>
+<span class="mi">1206</span>             <span class="k">return</span> <span class="mi">-1</span><span class="p">;</span>
+<span class="mi">1207</span>     <span class="p">}</span>
+
+<span class="c1">// lib/decompress.c</span>
+ <span class="k">static</span> <span class="k">const</span> <span class="k">struct</span> <span class="nc">compress_format</span> <span class="p">{</span>
+ <span class="mi">27</span>         <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">magic</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+ <span class="mi">28</span>         <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+ <span class="mi">29</span>         <span class="n">decompress_fn</span> <span class="n">decompressor</span><span class="p">;</span>
+ <span class="mi">30</span> <span class="p">}</span> <span class="n">compressed_formats</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="mi">31</span>         <span class="p">{</span> <span class="p">{</span><span class="mo">037</span><span class="p">,</span> <span class="mo">0213</span><span class="p">},</span> <span class="s">&quot;gzip&quot;</span><span class="p">,</span> <span class="n">gunzip</span> <span class="p">},</span>
+ <span class="mi">32</span>         <span class="p">{</span> <span class="p">{</span><span class="mo">037</span><span class="p">,</span> <span class="mo">0236</span><span class="p">},</span> <span class="s">&quot;gzip&quot;</span><span class="p">,</span> <span class="n">gunzip</span> <span class="p">},</span>
+ <span class="mi">33</span>         <span class="p">{</span> <span class="p">{</span><span class="mh">0x42</span><span class="p">,</span> <span class="mh">0x5a</span><span class="p">},</span> <span class="s">&quot;bzip2&quot;</span><span class="p">,</span> <span class="n">bunzip2</span> <span class="p">},</span>
+ <span class="mi">34</span>         <span class="p">{</span> <span class="p">{</span><span class="mh">0x5d</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">},</span> <span class="s">&quot;lzma&quot;</span><span class="p">,</span> <span class="n">unlzma</span> <span class="p">},</span>
+ <span class="mi">35</span>         <span class="p">{</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span> <span class="p">}</span>
+ <span class="mi">36</span> <span class="p">};</span>
+ <span class="mi">37</span> 
+ <span class="mi">38</span> <span class="n">decompress_fn</span> <span class="n">decompress_method</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">inbuf</span><span class="p">,</span> <span class="kt">int</span> <span class="n">len</span><span class="p">,</span>
+ <span class="mi">39</span>                                 <span class="k">const</span> <span class="kt">char</span> <span class="o">**</span><span class="n">name</span><span class="p">)</span>
+ <span class="mi">40</span> <span class="p">{</span>
+ <span class="mi">41</span>         <span class="k">const</span> <span class="k">struct</span> <span class="nc">compress_format</span> <span class="o">*</span><span class="n">cf</span><span class="p">;</span>
+ <span class="mi">42</span> 
+ <span class="mi">43</span>         <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+ <span class="mi">44</span>                 <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>    <span class="cm">/* Need at least this much... */</span>
+ <span class="mi">45</span> 
+ <span class="mi">46</span>         <span class="k">for</span> <span class="p">(</span><span class="n">cf</span> <span class="o">=</span> <span class="n">compressed_formats</span><span class="p">;</span> <span class="n">cf</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span> <span class="n">cf</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+ <span class="mi">47</span>                 <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">memcmp</span><span class="p">(</span><span class="n">inbuf</span><span class="p">,</span> <span class="n">cf</span><span class="o">-&gt;</span><span class="n">magic</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+ <span class="mi">48</span>                         <span class="k">break</span><span class="p">;</span>
+ <span class="mi">49</span> 
+ <span class="mi">50</span>         <span class="p">}</span>
+ <span class="mi">51</span>         <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
+ <span class="mi">52</span>                 <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="n">cf</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">;</span>
+ <span class="mi">53</span>         <span class="k">return</span> <span class="n">cf</span><span class="o">-&gt;</span><span class="n">decompressor</span><span class="p">;</span>
+ <span class="mi">54</span> <span class="p">}</span>
+
+<span class="c1">// init/initramfs.c</span>
+<span class="mi">414</span> <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">__init</span> <span class="n">unpack_to_rootfs</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">len</span><span class="p">)</span>
+<span class="mi">415</span> <span class="p">{</span>
+<span class="mi">447</span>                 <span class="n">decompress</span> <span class="o">=</span> <span class="n">decompress_method</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">compress_name</span><span class="p">);</span>
+</code></pre></div>
+<p>下述代码来源于2.6.29内核</p>
+<div class="highlight"><pre><span></span><code><span class="mi">479</span> <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">__init</span> <span class="n">unpack_to_rootfs</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">buf</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">check_only</span><span class="p">)</span>
+<span class="mi">480</span> <span class="p">{</span>
+<span class="mi">515</span>                 <span class="n">gunzip</span><span class="p">();</span>
+</code></pre></div>
+<p>相信通过上面的代码片段大家已经了解了initramfs是如何解压缩的,不多说，接着同步代码，主要是将decompress_method 移植过来，其他的不动。</p>
+<p>修改完后，我们再次编译，启动，initramfs已经能够正常解压缩了，至此，移植活动就完成了。</p>
+<h2 id="_3">后记<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>在做这个的时候也想过直接去找内核的path,但找起来比较复杂，就放弃了这个思路。</p>
+<p>对于内核的编译、压缩、解压缩需要进一步深入研究。</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="kernel-status.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Kernel status" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Kernel status
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="sync-and-exclusion.html" class="md-footer__link md-footer__link--next" aria-label="Next: Linux的同步和互斥机制" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Linux的同步和互斥机制
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.82b56eb2.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2598 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
+    
+    
+      
+        <title>directory-structure - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ca7ac06f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.f1a3b89f.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+  
+
+
+
+  
+  
+
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-36723568-3","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#directory-structure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              directory-structure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/chsgcxy/messy_notes/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/chsgcxy/messy_notes/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        Arch
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/atomic.html" class="md-nav__link">
+        RISCV原子操作
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        C
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Debug
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Deeplearning
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        Design patterns
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      <label class="md-nav__link" for="__nav_7">
+        Gem5
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Gem5" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Gem5
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gem5/gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gem5/gem5.html" class="md-nav__link">
+        GEM5 设计与实现分析
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      <label class="md-nav__link" for="__nav_8">
+        Ic
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      <label class="md-nav__link" for="__nav_9">
+        Linux
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/lzma_transplant.html" class="md-nav__link">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      <label class="md-nav__link" for="__nav_10">
+        Mcu
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      <label class="md-nav__link" for="__nav_11">
+        Misc
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      <label class="md-nav__link" for="__nav_12">
+        Python
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      <label class="md-nav__link" for="__nav_13">
+        Riscv
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      <label class="md-nav__link" for="__nav_14">
+        Smt pnp
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      <label class="md-nav__link" for="__nav_15">
+        Tools
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_16" type="checkbox" id="__nav_16" checked>
+      
+      <label class="md-nav__link" for="__nav_16">
+        Tvm
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          directory-structure
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="codebase-struct.html" class="md-nav__link md-nav__link--active">
+        directory-structure
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    主目录结构
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    详细结构
+  </a>
+  
+    <nav class="md-nav" aria-label="详细结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src" class="md-nav__link">
+    src
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topi" class="md-nav__link">
+    topi
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tvm-start.html" class="md-nav__link">
+        tvm
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    主目录结构
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    详细结构
+  </a>
+  
+    <nav class="md-nav" aria-label="详细结构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python" class="md-nav__link">
+    python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src" class="md-nav__link">
+    src
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#topi" class="md-nav__link">
+    topi
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/chsgcxy/messy_notes/edit/master/docs/tvm/codebase-struct.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="directory-structure">directory-structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#directory-structure">directory-structure</a><ul>
+<li><a href="#_1">主目录结构</a></li>
+<li><a href="#_2">详细结构</a><ul>
+<li><a href="#python">python</a></li>
+<li><a href="#src">src</a></li>
+<li><a href="#topi">topi</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>所有复杂代码都在ｃ++中实现，python是为了用户接口，但是c++也可以调用python里面的接口</p>
+<h2 id="_1">主目录结构<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>├── <strong><em>3rdparty</em></strong> 第三方软件库，其中一些以git submodule的形式包含， 包括 HalideIR, rang, dlpack等一些开源软件<br />
+├── <strong><em>apps</em></strong> 包含了一些基于TVM的扩展项目，也作为如何使用tvm的例程<br />
+├── <strong><em>cmake</em></strong> tvm编译用的cmake<br />
+├── <strong><em>conda</em></strong> conda是一个开源的软件包管理系统和环境管理系统，用于安装多个版本的软件包及其依赖关系，并在它们之间轻松切换,这里实现了tvm的安装的包装，使得tvm安装更加方便<br />
+├── <strong><em>docker</em></strong> 基于docker的tvm快速部署，包含了一系列的dockerfile和安装脚本，能够根据dockerfile直接生成相应的镜像，省去了安装依赖环境的烦恼<br />
+├── <strong><em>docs</em></strong> 基于rst的文档，和官网的doc是一样的<br />
+├── <strong><em>golang</em></strong> tvm runtime的golang接口<br />
+├── <strong><em>include</em></strong> src 目录下的cc文件对应的头文件<br />
+├── <strong><em>jvm</em></strong> tvm runtime的java接口<br />
+├── <strong><em>nnvm</em></strong> nnvm实现，我们使用relay<br />
+├── <strong><em>python</em></strong> 可以理解为软件前端，c++可以理解为软件后端，python实现了对c++代码的封装，可以控制编译流程<br />
+├── <strong><em>rust</em></strong> Rust是一门系统编程语言，专注于安全，尤其是并发安全，支持函数式和命令式以及泛型等编程范式的多范式语言,放在tvm中不知道是要做什么，似乎是不影响我们了解tvm的编译过程<br />
+├── <strong><em>src</em></strong> op编译相关的c++代码和runtime部署相关的c++代码<br />
+├── <strong><em>tests</em></strong> 应该是测试相关的<br />
+├── <strong><em>topi</em></strong> op的实现在这里，包含的compute和schedule实现，实现支持c++和python<br />
+├── <strong><em>tutorials</em></strong> 一些demo<br />
+├── <strong><em>vta</em></strong> versatile tensor accelerator
+└── <strong><em>web</em></strong> This folder contains TVM WebAssembly and Javascript backend through Emscripten  </p>
+<h2 id="_2">详细结构<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="python">python<a class="headerlink" href="#python" title="Permanent link">&para;</a></h3>
+<p>可以理解为软件前端，c++可以理解为软件后端，python实现了对c++代码的封装，可以控制编译流程</p>
+<p>├── python<br />
+│   └── tvm<br />
+│       ├── <em>api_internal.py<br />
+│       ├── api.py <strong>生成tensor</strong> <a href="#api_lang.cc">转到c++中实现</a><br />
+│       ├── arith.py<br />
+│       ├── attrs.py<br />
+│       ├── autotvm<br />
+│       ├── build_module.py <strong>包含了tvm.build(),利用schedule,input tensor, output tensor, target 来生成tvm.module， 同时包含了tvm.lower(),这是build过程的第一步</strong><br />
+│       ├── codegen.py<br />
+│       ├── container.py<br />
+│       ├── <strong><em>contrib</em></strong> 一些非核心特性的API，类似于一个小工具库，其中包含一些对第三方工具的包装<br />
+│       ├── datatype.py<br />
+│       ├── error.py<br />
+│       ├── <strong><em>exec</em></strong><br />
+│       ├── expr.py<br />
+│       ├── <strong><em>_ffi</em></strong> 在这里tvm实现了对python的包装,_LIB实现包含在这里面<br />
+│       ├── generic.py<br />
+│       ├── <strong><em>hybrid</em></strong><br />
+│       ├── __init_</em>.py<br />
+│       ├── intrin.py<br />
+│       ├── ir_builder.py<br />
+│       ├── ir_pass.py<br />
+│       ├── make.py<br />
+│       ├── module.py <strong>实现了tvm.module的定义， module包含了一个编译好的func,可以使用函数调用语法进行调用</strong><br />
+│       ├── <strong>ndarray.py</strong> 实现了NDarray类，但实际上文件的大多数method与ctx有关，用于创建不同的ctx实例，估计后续会有命名优化
+│       ├── node.py<br />
+│       ├── <em>pyversion.py<br />
+│       ├── relay<br />
+│       │   ├── <strong><em>backend</em></strong><br />
+│       │   ├── _base.py<br />
+│       │   ├── base.py<br />
+│       │   ├── _build_module.py<br />
+│       │   ├── <strong>build_module.py</strong> relay 的build入口
+│       │   ├── contrib.py<br />
+│       │   ├── debug.py<br />
+│       │   ├── expr_functor.py<br />
+│       │   ├── _expr.py<br />
+│       │   ├── <strong>expr.py</strong>  The expression nodes of Relay 以及各种各样的expr<br />
+│       │   ├── expr.pyi<br />
+│       │   ├── feature.py<br />
+│       │   ├── <strong><em>frontend</em></strong> relay前端，包含tensorflow, caffe, mxnet 等网络<br />
+│       │   ├── grammar<br />
+│       │   ├── image.py<br />
+│       │   ├── __init_</em>.py<br />
+│       │   ├── _make.py<br />
+│       │   ├── _module.py<br />
+│       │   ├── module.py<br />
+│       │   ├── _module.pyi<br />
+│       │   ├── nn.py<br />
+│       │   ├── <strong><em>op</em></strong><br />
+│       │   ├── param_dict.py<br />
+│       │   ├── _parser.py<br />
+│       │   ├── parser.py<br />
+│       │   ├── prelude.py<br />
+│       │   ├── prelude.rly<br />
+│       │   ├── quantize<br />
+│       │   ├── scope_builder.py<br />
+│       │   ├── _transform.py<br />
+│       │   ├── transform.py<br />
+│       │   ├── transform.pyi<br />
+│       │   ├── ty.py<br />
+│       │   ├── ty.pyi<br />
+│       │   └── vision.py<br />
+│       ├── <strong><em>rpc</em></strong><br />
+│       ├── schedule.py <strong>包含class schedule的定义，create_schedule通过node机制来实现c++类型到python类型的转换并返回一个schedule对象,c++中也有一个对应的schedule定义</strong><br />
+│       ├── stmt.py<br />
+│       ├── tag.py<br />
+│       ├── target.py<br />
+│       ├── tensor_intrin.py<br />
+│       ├── tensor.py <span id="tensor.py"> <strong>tensor的抽象，例如A = tvm.placeholder((n,), name='A')， A就是一个tensor， 也包含operation的抽象</strong> </span> <a href="#tensor.cc">tensor具体实现在c++中</a><br />
+│       └── testing.py  </p>
+<h3 id="src">src<a class="headerlink" href="#src" title="Permanent link">&para;</a></h3>
+<p>├── src<br />
+│   ├── api <strong>c++对上层的接口，每个接口都可以在python端调用，均通过TVM_REGISTER_API进行注册， 在python端通过_api_internal.进行调用</strong><br />
+│   │   ├── api_arith.cc<br />
+│   │   ├── api_base.cc<br />
+│   │   ├── api_codegen.cc<br />
+│   │   ├── api_ir.cc<br />
+│   │   ├── api_lang.cc <span id="api_lang.cc"> <strong>包含创建tensor相关的api接口</strong> </span><br />
+│   │   ├── api_pass.cc<br />
+│   │   ├── api_schedule.cc<br />
+│   │   ├── api_test.cc<br />
+│   │   └── dsl_api.cc<br />
+│   ├── arithmetic<br />
+│   │   ├── analyzer.cc<br />
+│   │   ├── bound_deducer.cc<br />
+│   │   ├── canonical_simplify.cc<br />
+│   │   ├── compute_expr.h<br />
+│   │   ├── const_fold.h<br />
+│   │   ├── const_int_bound.cc<br />
+│   │   ├── detect_linear_equation.cc<br />
+│   │   ├── domain_touched.cc<br />
+│   │   ├── int_op_overflow.h<br />
+│   │   ├── int_set.cc<br />
+│   │   ├── int_set.h<br />
+│   │   ├── modular_set.cc<br />
+│   │   ├── pattern_match.h<br />
+│   │   ├── rewrite_simplify.cc<br />
+│   │   ├── rewrite_simplify.h<br />
+│   │   └── stmt_simplify.cc  CDLL
+│   ├── autotvm<br />
+│   │   ├── feature_visitor.cc<br />
+│   │   ├── feature_visitor.h<br />
+│   │   ├── touch_extractor.cc<br />
+│   │   └── touch_extractor.h<br />
+│   ├── codegen<br />
+│   │   ├── build_common.h<br />
+│   │   ├── build_module.cc<br />
+│   │   ├── codegen_aocl.cc<br />
+│   │   ├── codegen.cc<br />
+│   │   ├── codegen_c.cc<br />
+│   │   ├── codegen_c.h<br />
+│   │   ├── codegen_c_host.cc<br />
+│   │   ├── codegen_c_host.h<br />
+│   │   ├── codegen_cuda.cc<br />
+│   │   ├── codegen_cuda.h<br />
+│   │   ├── codegen_metal.cc<br />
+│   │   ├── codegen_metal.h<br />
+│   │   ├── codegen_opencl.cc<br />
+│   │   ├── codegen_opencl.h<br />
+│   │   ├── codegen_opengl.cc<br />
+│   │   ├── codegen_opengl.h<br />
+│   │   ├── codegen_source_base.cc<br />
+│   │   ├── codegen_source_base.h<br />
+│   │   ├── codegen_vhls.cc<br />
+│   │   ├── codegen_vhls.h<br />
+│   │   ├── datatype<br />
+│   │   │   ├── registry.cc<br />
+│   │   │   └── registry.h<br />
+│   │   ├── intrin_rule_aocl.cc<br />
+│   │   ├── intrin_rule.cc<br />
+│   │   ├── intrin_rule_cuda.cc<br />
+│   │   ├── intrin_rule.h<br />
+│   │   ├── intrin_rule_metal.cc<br />
+│   │   ├── intrin_rule_opencl.cc<br />
+│   │   ├── intrin_rule_opengl.cc<br />
+│   │   ├── intrin_rule_vhls.cc<br />
+│   │   ├── llvm<br />
+│   │   │   ├── codegen_amdgpu.cc<br />
+│   │   │   ├── codegen_arm.cc<br />
+│   │   │   ├── codegen_cpu.cc<br />
+│   │   │   ├── codegen_cpu.h<br />
+│   │   │   ├── codegen_llvm.cc<br />
+│   │   │   ├── codegen_llvm.h<br />
+│   │   │   ├── codegen_nvptx.cc<br />
+│   │   │   ├── codegen_x86_64.cc<br />
+│   │   │   ├── intrin_rule_llvm.cc<br />
+│   │   │   ├── intrin_rule_llvm.h<br />
+│   │   │   ├── intrin_rule_nvptx.cc<br />
+│   │   │   ├── intrin_rule_rocm.cc<br />
+│   │   │   ├── llvm_common.cc<br />
+│   │   │   ├── llvm_common.h<br />
+│   │   │   └── llvm_module.cc<br />
+│   │   ├── opt<br />
+│   │   │   ├── build_aocl_off.cc<br />
+│   │   │   ├── build_cuda_off.cc<br />
+│   │   │   ├── build_cuda_on.cc<br />
+│   │   │   ├── build_metal_off.cc<br />
+│   │   │   ├── build_opencl_off.cc<br />
+│   │   │   ├── build_opengl_off.cc<br />
+│   │   │   ├── build_rocm_off.cc<br />
+│   │   │   ├── build_sdaccel_off.cc<br />
+│   │   │   └── README<br />
+│   │   ├── source_module.cc<br />
+│   │   ├── spirv<br />
+│   │   │   ├── build_vulkan.cc<br />
+│   │   │   ├── codegen_spirv.cc<br />
+│   │   │   ├── codegen_spirv.h<br />
+│   │   │   ├── intrin_rule_spirv.cc<br />
+│   │   │   ├── ir_builder.cc<br />
+│   │   │   └── ir_builder.h 
+│   │   └── stackvm<br />
+│   │       ├── codegen_stackvm.cc<br />
+│   │       └── codegen_stackvm.h<br />
+│   ├── common<br />
+│   │   ├── arena.h<br />
+│   │   ├── base64.h<br />
+│   │   ├── pipe.h<br />
+│   │   ├── ring_buffer.h<br />
+│   │   └── socket.h<br />
+│   ├── contrib<br />
+│   │   ├── cblas<br />
+│   │   │   ├── cblas.cc<br />
+│   │   │   └── gemm_common.h<br />
+│   │   ├── cublas<br />
+│   │   │   ├── cublas.cc<br />
+│   │   │   ├── cublas_utils.cc<br />
+│   │   │   └── cublas_utils.h<br />
+│   │   ├── cudnn<br />
+│   │   │   ├── conv_forward.cc<br />
+│   │   │   ├── cudnn_utils.cc<br />
+│   │   │   └── cudnn_utils.h<br />
+│   │   ├── hybrid<br />
+│   │   │   ├── codegen_hybrid.cc<br />
+│   │   │   └── codegen_hybrid.h<br />
+│   │   ├── miopen<br />
+│   │   │   ├── conv_forward.cc<br />
+│   │   │   ├── miopen_utils.cc<br />
+│   │   │   └── miopen_utils.h<br />
+│   │   ├── mps<br />
+│   │   │   ├── conv.mm<br />
+│   │   │   ├── gemm.mm<br />
+│   │   │   ├── mps_utils.h<br />
+│   │   │   └── mps_utils.mm<br />
+│   │   ├── nnpack<br />
+│   │   │   ├── convolution.cc<br />
+│   │   │   ├── fully_connected.cc<br />
+│   │   │   ├── nnpack_utils.cc<br />
+│   │   │   └── nnpack_utils.h<br />
+│   │   ├── random<br />
+│   │   │   ├── mt_random_engine.cc<br />
+│   │   │   ├── random.cc<br />
+│   │   │   └── sgx_random_engine.cc<br />
+│   │   ├── rocblas<br />
+│   │   │   └── rocblas.cc<br />
+│   │   └── sort<br />
+│   │       └── sort.cc<br />
+│   ├── lang<br />
+│   │   ├── api_registry.cc<br />
+│   │   ├── attr_functor.h<br />
+│   │   ├── attrs.cc<br />
+│   │   ├── buffer.cc<br />
+│   │   ├── channel.cc<br />
+│   │   ├── data_layout.cc<br />
+│   │   ├── expr.cc<br />
+│   │   ├── expr_operator.cc<br />
+│   │   ├── ir.cc<br />
+│   │   ├── lowered_func.cc<br />
+│   │   ├── reflection.cc<br />
+│   │   ├── target_info.cc<br />
+│   │   └── tensor.cc  <span id="tensor.cc"> <strong>tensor表达的实现</strong> </span> <a href="#tensor.py">对应python中的tensor</a> | <a href="#tensor.h">对应头文件</a><br />
+│   ├── op<br />
+│   │   ├── compute_op.cc<br />
+│   │   ├── compute_op.h<br />
+│   │   ├── cross_thread_reduction.cc<br />
+│   │   ├── extern_op.cc<br />
+│   │   ├── hybrid_op.cc<br />
+│   │   ├── hybrid_op.h<br />
+│   │   ├── op_util.cc<br />
+│   │   ├── op_util.h<br />
+│   │   ├── placeholder_op.cc<br />
+│   │   ├── scan_op.cc<br />
+│   │   ├── tensor_compute_op.cc<br />
+│   │   └── tensorize.cc<br />
+│   ├── pass<br />
+│   │   ├── arg_binder.cc<br />
+│   │   ├── arg_binder.h<br />
+│   │   ├── bound_checker.cc<br />
+│   │   ├── combine_context_call.cc<br />
+│   │   ├── coproc_sync.cc<br />
+│   │   ├── detect_device.cc<br />
+│   │   ├── inject_copy_intrin.cc<br />
+│   │   ├── inject_double_buffer.cc<br />
+│   │   ├── inject_prefetch.cc<br />
+│   │   ├── inject_virtual_thread.cCDLLc<br />
+│   │   ├── inline.cc<br />
+│   │   ├── ir_deep_compare.cc<br />
+│   │   ├── ir_mutator.cc<br />
+│   │   ├── ir_util.cc<br />
+│   │   ├── ir_util.h<br />
+│   │   ├── ir_visitor.cc<br />
+│   │   ├── lift_attr_scope.cc<br />
+│   │   ├── loop_partition.cc<br />
+│   │   ├── lower_custom_datatypes.cc<br />
+│   │   ├── lower_intrin.cc<br />
+│   │   ├── lower_thread_allreduce.cc<br />
+│   │   ├── lower_tvm_builtin.cc<br />
+│   │   ├── lower_warp_memory.cc<br />
+│   │   ├── make_api.cc<br />
+│   │   ├── narrow_channel_access.cc<br />
+│   │   ├── remap_thread_axis.cc<br />
+│   │   ├── remove_no_op.cc<br />
+│   │   ├── rewrite_unsafe_select.cc<br />
+│   │   ├── simple_passes.cc<br />
+│   │   ├── split_host_device.cc<br />
+│   │   ├── split_pipeline.cc<br />
+│   │   ├── ssa.cc<br />
+│   │   ├── storage_access.cc<br />
+│   │   ├── storage_access.h<br />
+│   │   ├── storage_flatten.cc<br />
+│   │   ├── storage_rewrite.cc<br />
+│   │   ├── storage_sync.cc<br />
+│   │   ├── unroll_loop.cc<br />
+│   │   ├── vectorize_loop.cc<br />
+│   │   ├── verify_gpu_code.cc<br />
+│   │   └── verify_memory.cc<br />
+│   ├── relay <strong>管理计算图的组件（提供一种计算图的表达，即IR），计算图中的node使用src目录下的一些基础架构进行编译和执行</strong><br />
+│   │   ├── backend<br />
+│   │   │   ├── build_module.cc<br />
+│   │   │   ├── compile_engine.cc<br />
+│   │   │   ├── compile_engine.h<br />
+│   │   │   ├── graph_plan_memory.cc<br />
+│   │   │   ├── graph_runtime_codegen.cc<br />
+│   │   │   ├── interpreter.cc<br />
+│   │   │   ├── param_dict.cc<br />
+│   │   │   ├── param_dict.h<br />
+│   │   │   ├── utils.h<br />
+│   │   │   └── vm<br />
+│   │   │       ├── compiler.cc<br />
+│   │   │       ├── inline_primitives.cc<br />
+│   │   │       ├── lambda_lift.cc<br />
+│   │   │       └── vm.cc<br />
+│   │   ├── ir<br />
+│   │   │   ├── adt.cc<br />
+│   │   │   ├── alpha_equal.cc<br />
+│   │   │   ├── base.cc<br />
+│   │   │   ├── doc.cc<br />
+│   │   │   ├── doc.h<br />
+│   │   │   ├── error.cc<br />
+│   │   │   ├── expr.cc<br />
+│   │   │   ├── expr_functor.cc<br />
+│   │   │   ├── hash.cc<br />
+│   │   │   ├── module.cc<br />
+│   │   │   ├── op.cc<br />
+│   │   │   ├── pattern_functor.cc<br />
+│   │   │   ├── pretty_printer.cc<br />
+│   │   │   ├── type.cc<br />
+│   │   │   ├── type_functor.cc<br />
+│   │   │   └── type_functor.h<br />
+│   │   ├── op<br />
+│   │   │   ├── algorithm<br />
+│   │   │   │   ├── argsort.cc<br />
+│   │   │   │   └── topk.cc<br />
+│   │   │   ├── annotation<br />
+│   │   │   │   └── annotation.cc<br />
+│   │   │   ├── debug.cc<br />
+│   │   │   ├── device_copy.cc<br />
+│   │   │   ├── image<br />
+│   │   │   │   └── resize.cc<br />
+│   │   │   ├── nn<br />
+│   │   │   │   ├── convolution.cc<br />
+│   │   │   │   ├── nn.cc<br />
+│   │   │   │   ├── pad.cc<br />
+│   │   │   │   ├── pooling.cc<br />
+│   │   │   │   └── upsampling.cc<br />
+│   │   │   ├── op_common.h<br />
+│   │   │   ├── tensor<br />
+│   │   │   │   ├── binary.cc<br />
+│   │   │   │   ├── reduce.cc<br />
+│   │   │   │   ├── transform.cc<br />
+│   │   │   │   └── unary.cc<br />
+│   │   │   ├── type_relations.cc<br />
+│   │   │   ├── type_relations.h<br />
+│   │   │   └── vision<br />
+│   │   │       ├── multibox_op.cc<br />
+│   │   │       ├── nms.cc<br />
+│   │   │       ├── rcnn_op.cc<br />
+│   │   │       └── yolo.cc<br />
+│   │   └── pass<br />
+│   │       ├── alter_op_layout.cc<br />
+│   │       ├── alter_op_layout.h<br />
+│   │       ├── canonicalize_cast.cc<br />
+│   │       ├── canonicalize_ops.cc<br />
+│   │       ├── combine_parallel_conv2d.cc<br />
+│   │       ├── dead_code.cc<br />
+│   │       ├── de_duplicate.cc<br />
+│   │       ├── dependency_graph.cc<br />
+│   │       ├── dependency_graph.h<br />
+│   │       ├── device_annotation.cc<br />
+│   │       ├── eliminate_common_subexpr.cc<br />
+│   │       ├── eta_expand.cc<br />
+│   │       ├── expr_subst.cc<br />
+│   │       ├── expr_subst.h<br />
+│   │       ├── feature.cc<br />
+│   │       ├── fold_constant.cc<br />
+│   │       ├── fold_scale_axis.cc<br />
+│   │       ├── forward_rewrite.cc<br />
+│   │       ├── fuse_ops.cc<br />
+│   │       ├── gradient.cc<br />
+│   │       ├── kind_check.cc<br />
+│   │       ├── let_list.h<br />
+│   │       ├── mac_count.cc<br />
+│   │       ├── match_exhaustion.cc<br />
+│   │       ├── partial_eval.cc<br />
+│   │       ├── pass_manager.cc<br />
+│   │       ├── pass_util.h<br />
+│   │       ├── pattern_util.h<br />
+│   │       ├── quantize.cc<br />
+│   │       ├── quantize.h<br />
+│   │       ├── simplify_inference.cc<br />
+│   │       ├── to_a_normal_form.cc<br />
+│   │       ├── to_cps.cc<br />
+│   │       ├── to_graph_normal_form.cc<br />
+│   │       ├── type_infer.cc<br />
+│   │       ├── type_solver.cc<br />
+│   │       ├── type_solver.h<br />
+│   │       ├── util.cc<br />
+│   │       └── well_formed.cc<br />
+│   ├── runtime<br />
+│   │   ├── builtin_fp16.cc<br />
+│   │   ├── c_dsl_api.cc<br />
+│   │   ├── cpu_device_api.cc<br />
+│   │   ├── c_runtime_api.cc<br />
+│   │   ├── <strong><em>cuda</em></strong> cuda runtime 接口实现<br />
+│   │   ├── dsl_api.h<br />
+│   │   ├── dso_module.cc<br />
+│   │   ├── file_util.cc<br />
+│   │   ├── file_util.h<br />
+│   │   ├── <strong><em>graph</em></strong><br />
+│   │   ├── meta_data.h<br />
+│   │   ├── <strong><em>metal</em></strong><br />
+│   │   ├── module.cc<br />
+│   │   ├── module_util.cc<br />
+│   │   ├── module_util.h<br />
+│   │   ├── ndarray.cc<br />
+│   │   ├── <strong><em>opencl</em></strong> opencl runtime 接口实现<br />
+│   │   ├── <strong><em>opengl</em></strong> opengl runtime 接口实现
+│   │   ├── <strong>pack_func.h</strong>  PackedFunc 定义与实现
+│   │   ├── <strong>registry.cc</strong> PackedFunc 相关
+│   │   ├── <strong><em>rocm</em></strong> rocm runtime 接口实现
+│   │   ├── <strong><em>rpc</em></strong> rpc runtime接口实现<br />
+│   │   ├── runtime_base.h<br />
+│   │   ├── <strong><em>sgx</em></strong><br />
+│   │   ├── <strong><em>stackvm</em></strong><br />
+│   │   ├── system_lib_module.cc<br />
+│   │   ├── threading_backend.cc<br />
+│   │   ├── thread_pool.cc<br />
+│   │   ├── thread_storage_scope.h<br />
+│   │   ├── <strong><em>vm</em></strong><br />
+│   │   ├── <strong><em>vulkan</em></strong><br />
+│   │   ├── workspace_pool.cc<br />
+│   │   └── workspace_pool.h<br />
+│   └── schedule<br />
+│       ├── auto_inline_elem_wise.cc<br />
+│       ├── bound.cc <strong>bound实现，bound infrence是推断出所有循环边界和中间缓冲区大小的过程</strong><br />
+│       ├── graph.cc <strong>与bound有关</strong><br />
+│       ├── graph.h<br />
+│       ├── message_passing.cc <strong>与bound有关</strong><br />
+│       ├── message_passing.h<br />
+│       ├── schedule_dataflow_rewrite.cc<br />
+│       ├── schedule_lang.cc<br />
+│       └── schedule_ops.cc <strong>定义ScheduleOps(),返回stmt</strong>  </p>
+<h3 id="topi">topi<a class="headerlink" href="#topi" title="Permanent link">&para;</a></h3>
+<p>├── topi<br />
+│   ├── include<br />
+│   │   └── topi<br />
+│   │       ├── broadcast.h<br />
+│   │       ├── contrib<br />
+│   │       │   ├── cublas.h<br />
+│   │       │   └── rocblas.h<br />
+│   │       ├── cuda<br />
+│   │       │   ├── dense.h<br />
+│   │       │   ├── extern.h<br />
+│   │       │   ├── injective.h<br />
+│   │       │   ├── normalization.h<br />
+│   │       │   ├── pooling.h<br />
+│   │       │   ├── reduction.h<br />
+│   │       │   └── softmax.h<br />
+│   │       ├── detail<br />
+│   │       │   ├── array_utils.h<br />
+│   │       │   ├── broadcast.h<br />
+│   │       │   ├── constant_utils.h<br />
+│   │       │   ├── extern.h<br />
+│   │       │   ├── fuse.h<br />
+│   │       │   ├── pad_utils.h<br />
+│   │       │   └── ravel_unravel.h<br />
+│   │       ├── elemwise.h<br />
+│   │       ├── generic<br />
+│   │       │   ├── default.h<br />
+│   │       │   ├── extern.h<br />
+│   │       │   └── injective.h<br />
+│   │       ├── image<br />
+│   │       │   └── resize.h<br />
+│   │       ├── nn<br />
+│   │       │   ├── batch_matmul.h<br />
+│   │       │   ├── bias_add.h<br />
+│   │       │   ├── bnn.h<br />
+│   │       │   ├── dense.h<br />
+│   │       │   ├── dilate.h<br />
+│   │       │   ├── flatten.h<br />
+│   │       │   ├── l2_normalize.h<br />
+│   │       │   ├── local_response_norm.h<br />
+│   │       │   ├── mapping.h<br />
+│   │       │   ├── pooling.h<br />
+│   │       │   ├── softmax.h<br />
+│   │       │   └── upsampling.h<br />
+│   │       ├── nn.h<br />
+│   │       ├── reduction.h<br />
+│   │       ├── rocm<br />
+│   │       │   ├── dense.h<br />
+│   │       │   └── normalization.h<br />
+│   │       ├── tags.h<br />
+│   │       ├── transform.h<br />
+│   │       ├── vision<br />
+│   │       │   └── reorg.h<br />
+│   │       └── x86<br />
+│   │           ├── bnn.h<br />
+│   │           ├── default.h<br />
+│   │           └── injective.h<br />
+│   ├── python<br />
+│   │   ├── setup.py<br />
+│   │   └── topi<br />
+│   │       ├── arm_cpu<br />
+│   │       │   ├── bitserial_conv2d.py<br />
+│   │       │   ├── bitserial_dense.py<br />
+│   │       │   ├── conv2d.py<br />
+│   │       │   ├── conv2d_transpose.py<br />
+│   │       │   ├── depthwise_conv2d.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   └── injective.py<br />
+│   │       ├── broadcast.py<br />
+│   │       ├── cpp.py<br />
+│   │       ├── cuda<br />
+│   │       │   ├── batch_matmul.py<br />
+│   │       │   ├── conv2d_direct.py<br />
+│   │       │   ├── conv2d_hwcn.py<br />
+│   │       │   ├── conv2d_int8.py<br />
+│   │       │   ├── conv2d.py<br />
+│   │       │   ├── conv2d_transpose_nchw.py<br />
+│   │       │   ├── conv2d_winograd.py<br />
+│   │       │   ├── deformable_conv2d.py<br />
+│   │       │   ├── dense.py<br />
+│   │       │   ├── depthwise_conv2d.py<br />
+│   │       │   ├── extern.py<br />
+│   │       │   ├── group_conv2d_nchw.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── injective.py<br />
+│   │       │   ├── nms.py<br />
+│   │       │   ├── nn.py<br />
+│   │       │   ├── pooling.py<br />
+│   │       │   ├── rcnn<br />
+│   │       │   │   ├── <strong>init</strong>.py<br />
+│   │       │   │   ├── proposal.py<br />
+│   │       │   │   └── <strong>pycache</strong><br />
+│   │       │   ├── reduction.py<br />
+│   │       │   ├── softmax.py<br />
+│   │       │   ├── sort.py<br />
+│   │       │   ├── ssd<br />
+│   │       │   │   ├── <strong>init</strong>.py<br />
+│   │       │   │   ├── multibox.py<br />
+│   │       │   │   └── <strong>pycache</strong><br />
+│   │       │   ├── tensor_intrin.py<br />
+│   │       │   └── vision.py<br />
+│   │       ├── generic<br />
+│   │       │   ├── extern.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── injective.py<br />
+│   │       │   ├── nn.py<br />
+│   │       │   ├── sort.py<br />
+│   │       │   └── vision.py<br />
+│   │       ├── generic_op_impl.py<br />
+│   │       ├── hls<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── injective.py<br />
+│   │       │   ├── nn.py<br />
+│   │       │   └── <strong>pycache</strong><br />
+│   │       ├── image<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   └── resize.py<br />
+│   │       ├── <strong>init</strong>.py<br />
+│   │       ├── intel_graphics<br />
+│   │       │   ├── conv2d.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   └── <strong>pycache</strong><br />
+│   │       ├── mali<br />
+│   │       │   ├── conv2d.py<br />
+│   │       │   ├── dense.py<br />
+│   │       │   ├── depthwise_conv2d.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   └── <strong>pycache</strong><br />
+│   │       ├── math.py<br />
+│   │       ├── nn<br />
+│   │       │   ├── batch_matmul.py<br />
+│   │       │   ├── bitserial_conv2d.py<br />
+│   │       │   ├── bitserial_dense.py<br />
+│   │       │   ├── bitserial_util.py<br />
+│   │       │   ├── bnn.py<br />
+│   │       │   ├── conv2d.py<br />
+│   │       │   ├── conv2d_transpose.py<br />
+│   │       │   ├── deformable_conv2d.py<br />
+│   │       │   ├── dense.py<br />
+│   │       │   ├── depthwise_conv2d.py<br />
+│   │       │   ├── dilate.py<br />
+│   │       │   ├── elemwise.py<br />
+│   │       │   ├── flatten.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── l2_normalize.py<br />
+│   │       │   ├── local_response_norm.py<br />
+│   │       │   ├── mapping.py<br />
+│   │       │   ├── pad.py<br />
+│   │       │   ├── pooling.py<br />
+│   │       │   ├── softmax.py<br />
+│   │       │   ├── upsampling.py<br />
+│   │       │   └── util.py<br />
+│   │       ├── opengl<br />
+│   │       │   ├── conv2d_nchw.py<br />
+│   │       │   ├── dense.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── injective.py<br />
+│   │       │   ├── pooling.py<br />
+│   │       │   └── softmax.py<br />
+│   │       ├── reduction.py<br />
+│   │       ├── rocm<br />
+│   │       │   ├── conv2d.py<br />
+│   │       │   ├── dense.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── nn.py<br />
+│   │       │   └── <strong>pycache</strong><br />
+│   │       ├── sort.py<br />
+│   │       ├── sparse<br />
+│   │       │   ├── csrmm.py<br />
+│   │       │   ├── csrmv.py<br />
+│   │       │   ├── dense.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   └── <strong>pycache</strong><br />
+│   │       ├── tag.py<br />
+│   │       ├── tensor.py<br />
+│   │       ├── testing<br />
+│   │       │   ├── batch_matmul.py<br />
+│   │       │   ├── bilinear_resize_python.py<br />
+│   │       │   ├── conv2d_hwcn_python.py<br />
+│   │       │   ├── conv2d_nchw_python.py<br />
+│   │       │   ├── conv2d_nhwc_python.py<br />
+│   │       │   ├── conv2d_transpose_nchw_python.py<br />
+│   │       │   ├── deformable_conv2d_nchw_python.py<br />
+│   │       │   ├── depthwise_conv2d_python.py<br />
+│   │       │   ├── dilate_python.py<br />
+│   │       │   ├── gather_nd_python.py<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── l2_normalize_python.py<br />
+│   │       │   ├── lrn_python.py<br />
+│   │       │   ├── reorg_python.py<br />
+│   │       │   ├── roi_align_python.py<br />
+│   │       │   ├── roi_pool_python.py<br />
+│   │       │   ├── sequence_mask_python.py<br />
+│   │       │   ├── slice_axis_python.py<br />
+│   │       │   ├── softmax_python.py<br />
+│   │       │   ├── strided_slice_python.py<br />
+│   │       │   └── upsampling_python.py<br />
+│   │       ├── transform.py<br />
+│   │       ├── util.py<br />
+│   │       ├── vision<br />
+│   │       │   ├── <strong>init</strong>.py<br />
+│   │       │   ├── nms.py<br />
+│   │       │   ├── rcnn<br />
+│   │       │   │   ├── <strong>init</strong>.py<br />
+│   │       │   │   ├── proposal.py<br />
+│   │       │   │   ├── roi_align.py<br />
+│   │       │   │   └── roi_pool.py<br />
+│   │       │   ├── reorg.py<br />
+│   │       │   └── ssd<br />
+│   │       │       ├── <strong>init</strong>.py<br />
+│   │       │       ├── multibox.py<br />
+│   │       │       └── <strong>pycache</strong><br />
+│   │       └── x86<br />
+│   │           ├── batch_matmul.py<br />
+│   │           ├── binarize_pack.py<br />
+│   │           ├── binary_dense.py<br />
+│   │           ├── bitserial_conv2d.py<br />
+│   │           ├── bitserial_dense.py<br />
+│   │           ├── check_targets.py<br />
+│   │           ├── conv2d_avx_1x1.py<br />
+│   │           ├── conv2d_avx_common.py<br />
+│   │           ├── conv2d.py<br />
+│   │           ├── dense.py<br />
+│   │           ├── depthwise_conv2d.py<br />
+│   │           ├── <strong>init</strong>.py<br />
+│   │           ├── injective.py<br />
+│   │           ├── nn.py<br />
+│   │           ├── pooling.py<br />
+│   │           ├── roi_align.py<br />
+│   │           ├── tensor_intrin.py<br />
+│   │           └── util.py<br />
+│   ├── recipe<br />
+│   │   ├── broadcast 
+│   │   │   └── test_broadcast_map.py<br />
+│   │   ├── conv<br />
+│   │   │   ├── depthwise_conv2d_test.py<br />
+│   │   │   ├── test_conv2d_hwcn_map.py<br />
+│   │   │   └── test_conv_int8_intel.py<br />
+│   │   ├── gemm<br />
+│   │   │   ├── android_gemm_square.py<br />
+│   │   │   ├── cuda_gemm_square.py<br />
+│   │   │   └── gemm_int8.py<br />
+│   │   ├── reduce<br />
+│   │   │   └── test_reduce_map.py<br />
+│   │   └── rnn<br />
+│   │       ├── lstm.py<br />
+│   │       └── matexp.py<br />
+│   ├── src<br />
+│   │   └── topi.cc<br />
+│   └── tests  </p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../tools/vscode-remotessh.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: vscode" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              vscode
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="node.html" class="md-footer__link md-footer__link--next" aria-label="Next: Node-SubSystem" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Node-SubSystem
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../assets/javascripts/workers/search.477d984a.min.js", "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.82b56eb2.min.js"></script>
+      
+    
+  </body>
+</html>
