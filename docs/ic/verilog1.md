@@ -56,6 +56,8 @@ chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ sudo apt-get install bison flex aut
 生成makefile
 
 ```shell
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ chmod +x autoconf.sh
+chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ ./autoconf.sh
 chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ ./configure --prefix=/home/chsgcxy/opt/iverilog/
 chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ make -j4
 chsgcxy@chsgcxy-TM1703:~/workspace/iverilog$ make install

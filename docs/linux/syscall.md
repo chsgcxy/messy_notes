@@ -38,3 +38,10 @@
 > 除了POSIX之外，还有其他标准，这些不是由某个委员会制定的，而是来源于 UNIX 和类 UNIX 操作系统的开发。在 UNIX 的历史中，两条开发主线产生了两个独立的系统，一个是SystemV(直接起源于AT&T的原始代码)，另一个是BSD (Berkeley Software Distribution，在加州大学开发，现在市场上的 NetBSD、 FreeBSD、 OpenBSD 都是基于 BSD 的，还有基于BSD的商业系统，如 MacOS。Linux 提供的系统调用汲取自所有上述 3 个来源
 
 ## 实现
+
+arch/riscv/kernel/entry.S 中
+在异常处理中，如果异常是用户模式下发生的ecall指令，那么就定位到sys_call_table[异常号对应偏移]中进行执行
+
+对应的执行函数就是我们在include/linux/syscall.h中看到的那些sys_xxxxx的函数，当然，sys_xxxx只是为了方便阅读的，
+没法直接调用，他们更像一个API说明书，其实所有的系统调用都是通过SYSCALL_DEFINE1 - SYSCALL_DEFINE6来定义的，分散在
+kernel代码的各个角落

@@ -107,3 +107,30 @@ sudo perf script | stackcollapse-perf.pl | stackcollapse-recursive.pl | c++filt 
 
 这篇记录里大多数的操作都是网上查到的，我只是记录了一下而已。而且perf这个分析方法也是同事告诉我的，
 其实我只是一个实施者，但从中应该学到的是如何快速的掌握一个工具使用方法的能力。应该提高的是查资料的能力。
+
+## perf 统计cache miss情况
+
+```shell
+perf stat -e L1-dcache-load-misses -e L1-dcache-loads -e LLC-load-misses  -e  LLC-loads -e LLC-store-misses -e LLC-stores -e dTLB-load-misses -e dTLB-loads -e dTLB-store-misses -e dTLB-stores ./randomstream
+```
+
+统计结果
+
+```text
+ Performance counter stats for './randomstream':
+    14,489,916,426      L1-dcache-load-misses     #   16.83% of all L1-dcache hits    (39.98%)
+    86,081,655,549      L1-dcache-loads                                               (39.99%)
+     2,633,551,306      LLC-load-misses           #   40.63% of all LL-cache hits     (40.01%)
+     6,482,329,778      LLC-loads                                                     (40.02%)
+     1,730,604,712      LLC-store-misses                                              (20.00%)
+     3,079,201,774      LLC-stores                                                    (20.00%)
+       244,280,338      dTLB-load-misses          #    0.28% of all dTLB cache hits   (30.00%)
+    86,066,948,345      dTLB-loads                                                    (40.00%)
+     1,414,326,484      dTLB-store-misses                                             (39.99%)
+    45,374,302,611      dTLB-stores                                                   (39.98%)
+
+      19.019721004 seconds time elapsed
+
+     282.336445000 seconds user
+     818.115020000 seconds sys
+```
