@@ -1,5 +1,7 @@
 # Linux的同步和互斥机制
 
+[TOC]
+
 在面对需要同步和互斥机制的场景时，只有熟练掌握linux提供的同步和互斥机制，才能灵活运用，举一反三。
 
 - 自旋锁(spin lock)
@@ -146,7 +148,7 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
 
 为了解决多个读线程无法并行的问题，在spinlock基础上实现了读写锁。
 
-这里可以参考https://blog.csdn.net/zhoutaopower/article/details/86605987
+这里可以参考[https://blog.csdn.net/zhoutaopower/article/details/86605987]
 
 来看代码实现，在分析spinlock的时候就已经看到，spinlock.h中还引用了读写锁的头文件rwlock.h
 同样的，spinlock_types.h中也包含了rwlock数据类型的定义的头文件rwlock_types.h，按照spinlock的头文件
@@ -312,3 +314,9 @@ struct mutex {
 >自旋等待机制的核心原理是当发现持有者正在临界区执行并且没有其他优先级高的进程要被调度（need_resched）时，那么mutex当前所在进程认为该持有者很快会离开临界区并释放锁，此时mutex选择自旋等待，短时间的自旋等待显然比睡眠-唤醒开销小一些。在实现上MCS保证了同一时间只有一个进程自旋等待持有者释放锁。MCS 的实现较为复杂，具体可参考一些内核书籍。MCS保证了不会存在多个cpu争用锁的情况，从而避免了多个CPU的cacheline颠簸从而降低系统性能的问题。经过改进后，mutex的性能有了相当大的提高，相对信号量的实现要高效得多。因此我们尽量选用mutex
 
 在阅读上面这段解释的时候，我有一个近期的感悟，随着芯片的发展，linux kernel经典的机制不断的面临新的挑战，与此同时，linux kernel在不断与时俱进，linux kernel早已进入5.0版本时代，在当下，当我们再去分析内核机制的时候，应该在参考经典解读的同时，自己去分析最新的kernel代码，在发现新特性的时候，要查找资料去了解它的应用场景，及时跟上时代的步伐。
+
+## 锁的测试方法
+
+[https://github.com/Hc7Hs/Performance-test-of-different-locks-under-Linux]
+
+上面提供了一个各种锁的效率的测试方法
