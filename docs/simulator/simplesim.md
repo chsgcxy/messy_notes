@@ -231,8 +231,43 @@ RUU来保证的。
 RUU不仅承担了标记寄存器依赖的工作，还承担了ROB的工作。在dispatch阶段，fetch_data中的指令按照顺序绑定RUU,在commit阶段，
 如果RUU_head中记录的指令没有complete，后面的指令都无法commit
 
+同时，对于speculative execution, simplesim还提供了use_spec_cv 和 spec_create_vector来快速恢复寄存器依赖到错误的分支之前。
+以4个RUU举例说明
+
+```text
+                 __________                    0      0      0     0      0      0      1
+                |          |                ________________________________________________
+add r2, r0, r1  |   RUU0   |               |__r0__|__r1__|__r2__|__r3__|__r4__|__r5__|__r6__| use_spec_cv
+                |__________|               
+                |          | 
+sub r3, r2, r1  |   RUU1   | 
+                |__________|
+                |          |                              RUU0   RUU1                  
+bnez r3, off    |   RUU2   |               ________________________________________________
+                |__________|              |__r0__|__r1__|__r2__|__r3__|__r4__|__r5__|__r6__| creat_vector
+                |          |
+mul r6, r0, r1  |   RUU3   | .spec_mode=TRUE
+                |__________|              
+                                                                                     RUU3
+                                          ________________________________________________
+                                         |__r0__|__r1__|__r2__|__r3__|__r4__|__r5__|__r6__| spec_creat_vector
+```
+
+假设有四条指令，第三条为分支指令，假设分支预测notaken, 所以speculative执行指令4, 这时候，启用spec_creat_vector来记录寄存器依赖
+并且将对应的use_spec_cv中的标志位置1。加入分支预测错误，要恢复，那么就需要按照指令顺序去遍历RUU。但其实无法快速的从RUU获取到
+对应的creat_vector,所以直接通过清除整个use_spec_cv来达到快速清除寄存器依赖的目的。
+
+simpleScalar因为仅仅是时序模拟，所有指令在dispatch阶段就执行完成了。因此在dispatch阶段就知道分支预测是否错误。分支预测错误的时候
+才会开启spec_mode, 并且stall整个dispatch过程。
+
 ### Load指令的处理
 
 ### store指令的处理
+
+```text
+
+            dispatch: tire to RUU
+
+```
 
 ### control指令的处理
