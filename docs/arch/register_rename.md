@@ -76,9 +76,80 @@ x6 ----> R6
 ```
 
 因此sub指令可以在lw和add等待资源的情况下先执行完成。
-问题在于物理寄存器的释放时机，通常来说，每完成一条指令，
-就可以释放该指令目的ISA寄存器上一次映射的物理寄存器。
-在上面的例子中，在mul指令rename的时候，R7可用吗？
+问题在于物理寄存器的释放时机，在上面的例子中，在mul指令rename的时候，R7可用吗？
+
+### 寄存器的释放问题
+
+![../imgs/boom_rename.png](../imgs/boom_rename.png)
+
+如上图，可以用作rename的寄存器可以通过一个freelist索引到， rename的时候，rename关系存放在Map table中， 按照上面描述的寄存器重命名原理，我们很容易能够理清上面图中描述的过程，但有一个问题，物理寄存器不是无限的，势必要有一个回收的机制，必然是在指令commit时才有可能回收这些用过的寄存器，那么在回收的时候，必须要保证整个CPU的flow中没有对这个寄存器的引用。
+
+如何来保证呢？假设在一条指令提交之后就回收该寄存器，那么显然可能会引入错误的WAR难道我们要去记录谁引用了rename之后的寄存器吗？怎么才能记录呢？实际上，设计者采用了一个非常巧妙的做法，使用很简单的方式就解决了这个问题。
+
+我们看下面的测试程序
+
+```asm
+OP1 r1, r1, r3
+OP2 r5, r5, r1
+OP3 r2, r1, r2
+OP4 r1, r1, r4
+OP5 r6, r1, r3
+OP6 r7, r4, r1
+OP7 r1, r8, r9
+```
+
+我们尝试去rename这段代码：
+
+```asm
+OP1 r16, r1, r3        # r1 -> r16
+OP2 r17, r5, r16       # r5 -> r17
+OP3 r18, r16, r2       # r2 -> r18
+OP4 r19, r16, r4       # r1 -> r19
+OP5 r20, r19, r3       # r6 -> r20
+OP6 r21, r4, r19       # r7 -> r21
+OP7 r???, r8, r9       # r1 -> r???
+```
+
+我们看r1的rename链， r1 -> r16 -> r19 -> r???, 假如现在commit到了OP4。最后一条指令OP7在rename时能不能使用r19?能不能使用r16?
+很显然，假如使用r19, 因为乱序执行，那么有可能OP7要比OP5和OP6先执行，那么就会导致OP5和OP6的计算结果出错。因此不能使用r19， 那么能不能使用r16呢？是可以的，因为OP4的提交，意味着所有对r16的引用肯定是结束了(属于充分不必要条件)，因为后面都改姓r19了。所以按照这种方式去释放寄存器，肯定是简单(不用去考虑哪条指令引用了这个寄存器的问题)又能保证正确，还不至于过度浪费。
+
+我们看gem5中O3CPU的实现，这也是alpha21264CPU的实现。在rename的时候，不单记录了当前arch寄存器被rename的物理寄存器，还记录了上一次被rename的物理寄存器。在指令提交时，调用removeFromHistory函数，这时候释放的是记录的上一次rename的物理寄存器(prevPhysReg)。
+
+```c++
+SimpleRenameMap::RenameInfo
+SimpleRenameMap::rename(const RegId& arch_reg)
+{
+  PhysRegIdPtr renamed_reg;
+  // Record the current physical register that is renamed to the
+  // requested architected register.
+  PhysRegIdPtr prev_reg = map[arch_reg.flatIndex()];
+  renamed_reg = freeList->getReg();
+  map[arch_reg.flatIndex()] = renamed_reg;
+  return RenameInfo(renamed_reg, prev_reg);
+}
+
+template<class Impl>
+void
+DefaultRename<Impl>::removeFromHistory(InstSeqNum inst_seq_num, ThreadID tid)
+{
+  // Commit all the renames up until (and including) the committed sequence
+  // number. Some or even all of the committed instructions may not have
+  // rename histories if they did not have destination registers that were
+  // renamed.
+  while (!historyBuffer[tid].empty() &&
+          hb_it != historyBuffer[tid].end() &&
+          hb_it->instSeqNum <= inst_seq_num) {
+
+      // Don't free special phys regs like misc and zero regs, which
+      // can be recognized because the new mapping is the same as
+      // the old one.
+      if (hb_it->newPhysReg != hb_it->prevPhysReg) {
+          freeList->addReg(hb_it->prevPhysReg);
+      }
+  }
+}
+```
+
 
 ## gem5 O3 CPU的重命名机制
 
