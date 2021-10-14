@@ -32,3 +32,5 @@ mechanism | 机制
 nest | 嵌套
 glues | 胶水
 underlying | 底层
+tradeoff | 折中
+penalty | 惩罚

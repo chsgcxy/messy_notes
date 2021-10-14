@@ -86,4 +86,14 @@ neoverse分为三大系列:
 
 ## Intel Alder Lake
 
-Alder Lake(美国华盛顿的一个名为奥尔德的湖, 不禁让人想到了中科院的雁栖湖) 是 Intel 21年最新发布的第12代CPU架构
+Alder Lake(美国华盛顿的一个名为奥尔德的湖, 不禁让人想到了中科院的雁栖湖) 是 Intel 21年最新发布的第12代CPU架构,这是一个大小核混合架构。大小核分别被成为Pcore和Ecore。从名字上就能看出，一个追求性能，一个追求能效比。猜测Intel使用大小核混合结构是为了适应更多的场景，不仅仅是桌面市场，在移动市场，Intel也想有更进一步的发展。不知道使用了Alder Lake的serface是不是能够销量大增。
+新的混合架构在IO方面还支持PCIe Gen5和DDR5
+
+### Performance core
+
+追求速度，强调低延迟，单线程性能。集成的矩阵引擎能够更好的处理AI场景，smart PM 控制，能够更好的对电源进行控制。
+微架构名为Golden Cove
+
+### Efficient core
+
+强调吞吐量，强调多任务多线程的总体性能。微架构名为Gracemont
