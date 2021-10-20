@@ -89,7 +89,7 @@ cache的tag与data的串行访问还是并行访问也会对性能和功耗有�
 
 AMD Opteron 双端口D-Cache设计实例
 
-![../imgs/multi-bank-cache.png](../imgs/multi-bank-cache.png)
+![../imgs/multi-bank-cache.png](../imgs/multi-bank-cache.PNG)
 ![../imgs/amd_opteron_dcache.png](../imgs/amd_opteron_dcache.png)
 
 ---
