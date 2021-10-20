@@ -80,7 +80,7 @@ x6 ----> R6
 
 ### 寄存器的释放问题
 
-![../imgs/boom_rename.png](../imgs/boom_rename.png)
+![../imgs/boom_rename.png](../imgs/boom_rename.PNG)
 
 如上图，可以用作rename的寄存器可以通过一个freelist索引到， rename的时候，rename关系存放在Map table中， 按照上面描述的寄存器重命名原理，我们很容易能够理清上面图中描述的过程，但有一个问题，物理寄存器不是无限的，势必要有一个回收的机制，必然是在指令commit时才有可能回收这些用过的寄存器，那么在回收的时候，必须要保证整个CPU的flow中没有对这个寄存器的引用。
 

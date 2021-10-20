@@ -32,7 +32,7 @@ PIM旨在提升带宽密集型workloads(目前主要是AI领域)的性能，通�
 
 众核的翘楚，目前Mk2 有1472个核，每个核带有624KiB的sram, 采用TSMC的7nm工艺，达到了823mm^2^ (这么大的面积，SRAM占了一半, 逻辑单元占了1/4), 主频1.325GHz, 算力可达250Tflop/s
 
-![./hotchip33/graphcore_mk2.png](./hotchip33/graphcore_mk2.png)
+![./hotchip33/graphcore_mk2.png](./hotchip33/graphcore_mk2.PNG)
 
 从上图的性能统计能够看出，graphcore的优势在于fp32的算力， 由于Mk2内部达到了897MiB的SRAM, 估计功耗表现要比A100好。
 
@@ -40,17 +40,17 @@ PIM旨在提升带宽密集型workloads(目前主要是AI领域)的性能，通�
 
 主要有两个处理单元，一个MAIN, 一个AUX， main有自己的registerfile,名为MRF;AUX有一个名为ARF的registerfile。有一个负责调度slot的supervisor, supervisor通过执行RUN指令来调度节点，codelet执行完成后，以EXIT指令终止。节点以芯片时钟的1/6执行，看不到流水线。访存，分支，浮点，几乎所有的指令都需要一个周期执行完成。这样编译器就能比较轻松的预测codelet执行，这样就能够轻松的评估负载，做到负载均衡。
 
-![./hotchip33/graphcore_mk2_tile.png](./hotchip33/graphcore_mk2_tile.png)
+![./hotchip33/graphcore_mk2_tile.png](./hotchip33/graphcore_mk2_tile.PNG)
 
 它有一个强大的浮点单元， 并且支持一些超越函数。
 
 下面是它在拆分kernel时的策略， 可以看出，它还是拆分成很小的矩阵来进行运算，并且中间结果采用fp32进行累加,至于为什么这么拆分，单从上面简单的tile结构图上还很难分析清楚。
 
-![./hotchip33/graphcore_mk2_calc.png](./hotchip33/graphcore_mk2_calc.png)
+![./hotchip33/graphcore_mk2_calc.png](./hotchip33/graphcore_mk2_calc.PNG)
 
 下面是运行bert-l 网络的时候的整体运行图，我们可以看出，所有tile都是按照sync,exchange,compute这三个状态进行循环，而且工具链对于整个网络的优化做的已经很好了，负载比较均衡。
 
-![./hotchip33/graphcore_mk2_bert.png](./hotchip33/graphcore_mk2_bert.png)
+![./hotchip33/graphcore_mk2_bert.png](./hotchip33/graphcore_mk2_bert.PNG)
 
 graphcore给出了不用HBM(在存储单元上和DDR没有太大差异，主要是将内存和主芯片封在一个芯片里面，这样就跨越了封装对芯片引脚数目的限制，大大缩短了dram和主芯片直接的距离，同时采用3D堆叠技术，直接通过TSV打孔竖直堆叠在一起，高端的DDR也采取这种方式，当然这种方式对散热要求更高)的理由
 
@@ -80,7 +80,7 @@ neoverse分为三大系列:
 - N-serise 性能，功耗，面积均衡， 12-36 cores, 30-80W, A72
 - E-serise 强调能效，功耗和面积, 4-16 cores, 20-35W, A53
 
-![./hotchip33/arm_neoverse_roadmap.png](./hotchip33/arm_neoverse_roadmap.png)
+![./hotchip33/arm_neoverse_roadmap.png](./hotchip33/arm_neoverse_roadmap.PNG)
 
 ---
 

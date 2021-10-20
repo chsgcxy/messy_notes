@@ -63,8 +63,8 @@ ICache只有读操作，相对简单，对于DCache, 它需要有多端口设计
 
 多路组相联的Cache因为要按照一定顺序比较多个Tag, 因此延迟要比直接映射Cache的延迟大。甚至为了保证时序，还需要拆解成多级流水。
 
-![../imgs/cache_2way.png](../imgs/cache_2way.png)
-![../imgs/cache_multi_cycle.png](../imgs/cache_multi_cycle.png)
+![../imgs/cache_2way.png](../imgs/cache_2way.PNG)
+![../imgs/cache_multi_cycle.png](../imgs/cache_multi_cycle.PNG)
 
 cache的tag与data的串行访问还是并行访问也会对性能和功耗有影响，并行访问会导致主频上不去，功耗大，但访问cache的周期能够缩短。
 
@@ -90,7 +90,7 @@ cache的tag与data的串行访问还是并行访问也会对性能和功耗有�
 AMD Opteron 双端口D-Cache设计实例
 
 ![../imgs/multi-bank-cache.png](../imgs/multi-bank-cache.PNG)
-![../imgs/amd_opteron_dcache.png](../imgs/amd_opteron_dcache.png)
+![../imgs/amd_opteron_dcache.png](../imgs/amd_opteron_dcache.PNG)
 
 ---
 
