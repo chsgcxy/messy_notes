@@ -124,6 +124,8 @@ MMU提供的TLB管理手段：
 - 能够flush掉ASID对应的entry
 - 能够flush掉某个VPN对应的entry
 
+## Cache
+
 物理cache与虚拟cache
 
 ![../imgs/cache_virtual_phy.png](../imgs/cache_virtual_phy.png)
@@ -132,6 +134,37 @@ MMU提供的TLB管理手段：
 
 同义问题：可以使用多bank的方法来解决cache的同义问题，但随着cache容量的增大，硬件复杂度和功耗都会增加很多。
 同名问题：通过ASID和G标识来解决，可以增加一级表来解决引入ASID带来的查找问题
+
+## 分支预测
+
+分支预测要解决两个方面的预测：
+
+- 分支方向
+- 跳转地址
+
+分支预测的最好时机就是在当前周期得到取指令地址的时候，再取指令的同时进行分支预测，这样在下一个周期就可以根据预测结果继续取指。
+主流处理器更广泛的采用基于两位饱和计数器的分支预测器，并以此为基础进行延申。两位饱和计数器的核心理念就是当一条分支指令连续两次执行方向都一样时，
+那么该分支指令在第三次执行时也会有同样的方向，如果一条分支指令只是偶尔发生了方向的改变，那么分支预测结果不会立马跟着改变，也就是滤波。
+
+PHT(Pattern History Table)由于容量的限制，只能对应PC值中的一部分，因此会产生别名的问题。可以通过hash来降低别名发生的概率。
+
+### 局部历史分支预测
+
+局部历史分支预测，通过记录过去几次分支执行的情况，来预测未来分支执行的情况，以PC值为索引，通过将PC值进行hash来降低别名问题，hash后的PC值用来寻址分支历史表(BHT),为了降低因为BHR中的值相同引起的重名问题，将BHR的值和PC值的一部分进行操作(或操作，组合操作)后，寻址饱和计数器表
+
+![../imgs/branch_predictor_local_history.PNG](../imgs/branch_predictor_local_history.PNG)
+
+### 全局历史分支预测
+
+通过分支之间的关系来进行预测，GHR不按照PC来进行，所有的分支都被记录到GHR,hash后的PC和GHR中的值进行XOR操作后，来索引PHT。
+
+![../imgs/branch_predictor_global_history.PNG](../imgs/branch_predictor_global_history.PNG)
+
+### 竞争的分支预测
+
+局部历史和全局历史都有局限性，因此，如果把这两个都包含进去，在适当的实际进行切换，应该会得到更好的效果。通过Choice PHT来进行选择，寻址Choise PHT时，使用了查找全局分支的PHT的index。
+
+![../imgs/branch_predictor_choice.PNG](../imgs/branch_predictor_choice.PNG)
 
 [^1]: 这是一种备份思想，虽然给每个人分配了晚餐，但也不想每个人都给足够的食物，就多备了几份，给那些饭量大的人
 [^2]: 如果CPU能够有类似AI的学习机制，有比较大的空间能够用来学习数据地址的规律，在预取时能够保证比较高的准确率，那么效率一定能提高不少
