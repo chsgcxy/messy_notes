@@ -162,9 +162,51 @@ PHT(Pattern History Table)由于容量的限制，只能对应PC值中的一部�
 
 ### 竞争的分支预测
 
-局部历史和全局历史都有局限性，因此，如果把这两个都包含进去，在适当的实际进行切换，应该会得到更好的效果。通过Choice PHT来进行选择，寻址Choise PHT时，使用了查找全局分支的PHT的index。
+局部历史和全局历史都有局限性，因此，如果把这两个都包含进去，在适当的时机进行切换，应该会得到更好的效果。通过Choice PHT来进行选择，寻址Choise PHT时，使用了查找全局分支的PHT的index。
 
-![../imgs/branch_predictor_choice.PNG](../imgs/branch_predictor_choice.PNG)
+![../imgs/branch_predicter_GHR_checkpoint.PNG](../imgs/branch_predictor_choice.PNG)
+
+### 分支预测器的更新
+
+GHR在取指令阶段更新会比较好，可以使后续的分支指令使用到最新的GHR。在取指令阶段更新GHR是推测的，在预测失败的时候需要有一种机制对GHR进行修复，使GHR能够恢复到正确值。
+可以使用checkpoint方法来将GHR进行恢复,将每次要修复成的值(取非操作)填入一个GHR栈。
+
+![../imgs/branch_predicter_GHR_checkpoint.PNG](../imgs/branch_predicter_GHR_checkpoint.PNG)
+
+对于BHR的更新，可以在分支指令retire的时候，这样可以简化设计，也不会对性能产生太大的负面影响。
+对于饱和计数器，一般都是在分支指令retire的时候对PHT中的饱和计数器进行更新。
+
+### 直接跳转的地址预测
+
+对于一条特定的直接跳转指令来说，它的目标地址是固定的，指令又与PC相关，因此使用一个PC寻址的cache来缓存这些指令的跳转地址，就能进行地址预测了，这就是BTB。一般可以采用组相联cache来实现BTB。
+
+![../imgs/btb_set.PNG](../imgs/btb_set.PNG)
+
+如果BTB发生miss,那么可以阻塞流水线，停止执行，这样能够节省功耗，但效率可能会低一些。也可以继续执行，一旦发现最终计算出来的跳转地址和speculative执行的地址不一样，再进行flush，这样有可能会蒙对，但功耗相对高一些。
+
+### 间接跳转的分支预测
+
+其实大多数间接跳转都是CALL/Return指令，CALL指令的地址也是固定的，因此BTB就能进行预测。Return指令虽然地址是不固定的，但CALL与Return一般是成对出现，return的地址总是等于最近一次执行的CALL指令的下一条指令的地址。使用RAS能够很好的对Return指令的跳转地址进行预测。
+
+![../imgs/ras_push_pop.PNG](../imgs/ras_push_pop.PNG)
+
+对于不是CALL/Return的间接跳转，也有方法能够进行地址预测。因为具有正常功能的代码，分支跳转的地址总是有限的，比如switch，case。那么可以借鉴局部历史的分支预测，将BHT替换成target-Cache就能比较好的进行分支预测。
+
+### 一个完整的分支预测
+
+一个完整的分支预测，结合上面所述的各个部分
+
+![../imgs/branch_predictor_all.PNG](../imgs/branch_predictor_all.PNG)
+
+### 预测失败的恢复
+
+可以在下面几个时间点对指令的分支预测结果进行检查
+
+- 解码阶段。对一部分直接跳转指令进行分支预测检查，比如无条件跳转指令。
+- 读取寄存器阶段。获取到寄存器值就能知道目标地址，对于一部分间接跳转就能进行预测检查
+- 执行阶段。penalty最大。可以利用ROB或者checkpoint进行预测失败恢复。利用ROB实现起来相对简单，使用checkpoint会使用更多的硬件资源。
+
+
 
 [^1]: 这是一种备份思想，虽然给每个人分配了晚餐，但也不想每个人都给足够的食物，就多备了几份，给那些饭量大的人
 [^2]: 如果CPU能够有类似AI的学习机制，有比较大的空间能够用来学习数据地址的规律，在预取时能够保证比较高的准确率，那么效率一定能提高不少

@@ -2,6 +2,8 @@
 
 [https://github.com/chipsalliance/rocket-chip](https://github.com/chipsalliance/rocket-chip)
 
+> Rocket Chip is a design generator, capable of producing many design instances from a single high-level source
+
 rocket chip项目不仅实现了rocket chip的SOC，还可以作为函数库来使用,准确来讲，Rocket Chip是一个开源的SOC可综合RTL生成器。内部实现了基于RISCV架构的顺序Core(Rocket)和乱序Core(BOOM)。目前Rocket Chip已经 taped out 11次，稳定性得到了肯定。
 
 通过github的README可以轻松找到Rocket的相关文档说明

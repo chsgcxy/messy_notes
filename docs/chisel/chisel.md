@@ -93,6 +93,67 @@ chisel官方提供了chisel-bootcamp, 一个chisel教程。这是一个很好的
 时刻注意，chisel是强类型语言，类型不匹配在编译时会报错，要熟知使用的对象的类型。
 下面的语法要点是对官方教程进行了总结，但**熟悉chisel基础语法最好的方式是按照官方教程进行学习**
 
+### 数据类型
+
+chisel有着严格的数据类型，它用于构建逻辑电路的数据类型和scala是严格区分的。同时，因为是生成硬件电路，因此，所有的数据都应该是val而不是var
+
+如下是常用数据类型，其中.U .S .B是常见的三种数据类型
+
+```scala
+1.U       // decimal 1-bit lit from Scala Int.
+"ha".U    // hexadecimal 4-bit lit from string.
+"o12".U   // octal 4-bit lit from string.
+"b1010".U // binary 4-bit lit from string.
+
+5.S    // signed decimal 4-bit lit from Scala Int.
+-8.S   // negative decimal 4-bit lit from Scala Int.
+5.U    // unsigned decimal 3-bit lit from Scala Int.
+
+8.U(4.W) // 4-bit unsigned decimal, value 8.
+-152.S(32.W) // 32-bit signed decimal, value -152.
+
+true.B // Bool lits from Scala lits.
+false.B
+```
+
+下划线可以用来增加可读性，并没有实际意义
+
+```scala
+"h_dead_beef".U   // 32-bit lit of type UInt
+```
+
+.W用来指定宽度。如果不指定，那么自动的会用最少的bits。如果指定的位宽大于实际需要的位宽，UInt会进行0扩展，SInt会进行符号扩展；如果小于，编译会报错。
+
+Vecs 也是数据类型(这样就能理解为什么写做Reg(Vec(4, UInt(4.W))))
+
+Analog 就等于inout，双向线
+
+chisel中有很多class都可以不用new来实例化，因为有些使用了case class, 有一些已经实现了object的apply方法
+
+#### Bundles
+
+bundle是一个值的集合，可以认为是struct
+
+Flipped()可以用来翻转Bundle，这样就非常方便的构建双向接口
+
+```scala
+class ABBundle extends Bundle {
+  val a = Input(Bool())
+  val b = Output(Bool())
+}
+class MyFlippedModule extends RawModule {
+  // Normal instantiation of the bundle
+  // 'a' is an Input and 'b' is an Output
+  val normalBundle = IO(new ABBundle)
+  normalBundle.b := normalBundle.a
+
+  // Flipped recursively flips the direction of all Bundle fields
+  // Now 'a' is an Output and 'b' is an Input
+  val flippedBundle = IO(Flipped(new ABBundle))
+  flippedBundle.a := flippedBundle.b
+}
+```
+
 ### 组合逻辑和时序逻辑
 
 chisel提供了Mux,Cat,Wire等基础类型用于实现组合逻辑，提供了Reg，when, elsewhen, otherwise等来实现时序逻辑。
