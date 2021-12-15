@@ -154,6 +154,23 @@ class MyFlippedModule extends RawModule {
 }
 ```
 
+rocket-chip中的flip的使用，其中flip就是Flipped(target),这样就能定义接口就好了，对于输出模块和输出模块，他们的信号就是完全可以Flip。
+其中Valid是在信号的基础上增加了Valid信号。通过这种机制，chisel编写的模块可读性更好。
+
+```scala
+class BTB(implicit p: Parameters) extends BtbModule {
+  val io = new Bundle {
+    val req = Valid(new BTBReq).flip
+    val resp = Valid(new BTBResp)
+    val btb_update = Valid(new BTBUpdate).flip
+    val bht_update = Valid(new BHTUpdate).flip
+    val bht_advance = Valid(new BTBResp).flip
+    val ras_update = Valid(new RASUpdate).flip
+    val ras_head = Valid(UInt(width = vaddrBits))
+    val flush = Bool().asInput
+  }
+```
+
 ### 组合逻辑和时序逻辑
 
 chisel提供了Mux,Cat,Wire等基础类型用于实现组合逻辑，提供了Reg，when, elsewhen, otherwise等来实现时序逻辑。

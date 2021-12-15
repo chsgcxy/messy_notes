@@ -5,8 +5,8 @@
 最近基于gem5调试了RandomX, 在调试过程中使用了gem5的syscall模式，于是顺手看了一下linux系统调用相关的资料，在这里做一个总结。当然，总结分为三大部分
 
 [linux系统调用简析](syscall.md)
-[RandomX总结](syscall.md)
-[gem5的syscall模式](syscall.md)
+[RandomX总结](../randomx.md)
+[gem5的syscall模式](../simulator/gem5-se.md)
 
 这里主要针对linux系统以及RISCV架构实现做一些简要分析。
 
