@@ -1,9 +1,6 @@
 site_name: Messy Notes
 site_url: https://chsgcxy.github.io/messy_notes
 theme: material
-nav:
-    - Home: index.md
-    - About: index.md
 repo_url: https://github.com/chsgcxy/messy_notes
 site_author: Chsgcxy
 google_analytics: ['UA-36723568-3', 'mkdocs.org']
