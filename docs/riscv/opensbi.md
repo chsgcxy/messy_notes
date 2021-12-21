@@ -265,11 +265,75 @@ int sbi_ecall_handler(struct sbi_trap_regs *regs)
 - 为了能够让每一个厂商都比较容易的添加自己特有的实现，SBI中规定的每一个接口都应该有一个默认实现，并且每个厂商都能够重写这个实现。
 - 应该能够有机制来识别厂商是否支持某接口
 - Makefile应该要灵活可扩展，应该尽可能的不需要厂商修改Makefile主体
+- 应该能够很好的解耦riscv的扩展指令集
 
-把上述几点实现，猜想应该大致能够实现一个满足扩展性和定制化的SBI框架。接下来就实际看一下OpenSBI的实现，他们的高明之处又在哪里。
+把上述几点实现，猜想应该大致能够实现一个满足扩展性和定制化的SBI框架。接下来就实际看一下OpenSBI的实现，他们设计的高明之处又在哪里。
 
 ### 实现
 
+首先来看一下大致的目录结构，一个build目录用于构建，一个firmware目录存放了启动文件以及连接脚本，其中通过名称跟功能对应。include和lib是其核心实现，platform应该就是放置厂商定制化内容的目录。
+整体一个Makefile搞定，没有借助编译框架。还有一个docs目录放置了一些说明文档，这非常有利于对整个软件关键部分的理解。
+
+```txt
+.
+├── build
+│   ├── lib
+│   └── platform
+├── docs
+├── firmware
+│   ├── external_deps.mk
+│   ├── fw_base.ldS
+│   ├── fw_base.S
+│   ├── fw_dynamic.elf.ldS
+│   ├── fw_dynamic.S
+│   ├── fw_jump.elf.ldS
+│   ├── fw_jump.S
+│   ├── fw_payload.elf.ldS
+│   ├── fw_payload.S
+│   ├── objects.mk
+│   └── payloads
+├── include
+│   ├── sbi
+│   └── sbi_utils
+├── lib
+│   ├── sbi
+│   └── utils
+├── Makefile
+├── platform
+│   ├── andes
+│   ├── generic
+│   ├── kendryte
+│   ├── sifive
+│   ├── template
+│   └── thead
+```
+
+OpenSBI在lib目录下实现了通用的框架，将需要各个平台定制化的东西抽象成sbi_platform, 各个平台需要实例化这个结构。libsbi.a 和 libsbiutil.a 加上实例化的 sbi_platform 就是libplatsbi.a。再加上启动汇编和链接脚本，就组成了最终的固件。
+
+```txt
+   --------------          ------------------
+   |  libsbi.a  |    +     |  libsbiutil.a  |               platform-independent library
+   --------------          ------------------
+                     |                                                                    |- andes
+                     |     ---------------------------      created by specific platform  |- sifive
+                     |  +  |  sbi_platform instance  |    <-------------------------------|- generic
+                     |     ---------------------------                                    |- ......
+                     |
+                     V
+      ----------------------------------
+      |          libplatsbi.a          |
+      ----------------------------------
+                     |
+                     |       ---------------------
+                     |   +   |      firmware     |
+                     |       ---------------------
+                     V
+          -----------------------
+          |    final firmware   |
+          -----------------------
+```
+
+OpenSBI维护了一个struct sbi_scratch， 它使用控制状态寄存器mscratch来保存这个结构的地址，struct sbi_platform 的地址可以在启动汇编中保存在sbi_scratch中。
 
 ## 参考资料
 
