@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/.</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/arch_design/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/atomic/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/cache/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/chiplet/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/computer_arch/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/hotchip33/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/numa/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/register_rename/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/rob/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/superscalar/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/think1/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/tlb/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/vector/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/arch/hotchip33/hotchip33/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/cast/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/complement/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/cplus/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/cpp-param-pack/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/gcc_tools/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/int_uint/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/lvalue_and_rvalue/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/makefile/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/omp/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/c/reverse/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/chisel/chisel/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/chisel/rocketchip/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/chisel/sbt/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/chisel/scala/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/debug/objcopy/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/deeplearning/bert/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/deeplearning/deeplearning/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/deeplearning/onehot/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/design-patterns/design-patterns/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/cordic/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/esl/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/ic_develop/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/qemu/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/simulator/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/simulator2/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/ic/tlm/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/linux/arm-linux-kmodule-load/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/linux/kernel-status/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/linux/lzma_transplant/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/linux/sync-and-exclusion/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/linux/syscall/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/mcu/ads7843/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/mcu/emwin_debug/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/mcu/fatfs_f_readdir/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/mcu/lpc1114_hex2bin/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/howtolearn/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/latex/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/pcie/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/photograph/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/pytest/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/randomx/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/roadmap/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/shell/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/skiing/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/vlog/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/words/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/work-201904-202102/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/misc/xmr/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/python/env_requirement/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/python/numpy_softfloat/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/python/python/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/RISC-V/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/la/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/opensbi/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/pma/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/riscv-torture/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/virtual_mem_manage/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/riscv/wfi/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/simulator/gem5-se/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/simulator/gem5/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/simulator/gem5_random/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/simulator/simplesim/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/simulator/spike/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/simulator/trace_format/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/smt-pnp/smt-pnp-introduction/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/cache-size/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/chrome-tracing/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/cii-and-crontable/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/git-hooks/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/git/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/llvm-symbolizer/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/markdown/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/ntfs-mount/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/perf/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/stream/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tools/vscode-remotessh/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tvm/codebase-struct/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tvm/node/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tvm/runtime/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/tvm/tvm-start/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/verilog/verilog1/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/verilog/verilog2/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/verilog/verilog3/</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://chsgcxy.github.io/messy_notes/books/shell.pdf</loc>
+  <lastmod>2021-12-23T09:21:05+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
