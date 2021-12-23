@@ -1,5 +1,5 @@
 site_name: Messy Notes
-site_url: https://chsgcxy.github.io/messy_notes
+site_url: http://chsgcxy.github.io/messy_notes
 theme:
     name: material
     locale: en
