@@ -5,6 +5,7 @@ theme:
 repo_url: https://github.com/chsgcxy/messy_notes
 site_author: Chsgcxy
 google_analytics: ['UA-36723568-3', 'mkdocs.org']
+use_directory_urls: false
 
 markdown_extensions:
     - admonition
