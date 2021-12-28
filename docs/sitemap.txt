@@ -1,0 +1,3 @@
+https://chsgcxy.github.io/messy_notes/arch/arch_design.html
+https://chsgcxy.github.io/messy_notes/arch/atomic.html
+https://chsgcxy.github.io/messy_notes/arch/cache.html
