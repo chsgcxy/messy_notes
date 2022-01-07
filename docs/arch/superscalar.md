@@ -243,3 +243,8 @@ ROB的编号与物理寄存器的编号一致，指令从ROB retire，ROB中的�
 - 寄存器的值只需要被写入一次，不需要由FRF转到ARF
 - 一条指令的源寄存器只会存在于PRF,不需要判断去哪里读取
 
+### 超标量处理器重命名的设计
+
+一个四路rename的设计
+
+![docs\imgs\rename_4way_rat.PNG](../imgs/rename_4way_rat.PNG)
