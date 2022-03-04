@@ -7,8 +7,9 @@
 gem5是一款可以实现时钟精确仿真的SOC模拟器。它本身的目的并不是帮助产品开发，它更偏向于教育和架构探索。
 但是研究它仍然是有意义的，它的意义在于能够让你学习到一款时钟级模拟器的构建思路。
 
-官网：http://www.gem5.org
-学习指导：http://www.gem5.org/documentation/learning_gem5/introduction
+官网：[http://www.gem5.org]
+学习指导：[http://www.gem5.org/documentation/learning_gem5/introduction]
+相关资料：[http://daystrom.m5sim.org/Main_Page]
 
 ## 分析点
 
