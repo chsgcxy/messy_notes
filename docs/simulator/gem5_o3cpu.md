@@ -141,7 +141,13 @@ macroOp fetch过程有如下特点：
 
 ### quiesce 类指令的处理
 
-wfe,wfi 指令都是quiesce类指令，Gem5不支持新的wfet,wfit指令。
+quiesce类指令：
+
+- wfe
+- wfet(Gem5 不支持)
+- wfi
+- wfit(Gem5 不支持)
+
 以wfi指令举例
 ```
 1376000: system.cpu.fetch: [tid:0] Instruction PC (0x1c4=>0x1c8).(0=>1) created [sn:119].
@@ -195,33 +201,35 @@ decode stage 会判断非条件跳转指令是否分支预测错误。
 
 如果下一个cycle没有收到squash信号或者stall信号，decode将再次转为running状态。
 
+当前cycle fetch到了 b 0x1570 指令，并且给通过分支预测器获取了不跳转的分支信息，下一条指令地址为 0x1d4
 ```
- // 当前cycle fetch到了 b 0x1570 指令，并且给通过分支预测器获取了不跳转的分支信息，下一条指令地址为 0x1d4
- 668000: system.cpu.fetch: [tid:0] Instruction PC (0x1cc=>0x1d0).(0=>1) created [sn:126].
- 668000: system.cpu.fetch: [tid:0] Instruction is:   b   0x1570
- 668000: system.cpu.fetch: [tid:0] [sn:126] Branch at PC 0x1cc predicted to be not taken
- 668000: system.cpu.fetch: [tid:0] [sn:126] Branch at PC 0x1cc predicted to go to (0x1d0=>0x1d4).(0=>1)
- 
- // 126 ~ 133 的指令被传入到fetchqueue
- 668000: system.cpu.fetch: [tid:0] [sn:126] Sending instruction to decode from fetch queue. Fetch queue size: 8.
- 668000: system.cpu.fetch: [tid:0] [sn:127] Sending instruction to decode from fetch queue. Fetch queue size: 7.
- 668000: system.cpu.fetch: [tid:0] [sn:128] Sending instruction to decode from fetch queue. Fetch queue size: 6.
- 668000: system.cpu.fetch: [tid:0] [sn:129] Sending instruction to decode from fetch queue. Fetch queue size: 5.
- 668000: system.cpu.fetch: [tid:0] [sn:130] Sending instruction to decode from fetch queue. Fetch queue size: 4.
- 668000: system.cpu.fetch: [tid:0] [sn:131] Sending instruction to decode from fetch queue. Fetch queue size: 3.
- 668000: system.cpu.fetch: [tid:0] [sn:132] Sending instruction to decode from fetch queue. Fetch queue size: 2.
- 668000: system.cpu.fetch: [tid:0] [sn:133] Sending instruction to decode from fetch queue. Fetch queue size: 1.
+668000: system.cpu.fetch: [tid:0] Instruction PC (0x1cc=>0x1d0).(0=>1) created [sn:126].
+668000: system.cpu.fetch: [tid:0] Instruction is:   b   0x1570
+668000: system.cpu.fetch: [tid:0] [sn:126] Branch at PC 0x1cc predicted to be not taken
+668000: system.cpu.fetch: [tid:0] [sn:126] Branch at PC 0x1cc predicted to go to (0x1d0=>0x1d4).(0=>1)
 
- // 下一个cycle， decode解析出来的指令跳转地址为0x1570，因此产生squash信号
- 668500: system.cpu.decode: [tid:0] Processing instruction [sn:126] with PC (0x1cc=>0x1d0).(0=>1)
- 668500: system.cpu.decode: [tid:0] [sn:126] Squashing due to incorrect branch prediction detected at decode.
- 668500: system.cpu.decode: [tid:0] [sn:126] Updating predictions: Wrong predicted target: (0x1d0=>0x1d4).(0=>1)    PredPC: (0x1570=>0x1574).(0=>1)
-
- // 由于是8条指令中的第一条指令出现了分支预测错误，因此没人任何指令能够传给rename
- 668500: system.cpu.rename: [tid:0] Not blocked, so attempting to run stage.
- 668500: system.cpu.rename: [tid:0] Nothing to do, breaking out early.
+// 126 ~ 133 的指令被传入到fetchqueue
+668000: system.cpu.fetch: [tid:0] [sn:126] Sending instruction to decode from fetch queue. Fetch queue size: 8.
+668000: system.cpu.fetch: [tid:0] [sn:127] Sending instruction to decode from fetch queue. Fetch queue size: 7.
+668000: system.cpu.fetch: [tid:0] [sn:128] Sending instruction to decode from fetch queue. Fetch queue size: 6.
+668000: system.cpu.fetch: [tid:0] [sn:129] Sending instruction to decode from fetch queue. Fetch queue size: 5.
+668000: system.cpu.fetch: [tid:0] [sn:130] Sending instruction to decode from fetch queue. Fetch queue size: 4.
+668000: system.cpu.fetch: [tid:0] [sn:131] Sending instruction to decode from fetch queue. Fetch queue size: 3.
+668000: system.cpu.fetch: [tid:0] [sn:132] Sending instruction to decode from fetch queue. Fetch queue size: 2.
+668000: system.cpu.fetch: [tid:0] [sn:133] Sending instruction to decode from fetch queue. Fetch queue size: 1.
 ```
- 
+
+下一个cycle， decode解析出来的指令跳转地址为0x1570，因此产生squash信号
+由于是8条指令中的第一条指令出现了分支预测错误，因此没有任何指令能够传给rename
+```
+668500: system.cpu.decode: [tid:0] Processing instruction [sn:126] with PC (0x1cc=>0x1d0).(0=>1)
+668500: system.cpu.decode: [tid:0] [sn:126] Squashing due to incorrect branch prediction detected at decode.
+668500: system.cpu.decode: [tid:0] [sn:126] Updating predictions: Wrong predicted target: (0x1d0=>0x1d4).(0=>1)    PredPC: (0x1570=>0x1574).(0=>1)
+
+668500: system.cpu.rename: [tid:0] Not blocked, so attempting to run stage.
+668500: system.cpu.rename: [tid:0] Nothing to do, breaking out early.
+```
+
 decode需要通知fetch进行squash操作,同时将fetch与decode之间锁存的指令也清除掉。同时，如果decode当前处于blocked或者unblocking状态，需要通知fetch此状态解除。
 
 #### squash 代码逻辑
@@ -318,6 +326,10 @@ rename stall 的源比较多，有如下几个
 
 serializeBefore makes the instruction wait in rename until the ROB is empty.
 
+serializeBefore类指令：
+
+- mrs
+
 msr指令引起serializeBefore， msr指令id为34
 ```
  388500: system.cpu.fetch: [tid:0] Instruction is:   msr   sp_el0, x0
@@ -365,6 +377,28 @@ msr指令引起serializeBefore， msr指令id为34
  394500: system.cpu.rename: [tid:0] Trying to unblock.
  394500: system.cpu.rename: [tid:0] Processing instruction [34] with PC (0x84=>0x88).(0=>1).
 ```
+
+### serilizeAfter
+
+serilizeAfter类指令：
+
+- rfe
+- svc
+- hlt
+- smc
+- hvc
+- eret
+- msr
+- wfe
+- wfi
+- mcr
+- setend
+- dsb
+- cps
+- svc
+- hvc
+- smc
+- brk
 
 ---
 
