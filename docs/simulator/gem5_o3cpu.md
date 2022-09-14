@@ -48,9 +48,137 @@ we use **VExpress_GEM5_V2** platform for our soc structure, you can find memorym
 ## fetch
  
 ![fetch struct](../imgs/gem5_o3cpu/struct_fetch.png)
- 
- 
- 
+
+### fetch a cache line and not hit
+
+没有开启mmu，因此当拍就能得到物理地址，然后查cache是否命中
+```
+1000: system.cpu.fetch: [tid:0] Attempting to translate and read instruction, starting at PC (0=>0x4).(0=>1).
+1000: system.cpu.fetch: [tid:0] Fetching cache line 0 for addr 0
+```
+
+cache未命中，向下一级缓存取指令，在43000个tick，cache miss的数据回填，再过3个cycle,数据被直接放在fetchbuffer中。
+```
+43000: system.cpu.icache: recvTimingResp: Handling response ReadResp [0:f] (s) IF UC
+44500: system.cpu.icache_port: Fetch unit received timing
+```
+
+### macroOp
+
+macroOp fetch过程有如下特点：
+
+- 不支持跨cacheLine
+- 不支持fetchbuffer拼接
+- 当拍处理完fetchbuffer，可以直接发起新的cache请求
+- 存在一个microOp的缓存
+
+![fetch macroOp](../imgs/gem5_o3cpu/fetch_macroOp.png)
+
+从指令流log中可以看到macro指令 stp被拆分成了三条micro指令
+```
+2457000: system.cpu: A0 T0 : 0x6220 @_malloc_r+640    :   adrp   x1, #73728        : IntAlu :  D=0x0000000000018000  FetchSeq=1364  CPSeq=902  flags=(IsInteger)
+2457000: system.cpu: A0 T0 : 0x6224 @_malloc_r+644    : stp                       
+2457000: system.cpu: A0 T0 : 0x6224 @_malloc_r+644. 0 :   addxi_uop   ureg0, sp, #80 : IntAlu :  D=0x0000000000014f30  FetchSeq=1365  CPSeq=903  flags=(IsInteger|IsMicroop|IsDelayedCommit|IsFirstMicroop)
+2457000: system.cpu: A0 T0 : 0x6224 @_malloc_r+644. 1 :   strxi_uop   x27, [ureg0] : MemWrite :  D=0x0000000000000000 A=0x14f30  FetchSeq=1366  CPSeq=904  flags=(IsInteger|IsStore|IsMicroop|IsDelayedCommit)
+2457500: system.cpu: A0 T0 : 0x6224 @_malloc_r+644. 2 :   strxi_uop   x28, [ureg0, #8] : MemWrite :  D=0x0000000000000000 A=0x14f38  FetchSeq=1367  CPSeq=905  flags=(IsInteger|IsStore|IsMicroop|IsLastMicroop)
+2457500: system.cpu: A0 T0 : 0x6228 @_malloc_r+648    :   adrp   x27, #61440       : IntAlu :  D=0x0000000000015000  FetchSeq=1368  CPSeq=906  flags=(IsInteger)
+2457500: system.cpu: A0 T0 : 0x622c @_malloc_r+652    :   ldr   x1, [x1, #2432]    : MemRead :  D=0x0000000000000000 A=0x18980  FetchSeq=1369  CPSeq=907  flags=(IsInteger|IsLoad)
+2458000: system.cpu: A0 T0 : 0x6230 @_malloc_r+656    :   movz   x3, #4127, #0     : IntAlu :  D=0x000000000000101f  FetchSeq=1370  CPSeq=908  flags=(IsInteger)
+2458000: system.cpu: A0 T0 : 0x6234 @_malloc_r+660    :   ldr   x2, [x27, #3936]   : MemRead :  D=0xffffffffffffffff A=0x15f60  FetchSeq=1371  CPSeq=909  flags=(IsInteger|IsLoad)
+```
+
+执行log中,可以看到在2457000个tick时，fetch一共处理了三条指令，adrp和stp的前两条micro指令
+```
+2457000: system.cpu.fetch: [tid:0] Instruction PC (0x6220=>0x6224).(0=>1) created [sn:1364].
+2457000: system.cpu.fetch: [tid:0] Instruction is:   adrp   x1, #73728
+
+2457000: system.cpu.decoder: Decode: Decoded stp instruction: 0x4a90573fb
+2457000: system.cpu.fetch: [tid:0] Instruction PC (0x6224=>0x6228).(0=>1) created [sn:1365].
+2457000: system.cpu.fetch: [tid:0] Instruction is:   addxi_uop   ureg0, sp, #80
+
+2457000: system.cpu.fetch: [tid:0] Instruction PC (0x6224=>0x6228).(1=>2) created [sn:1366].
+2457000: system.cpu.fetch: [tid:0] Instruction is:   strxi_uop   x27, [ureg0]
+
+2457000: system.cpu.fetch: [tid:0] Done fetching, reached fetch bandwidth for this cycle.
+
+2457000: system.cpu.fetch: [tid:0] [sn:1364] Sending instruction to decode from fetch queue. Fetch queue size: 3.
+2457000: system.cpu.fetch: [tid:0] [sn:1365] Sending instruction to decode from fetch queue. Fetch queue size: 2.
+2457000: system.cpu.fetch: [tid:0] [sn:1366] Sending instruction to decode from fetch queue. Fetch queue size: 1.
+```
+
+在下一个cycle,除了stp剩余的一条指令，还可以处理额外的两条指令
+```
+2457500: system.cpu.fetch: [tid:0] Instruction PC (0x6224=>0x6228).(2=>3) created [sn:1367].
+2457500: system.cpu.fetch: [tid:0] Instruction is:   strxi_uop   x28, [ureg0, #8]
+
+2457500: system.cpu.fetch: [tid:0] Instruction PC (0x6228=>0x622c).(0=>1) created [sn:1368].
+2457500: system.cpu.fetch: [tid:0] Instruction is:   adrp   x27, #61440
+
+2457500: system.cpu.fetch: [tid:0] Instruction PC (0x622c=>0x6230).(0=>1) created [sn:1369].
+2457500: system.cpu.fetch: [tid:0] Instruction is:   ldr   x1, [x1, #2432]
+
+2457500: system.cpu.fetch: [tid:0] Done fetching, reached fetch bandwidth for this cycle.
+```
+
+### 分支预测
+
+如果分支预测跳转，就会结束当前fetch操作，分支指令之前的指令可以继续进入fetchQueue。同时可以直接发起新的cache请求
+
+```
+2600000: system.cpu.fetch: [tid:0] Instruction PC (0x1514=>0x1518).(0=>1) created [sn:1413].
+2600000: system.cpu.fetch: [tid:0] Instruction is:   ret   
+
+2600000: system.cpu.fetch: [tid:0] [sn:1413] Branch at PC 0x1514 predicted to be taken to (0x6260=>0x6264).(0=>1)
+
+2600000: system.cpu.fetch: [tid:0] Done fetching, predicted branch instruction encountered.
+
+2600000: system.cpu.fetch: [tid:0] Issuing a pipelined I-cache access, starting at PC (0x6260=>0x6264).(0=>1).
+2600000: system.cpu.fetch: [tid:0] Fetching cache line 0x6260 for addr 0x6260
+
+2600000: system.cpu.fetch: [tid:0] [sn:1412] Sending instruction to decode from fetch queue. Fetch queue size: 2.
+2600000: system.cpu.fetch: [tid:0] [sn:1413] Sending instruction to decode from fetch queue. Fetch queue size: 1.
+```
+
+### quiesce 类指令的处理
+
+wfe,wfi 指令都是quiesce类指令，Gem5不支持新的wfet,wfit指令。
+以wfi指令举例
+```
+1376000: system.cpu.fetch: [tid:0] Instruction PC (0x1c4=>0x1c8).(0=>1) created [sn:119].
+1376000: system.cpu.fetch: [tid:0] Instruction is:   wfi   
+
+1376000: system.cpu.fetch: Quiesce instruction encountered, halting fetch!
+
+// 下一拍，fetch 开始处于pending的状态
+1376500: system.cpu.fetch: There are no more threads available to fetch from.
+1376500: system.cpu.fetch: [tid:0] Fetch is waiting for a pending quiesce instruction!
+
+// 在这个例子中，wfi指令处于分支错误的路径上，最终执行squash恢复了运行
+1380000: system.cpu.commit: [tid:0] Squashing due to branch mispred PC:0x1c0 [sn:118]
+1380000: system.cpu.commit: [tid:0] Redirecting to PC (0x1cc=>0x1d0).(0=>1)
+
+1380500: system.cpu.fetch: [tid:0] Squashing instructions due to squash from commit.
+1380500: system.cpu.fetch: [tid:0] Squash from commit.
+
+1381000: system.cpu.fetch: [tid:0] Done squashing, switching to running.
+1381000: system.cpu.fetch: Running stage.
+```
+
+### squash
+
+squash 主要执行如下操作
+
+- 将PC设置为Commit stage 返回的PC
+- 复位与fetch buffer相关的reg
+- 如果有进行中的icache请求，标记请求无效
+- 如果有进行中的itlb请求，标记请求无效
+- 如果有进行中的icache retry请求，标记请求无效
+- 清空fetchQueue
+
+### stall
+
+来自于decode的stall不会影响fetch将指令存入fetchQueue，会stall从fetchQueue向decode发送指令。
+
 ---
 
 ## decode
@@ -188,7 +316,9 @@ rename stall 的源比较多，有如下几个
  
 ### serilizeBefore
 
-msr 指令
+serializeBefore makes the instruction wait in rename until the ROB is empty.
+
+msr指令引起serializeBefore， msr指令id为34
 ```
  388500: system.cpu.fetch: [tid:0] Instruction is:   msr   sp_el0, x0
  388500: system.cpu.fetch: [tid:0] Fetch queue entry created (1/32).
@@ -198,9 +328,42 @@ msr 指令
 ```
 
 因为 fetch -> decode 的延迟为3，decode -> rename 延迟为2， 所以5个cycle ((391000-388500)/500=5)之后，rename收到msr指令
+判断指令携带IsSerializeBefore 标记，不对该指令进行具体的rename操作，转为SerializeStall状态。剩余的指令存入skidbuffer。
 ```
  391000: system.cpu.rename: [tid:0] Processing instruction [sn:34] with PC (0x84=>0x88).(0=>1).
  391000: system.cpu.rename: Serialize before instruction encountered.
+ 391000: system.cpu.rename: [tid:0] Blocking.
+ 391000: system.cpu.rename: [tid:0] Inserting [sn:35] PC: (0x88=>0x8c).(0=>1) into Rename skidBuffer
+```
+
+下一拍，rename保持serializeStall状态，并且将stall状态反压给decode
+```
+ 391500: system.cpu.rename: [tid:0] 1 instructions not yet in ROB
+ 391500: system.cpu.rename: [tid:0] Stall: Serialize stall and ROB is not empty.
+ 391500: system.cpu.rename: [tid:0] Blocking.
+ 391500: system.cpu.rename: [tid:0] Inserting [sn:36] PC: (0x8c=>0x90).(0=>1) into Rename skidBuffer
+```
+
+下一拍，decode 收到stall信号，这个stall信号会反压给fetch。rename仍然处于stall状态，因为还有一条指令on the fly
+```
+ 392000: system.cpu.decode: [tid:0] Stall fom Rename stage detected.
+ 392000: system.cpu.decode: [tid:0] Blocking.
+ 392000: system.cpu.rename: [tid:0] 1 instructions not yet in ROB
+ 392000: system.cpu.rename: [tid:0] Stall: Serialize stall and ROB is not empty.
+ 392000: system.cpu.rename: [tid:0] Blocking.
+```
+
+33号指令在四个cycle之后retire了
+```
+ 394000: system.cpu.commit: [tid:0] [sn:33] Committing instruction with PC (0x80=>0x84).(0=>1)
+ 394000: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0x80=>0x84).(0=>1), [sn:33]
+```
+
+下一个cycle,rename检测到
+```
+ 394500: system.cpu.rename: [tid:0] Done with serialize stall, switching to unblocking.
+ 394500: system.cpu.rename: [tid:0] Trying to unblock.
+ 394500: system.cpu.rename: [tid:0] Processing instruction [34] with PC (0x84=>0x88).(0=>1).
 ```
 
 ---
