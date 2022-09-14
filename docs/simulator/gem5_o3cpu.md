@@ -382,23 +382,20 @@ msr指令引起serializeBefore， msr指令id为34
 
 serilizeAfter类指令：
 
-- rfe
-- svc
-- hlt
-- smc
-- hvc
-- eret
-- msr
-- wfe
-- wfi
-- mcr
-- setend
-- dsb
-- cps
-- svc
-- hvc
-- smc
-- brk
+- rfe(return from exception) only arch32 support?
+- svc(supervisor call to EL1)
+- hvc(supervisor call to EL2)
+- smc(secure monitor call to EL3)
+- hlt(halt)
+- eret(exception return)
+- msr(move to system registers)
+- wfe(wait for exception)
+- wfi(wait for interrupt)
+- mcr( arch32 only?)
+- setend(arch32 only?)
+- dsb(Data Synchronization Barrier)
+- cps(change pe status) arch32 only?
+- brk(breakpoint)
 
 ---
 
