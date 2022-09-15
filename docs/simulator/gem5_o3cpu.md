@@ -300,6 +300,8 @@ Rename stage 会响应来自于commit stage的squash信号，接收到squashing�
 - 清除掉来自于decode的指令
 - 清除掉skidbuffer中的指令
 - 一次性恢复RAT(从时序行为上来看仍然是ROB walk的形式)
+
+rename的squash过程与iew和commit有较大关联，具体行为可以结合commit stage的squash过程进行分析
  
 ### stall
  
@@ -322,63 +324,54 @@ rename stall 的源比较多，有如下几个
  
 如果收到了dispatch 发送的解除stall信号，rename可能进入unblocking状态，从skidbuffer中取指令进行rename操作。当skidbuffer中没有指令时，发送解除stall信号给decode stage
  
-### serilizeBefore
+### serilizeBefore and serilizeAfter
 
-serializeBefore makes the instruction wait in rename until the ROB is empty.
+> serializeBefore makes the instruction wait in rename until the ROB is empty.
+> serializeAfter marks the next instruction as serializeBefore
 
 serializeBefore类指令：
 
 - mrs
 
-msr指令引起serializeBefore， msr指令id为34
+fetch到mrs指令，分配id=52
 ```
- 388500: system.cpu.fetch: [tid:0] Instruction is:   msr   sp_el0, x0
- 388500: system.cpu.fetch: [tid:0] Fetch queue entry created (1/32).
- 388500: system.cpu.decoder: Decode: Decoded msr instruction: 0x4d51c4100
- 388500: global: DynInst: [sn:34] Instruction created. Instcount for system.cpu = 2
- 388500: system.cpu.fetch: [tid:0] Instruction PC (0x84=>0x88).(0=>1) created [sn:34].
+561000: system.cpu.fetch: [tid:0] Instruction PC (0xcc=>0xd0).(0=>1) created [sn:52].
+561000: system.cpu.fetch: [tid:0] Instruction is:   mrs   x0, id_aa64pfr0_el1
 ```
 
-因为 fetch -> decode 的延迟为3，decode -> rename 延迟为2， 所以5个cycle ((391000-388500)/500=5)之后，rename收到msr指令
-判断指令携带IsSerializeBefore 标记，不对该指令进行具体的rename操作，转为SerializeStall状态。剩余的指令存入skidbuffer。
+因为 fetch -> decode 的延迟为3，decode -> rename 延迟为2， 所以5个cycle之后，rename收到mrs指令
+判断指令携带IsSerializeBefore标记,进行如下操作
+
+- 不对该指令进行rename操作。
+- 状态机转为SerializeStall状态
+- 该指令之前的指令发送给dispatch
+- 剩余的指令存入skidbuffer
+- 反压stall信号给decode
+
 ```
- 391000: system.cpu.rename: [tid:0] Processing instruction [sn:34] with PC (0x84=>0x88).(0=>1).
- 391000: system.cpu.rename: Serialize before instruction encountered.
- 391000: system.cpu.rename: [tid:0] Blocking.
- 391000: system.cpu.rename: [tid:0] Inserting [sn:35] PC: (0x88=>0x8c).(0=>1) into Rename skidBuffer
+563500: system.cpu.rename: [tid:0] Processing instruction [sn:52] with PC (0xcc=>0xd0).(0=>1).
+563500: system.cpu.rename: Serialize before instruction encountered.
+563500: system.cpu.rename: [tid:0] Blocking.
 ```
 
-下一拍，rename保持serializeStall状态，并且将stall状态反压给decode
+接下来，会一直等待ROB empty(实际上要no on the fly && ROB empty)
 ```
- 391500: system.cpu.rename: [tid:0] 1 instructions not yet in ROB
- 391500: system.cpu.rename: [tid:0] Stall: Serialize stall and ROB is not empty.
- 391500: system.cpu.rename: [tid:0] Blocking.
- 391500: system.cpu.rename: [tid:0] Inserting [sn:36] PC: (0x8c=>0x90).(0=>1) into Rename skidBuffer
+ 564500: system.cpu.rename: [tid:0] Stall: Serialize stall and ROB is not empty.
+ 564500: system.cpu.rename: [tid:0] Blocking.
 ```
 
-下一拍，decode 收到stall信号，这个stall信号会反压给fetch。rename仍然处于stall状态，因为还有一条指令on the fly
+一段时间之后，指令51提交了，意味着mrs指令之前的指令都提交了，因此ROB此时处于empty状态
 ```
- 392000: system.cpu.decode: [tid:0] Stall fom Rename stage detected.
- 392000: system.cpu.decode: [tid:0] Blocking.
- 392000: system.cpu.rename: [tid:0] 1 instructions not yet in ROB
- 392000: system.cpu.rename: [tid:0] Stall: Serialize stall and ROB is not empty.
- 392000: system.cpu.rename: [tid:0] Blocking.
+567000: system.cpu.commit: [tid:0] [sn:51] Committing instruction with PC (0xc8=>0xcc).(0=>1)
+567000: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0xc8=>0xcc).(0=>1), [sn:51]
 ```
 
-33号指令在四个cycle之后retire了
+所以下一个cycle,rename进入unblocking状态，继续进行rename
 ```
- 394000: system.cpu.commit: [tid:0] [sn:33] Committing instruction with PC (0x80=>0x84).(0=>1)
- 394000: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0x80=>0x84).(0=>1), [sn:33]
+567500: system.cpu.rename: [tid:0] Done with serialize stall, switching to unblocking.
+567500: system.cpu.rename: [tid:0] Trying to unblock.
+567500: system.cpu.rename: [tid:0] Processing instruction [52] with PC (0xcc=>0xd0).(0=>1).
 ```
-
-下一个cycle,rename检测到
-```
- 394500: system.cpu.rename: [tid:0] Done with serialize stall, switching to unblocking.
- 394500: system.cpu.rename: [tid:0] Trying to unblock.
- 394500: system.cpu.rename: [tid:0] Processing instruction [34] with PC (0x84=>0x88).(0=>1).
-```
-
-### serilizeAfter
 
 serilizeAfter类指令：
 
@@ -396,6 +389,47 @@ serilizeAfter类指令：
 - dsb(Data Synchronization Barrier)
 - cps(change pe status) arch32 only?
 - brk(breakpoint)
+
+msr指令举例，id=43,它的下一条是adr指令，id=44
+```
+474500: system.cpu.fetch: [tid:0] Instruction PC (0xa8=>0xac).(0=>1) created [sn:43].
+474500: system.cpu.fetch: [tid:0] Instruction is:   msr   vbar_el3, x1
+
+475000: system.cpu.fetch: [tid:0] Instruction PC (0xac=>0xb0).(0=>1) created [sn:44].
+475000: system.cpu.fetch: [tid:0] Instruction is:   adr   x1, #85840
+```
+
+若干cycle之后，rename处理msr指令，识别为serializeAfter指令,43号指令正常进行rename，并且发给IEW,
+后面的44号指令
+```
+480500: system.cpu.rename: [tid:0] Processing instruction [sn:43] with PC (0xa8=>0xac).(0=>1).
+480500: system.cpu.rename: Serialize after instruction encountered.
+
+480500: system.cpu.rename: [tid:0] [sn:43] Adding instruction to history buffer (size=3).
+480500: system.cpu.rename: [tid:0] Sending instructions to IEW.
+480500: system.cpu.rename: [tid:0] Removing [sn:44] PC:(0xac=>0xb0).(0=>1) from rename skidBuffer
+480500: system.cpu.rename: [tid:0] Processing instruction [sn:44] with PC (0xac=>0xb0).(0=>1).
+480500: system.cpu.rename: Serialize before instruction encountered.
+480500: system.cpu.rename: [tid:0] Blocking.
+```
+
+43号指令提交了
+```
+485500: system.cpu.commit: [tid:0] [sn:43] Committing instruction with PC (0xa8=>0xac).(0=>1)
+485500: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0xa8=>0xac).(0=>1), [sn:43]
+```
+
+下一个cycle,44号指令可以继续rename
+```
+486000: system.cpu.rename: [tid:0] Done with serialize stall, switching to unblocking.
+486000: system.cpu.rename: [tid:0] Trying to unblock.
+
+486000: system.cpu.rename: [tid:0] Processing instruction [44] with PC (0xac=>0xb0).(0=>1).
+486000: system.cpu.rename: [tid:0] Instruction must be processed by rename. Adding to front of list.
+
+486000: system.cpu.rename: [tid:0] Sending instructions to IEW.
+486000: system.cpu.rename: [tid:0] Processing instruction [sn:44] with PC (0xac=>0xb0).(0=>1).
+```
 
 ---
 
