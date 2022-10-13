@@ -834,8 +834,9 @@ dispatch 进入unblocking状态，发现skidbuffer中没有指令，转入runnin
 再下一个cycle(cycle6), fetch stage 收到decode的stall信号，不会从fetchqueue中将指令送给decode stage
 
 汇总的各个stage状态如下表所示
+
 stage |cycle0 | cycle1 | cycle2 | cycle3 | cycle4 | cycle5 | cycle6
----|---|---|---|---|---|---|---
+---|---|---|---|---|---|---|---|
 fetch | running | running | squashing | running | running | running |running
 decode | running | running | squashing | running | running | block | unblocking
 rename | running |running | squashing | running | block | unblocking | running
