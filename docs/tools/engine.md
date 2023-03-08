@@ -6,4 +6,4 @@
 
 [https://gitlab.com/libeigen/eigen/tree/master](https://gitlab.com/libeigen/eigen/tree/master)
 
-[git clone https://gitlab.com/libeigen/eigen.git](git clone https://gitlab.com/libeigen/eigen.git)
+[https://gitlab.com/libeigen/eigen.git](https://gitlab.com/libeigen/eigen.git)
