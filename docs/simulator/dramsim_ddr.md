@@ -384,6 +384,12 @@ execute.
 
 《memory access scheduling》
 
+## DDR功耗
+
+[https://www.micron.com/support/tools-and-utilities/power-calc?login]
+
+以镁光DDR举例，镁光提供了一些工具来对DDR的功耗进行评估，也有相关的文档描述他们的一些评估结果
+
 ## DRAMSim3
 
 ### 配置参数解析
