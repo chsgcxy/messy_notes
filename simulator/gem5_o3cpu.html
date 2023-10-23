@@ -1,0 +1,3844 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+        <link rel="canonical" href="https://chsgcxy.github.io/messy_notes/simulator/gem5_o3cpu.html">
+      
+      
+        <link rel="prev" href="gem5_isa.html">
+      
+      
+        <link rel="next" href="gem5_random.html">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>O3CPU 代码分析 - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#o3cpu" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              O3CPU 代码分析
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          Arch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_demo.html" class="md-nav__link">
+        XS Arch simple
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arm_training_day1.html" class="md-nav__link">
+        ARM Training Day1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arm_training_day2.html" class="md-nav__link">
+        ARM Training Day2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/atomic.html" class="md-nav__link">
+        RISCV原子操作
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/computer_arch.html" class="md-nav__link">
+        计算机体系结构量化研究方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/numa.html" class="md-nav__link">
+        numa架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/superscalar.html" class="md-nav__link">
+        超标量处理器设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_17" type="checkbox" id="__nav_2_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_17" tabindex="0" aria-expanded="false">
+          Hotchip33
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Hotchip33" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_17">
+          <span class="md-nav__icon md-icon"></span>
+          Hotchip33
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/hotchip33/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          C
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/int_uint.html" class="md-nav__link">
+        符号扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/reverse.html" class="md-nav__link">
+        如何写一个又高效又美观的reverse
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/stl_containers.html" class="md-nav__link">
+        C++ STL容器
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          Chisel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Chisel" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Chisel
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/chisel.html" class="md-nav__link">
+        chisel
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/rocketchip.html" class="md-nav__link">
+        rocket chip分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/sbt.html" class="md-nav__link">
+        sbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/scala.html" class="md-nav__link">
+        scala
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          Debug
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          Deeplearning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Design patterns
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          Ic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/axi4.html" class="md-nav__link">
+        AXI4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/pcie.html" class="md-nav__link">
+        PCIE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator2.html" class="md-nav__link">
+        再谈模拟器
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/usb.html" class="md-nav__link">
+        USB
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/lzma_transplant.html" class="md-nav__link">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          Mcu
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" tabindex="0" aria-expanded="false">
+          Misc
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" tabindex="0" aria-expanded="false">
+          Python
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" tabindex="0" aria-expanded="false">
+          Riscv
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/opensbi.html" class="md-nav__link">
+        OpenSBI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-rvv.html" class="md-nav__link">
+        RISCV向量扩展实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_14" type="checkbox" id="__nav_14" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" tabindex="0" aria-expanded="true">
+          Simulator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Simulator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Simulator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dramsim_ddr.html" class="md-nav__link">
+        DDR and DRAMSim3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5.html" class="md-nav__link">
+        GEM5 设计与实现分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_introduction.html" class="md-nav__link">
+        Gem5 Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_isa.html" class="md-nav__link">
+        Gem5指令集框架解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          O3CPU 代码分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="gem5_o3cpu.html" class="md-nav__link md-nav__link--active">
+        O3CPU 代码分析
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    运行说明
+  </a>
+  
+    <nav class="md-nav" aria-label="运行说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-gem5" class="md-nav__link">
+    build Gem5
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-gem5" class="md-nav__link">
+    run Gem5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-gem5" class="md-nav__link">
+    stop Gem5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fetch" class="md-nav__link">
+    fetch
+  </a>
+  
+    <nav class="md-nav" aria-label="fetch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetch-a-cache-line-and-not-hit" class="md-nav__link">
+    fetch a cache line and not hit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macroop" class="md-nav__link">
+    macroOp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quiesce" class="md-nav__link">
+    quiesce 类指令的处理
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#squash" class="md-nav__link">
+    squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stall" class="md-nav__link">
+    stall
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decode" class="md-nav__link">
+    decode
+  </a>
+  
+    <nav class="md-nav" aria-label="decode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decode-squash" class="md-nav__link">
+    decode squash
+  </a>
+  
+    <nav class="md-nav" aria-label="decode squash">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#squash_1" class="md-nav__link">
+    分支预测错误引起的squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#squash_2" class="md-nav__link">
+    squash 代码逻辑
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commitsquash" class="md-nav__link">
+    来自于commit的squash
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decode-stall" class="md-nav__link">
+    decode stall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unblocking" class="md-nav__link">
+    unblocking
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rename" class="md-nav__link">
+    Rename
+  </a>
+  
+    <nav class="md-nav" aria-label="Rename">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rename-squash" class="md-nav__link">
+    rename squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-stall" class="md-nav__link">
+    rename stall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-unblocking" class="md-nav__link">
+    rename unblocking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serilizebefore-and-serilizeafter" class="md-nav__link">
+    serilizeBefore and serilizeAfter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iew" class="md-nav__link">
+    IEW
+  </a>
+  
+    <nav class="md-nav" aria-label="IEW">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    一般流程
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic" class="md-nav__link">
+    atomic类指令
+  </a>
+  
+    <nav class="md-nav" aria-label="atomic类指令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    原子比较交换
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    原子交换
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    原子累加
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    原子位操作
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    原子比较
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iew-squash" class="md-nav__link">
+    iew squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    不能冒险执行的指令
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    发射队列仲裁逻辑
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    执行过程的流水线
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    执行过程中的分支预测错误
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lsu" class="md-nav__link">
+    LSU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    commit
+  </a>
+  
+    <nav class="md-nav" aria-label="commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#squash_3" class="md-nav__link">
+    分支预测引起的squash
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="simplesim.html" class="md-nav__link">
+        simpleScalar解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="trace_format.html" class="md-nav__link">
+        利用Trace进行性能分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" tabindex="0" aria-expanded="false">
+          Smt pnp
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_16" type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" tabindex="0" aria-expanded="false">
+          Tools
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/arm-atp.html" class="md-nav__link">
+        ATP(Adaptive Traffic Profiles)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/engine.html" class="md-nav__link">
+        engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git.html" class="md-nav__link">
+        git技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/protobuf.html" class="md-nav__link">
+        protobuf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/screen.html" class="md-nav__link">
+        screen
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/wsl.html" class="md-nav__link">
+        WSL
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_17" type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" tabindex="0" aria-expanded="false">
+          Tvm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/codebase-struct.html" class="md-nav__link">
+        directory-structure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/tvm-start.html" class="md-nav__link">
+        tvm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_18" type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" tabindex="0" aria-expanded="false">
+          Verilog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Verilog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          Verilog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/round_robin_algo.html" class="md-nav__link">
+        一种round_robin算法实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    运行说明
+  </a>
+  
+    <nav class="md-nav" aria-label="运行说明">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-gem5" class="md-nav__link">
+    build Gem5
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-gem5" class="md-nav__link">
+    run Gem5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-gem5" class="md-nav__link">
+    stop Gem5
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fetch" class="md-nav__link">
+    fetch
+  </a>
+  
+    <nav class="md-nav" aria-label="fetch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fetch-a-cache-line-and-not-hit" class="md-nav__link">
+    fetch a cache line and not hit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macroop" class="md-nav__link">
+    macroOp
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quiesce" class="md-nav__link">
+    quiesce 类指令的处理
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#squash" class="md-nav__link">
+    squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stall" class="md-nav__link">
+    stall
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decode" class="md-nav__link">
+    decode
+  </a>
+  
+    <nav class="md-nav" aria-label="decode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decode-squash" class="md-nav__link">
+    decode squash
+  </a>
+  
+    <nav class="md-nav" aria-label="decode squash">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#squash_1" class="md-nav__link">
+    分支预测错误引起的squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#squash_2" class="md-nav__link">
+    squash 代码逻辑
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commitsquash" class="md-nav__link">
+    来自于commit的squash
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decode-stall" class="md-nav__link">
+    decode stall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unblocking" class="md-nav__link">
+    unblocking
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rename" class="md-nav__link">
+    Rename
+  </a>
+  
+    <nav class="md-nav" aria-label="Rename">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rename-squash" class="md-nav__link">
+    rename squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-stall" class="md-nav__link">
+    rename stall
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rename-unblocking" class="md-nav__link">
+    rename unblocking
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serilizebefore-and-serilizeafter" class="md-nav__link">
+    serilizeBefore and serilizeAfter
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iew" class="md-nav__link">
+    IEW
+  </a>
+  
+    <nav class="md-nav" aria-label="IEW">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    一般流程
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic" class="md-nav__link">
+    atomic类指令
+  </a>
+  
+    <nav class="md-nav" aria-label="atomic类指令">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    原子比较交换
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    原子交换
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    原子累加
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    原子位操作
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    原子比较
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iew-squash" class="md-nav__link">
+    iew squash
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    不能冒险执行的指令
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    发射队列仲裁逻辑
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    执行过程的流水线
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    执行过程中的分支预测错误
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lsu" class="md-nav__link">
+    LSU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    commit
+  </a>
+  
+    <nav class="md-nav" aria-label="commit">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#squash_3" class="md-nav__link">
+    分支预测引起的squash
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="o3cpu">O3CPU 代码分析<a class="headerlink" href="#o3cpu" title="Permanent link">&para;</a></h1>
+<h2 id="_1">运行说明<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h3 id="build-gem5">build Gem5<a class="headerlink" href="#build-gem5" title="Permanent link">&para;</a></h3>
+<p>can use a <strong>-j</strong> param to enable compile in parallel</p>
+<div class="highlight"><pre><span></span><code>scons<span class="w"> </span>build/ARM/gem5.debug<span class="w"> </span>-j4
+</code></pre></div>
+<h2 id="run-gem5">run Gem5<a class="headerlink" href="#run-gem5" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>chlxy@LAPTOP-SMLPH2RJ:~/workspace/gem5$<span class="w"> </span>./build/ARM/gem5.debug<span class="w"> </span>--debug-flags<span class="o">=</span>Exec<span class="w"> </span>configs/example/fs.py<span class="w"> </span>--cpu-type<span class="o">=</span>ArmO3CPU<span class="w"> </span>--caches<span class="w"> </span>--machine-type<span class="o">=</span>VExpress_GEM5_V2<span class="w"> </span>-n1<span class="w"> </span>--bare-metal<span class="w"> </span>--kernel<span class="w"> </span>../tests/aarch64/dhrystone/dhrystone.elf
+</code></pre></div>
+<h2 id="stop-gem5">stop Gem5<a class="headerlink" href="#stop-gem5" title="Permanent link">&para;</a></h2>
+<p>dhrystone will write a <strong>EOT</strong> to inform system to stop at the end of the test</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define TUBE_ADDRESS ((volatile uint32_t *) 0x13000000u)</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">benchmark_finish</span><span class="p">()</span>
+<span class="p">{</span><span class="err">​​</span>
+<span class="w">  </span><span class="kt">char</span><span class="w">  </span><span class="n">p</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;** TEST PASSED OK **</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span><span class="err">​​​​​​​​​</span>
+<span class="w">    </span><span class="o">*</span><span class="n">TUBE_ADDRESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="err">​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</span>
+<span class="w">  </span><span class="o">*</span><span class="n">TUBE_ADDRESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x4</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>so, we set <strong>UART0.pio=0x13000000</strong>, and enable EOT</p>
+<div class="highlight"><pre><span></span><code><span class="n">Pl011</span><span class="p">(</span><span class="n">pio_addr</span><span class="o">=</span><span class="mh">0x13000000</span><span class="p">,</span>
+      <span class="n">interrupt</span><span class="o">=</span><span class="n">ArmSPI</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="mi">37</span><span class="p">),</span> <span class="n">end_on_eot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>we use <strong>VExpress_GEM5_V2</strong> platform for our soc structure, you can find memorymap and other information in file src/dev/arm/RealView.py</p>
+<h2 id="fetch">fetch<a class="headerlink" href="#fetch" title="Permanent link">&para;</a></h2>
+<p><img alt="fetch struct" src="../imgs/gem5_o3cpu/struct_fetch.png" /></p>
+<h3 id="fetch-a-cache-line-and-not-hit">fetch a cache line and not hit<a class="headerlink" href="#fetch-a-cache-line-and-not-hit" title="Permanent link">&para;</a></h3>
+<p>没有开启mmu，因此当拍就能得到物理地址，然后查cache是否命中</p>
+<div class="highlight"><pre><span></span><code>1000: system.cpu.fetch: [tid:0] Attempting to translate and read instruction, starting at PC (0=&gt;0x4).(0=&gt;1).
+1000: system.cpu.fetch: [tid:0] Fetching cache line 0 for addr 0
+</code></pre></div>
+<p>cache未命中，向下一级缓存取指令，在43000个tick，cache miss的数据回填，再过3个cycle,数据被直接放在fetchbuffer中。</p>
+<div class="highlight"><pre><span></span><code>43000: system.cpu.icache: recvTimingResp: Handling response ReadResp [0:f] (s) IF UC
+44500: system.cpu.icache_port: Fetch unit received timing
+</code></pre></div>
+<h3 id="macroop">macroOp<a class="headerlink" href="#macroop" title="Permanent link">&para;</a></h3>
+<p>macroOp fetch过程有如下特点：</p>
+<ul>
+<li>不支持跨cacheLine</li>
+<li>不支持fetchbuffer拼接</li>
+<li>当拍处理完fetchbuffer，可以直接发起新的cache请求</li>
+<li>存在一个microOp的缓存</li>
+</ul>
+<p><img alt="fetch macroOp" src="../imgs/gem5_o3cpu/fetch_macroOp.png" /></p>
+<p>从指令流log中可以看到macro指令 stp被拆分成了三条micro指令</p>
+<div class="highlight"><pre><span></span><code>2457000: system.cpu: A0 T0 : 0x6220 @_malloc_r+640    :   adrp   x1, #73728        : IntAlu :  D=0x0000000000018000  FetchSeq=1364  CPSeq=902  flags=(IsInteger)
+2457000: system.cpu: A0 T0 : 0x6224 @_malloc_r+644    : stp                       
+2457000: system.cpu: A0 T0 : 0x6224 @_malloc_r+644. 0 :   addxi_uop   ureg0, sp, #80 : IntAlu :  D=0x0000000000014f30  FetchSeq=1365  CPSeq=903  flags=(IsInteger|IsMicroop|IsDelayedCommit|IsFirstMicroop)
+2457000: system.cpu: A0 T0 : 0x6224 @_malloc_r+644. 1 :   strxi_uop   x27, [ureg0] : MemWrite :  D=0x0000000000000000 A=0x14f30  FetchSeq=1366  CPSeq=904  flags=(IsInteger|IsStore|IsMicroop|IsDelayedCommit)
+2457500: system.cpu: A0 T0 : 0x6224 @_malloc_r+644. 2 :   strxi_uop   x28, [ureg0, #8] : MemWrite :  D=0x0000000000000000 A=0x14f38  FetchSeq=1367  CPSeq=905  flags=(IsInteger|IsStore|IsMicroop|IsLastMicroop)
+2457500: system.cpu: A0 T0 : 0x6228 @_malloc_r+648    :   adrp   x27, #61440       : IntAlu :  D=0x0000000000015000  FetchSeq=1368  CPSeq=906  flags=(IsInteger)
+2457500: system.cpu: A0 T0 : 0x622c @_malloc_r+652    :   ldr   x1, [x1, #2432]    : MemRead :  D=0x0000000000000000 A=0x18980  FetchSeq=1369  CPSeq=907  flags=(IsInteger|IsLoad)
+2458000: system.cpu: A0 T0 : 0x6230 @_malloc_r+656    :   movz   x3, #4127, #0     : IntAlu :  D=0x000000000000101f  FetchSeq=1370  CPSeq=908  flags=(IsInteger)
+2458000: system.cpu: A0 T0 : 0x6234 @_malloc_r+660    :   ldr   x2, [x27, #3936]   : MemRead :  D=0xffffffffffffffff A=0x15f60  FetchSeq=1371  CPSeq=909  flags=(IsInteger|IsLoad)
+</code></pre></div>
+<p>执行log中,可以看到在2457000个tick时，fetch一共处理了三条指令，adrp和stp的前两条micro指令</p>
+<div class="highlight"><pre><span></span><code>2457000: system.cpu.fetch: [tid:0] Instruction PC (0x6220=&gt;0x6224).(0=&gt;1) created [sn:1364].
+2457000: system.cpu.fetch: [tid:0] Instruction is:   adrp   x1, #73728
+
+2457000: system.cpu.decoder: Decode: Decoded stp instruction: 0x4a90573fb
+2457000: system.cpu.fetch: [tid:0] Instruction PC (0x6224=&gt;0x6228).(0=&gt;1) created [sn:1365].
+2457000: system.cpu.fetch: [tid:0] Instruction is:   addxi_uop   ureg0, sp, #80
+
+2457000: system.cpu.fetch: [tid:0] Instruction PC (0x6224=&gt;0x6228).(1=&gt;2) created [sn:1366].
+2457000: system.cpu.fetch: [tid:0] Instruction is:   strxi_uop   x27, [ureg0]
+
+2457000: system.cpu.fetch: [tid:0] Done fetching, reached fetch bandwidth for this cycle.
+
+2457000: system.cpu.fetch: [tid:0] [sn:1364] Sending instruction to decode from fetch queue. Fetch queue size: 3.
+2457000: system.cpu.fetch: [tid:0] [sn:1365] Sending instruction to decode from fetch queue. Fetch queue size: 2.
+2457000: system.cpu.fetch: [tid:0] [sn:1366] Sending instruction to decode from fetch queue. Fetch queue size: 1.
+</code></pre></div>
+<p>在下一个cycle,除了stp剩余的一条指令，还可以处理额外的两条指令</p>
+<div class="highlight"><pre><span></span><code>2457500: system.cpu.fetch: [tid:0] Instruction PC (0x6224=&gt;0x6228).(2=&gt;3) created [sn:1367].
+2457500: system.cpu.fetch: [tid:0] Instruction is:   strxi_uop   x28, [ureg0, #8]
+
+2457500: system.cpu.fetch: [tid:0] Instruction PC (0x6228=&gt;0x622c).(0=&gt;1) created [sn:1368].
+2457500: system.cpu.fetch: [tid:0] Instruction is:   adrp   x27, #61440
+
+2457500: system.cpu.fetch: [tid:0] Instruction PC (0x622c=&gt;0x6230).(0=&gt;1) created [sn:1369].
+2457500: system.cpu.fetch: [tid:0] Instruction is:   ldr   x1, [x1, #2432]
+
+2457500: system.cpu.fetch: [tid:0] Done fetching, reached fetch bandwidth for this cycle.
+</code></pre></div>
+<h3 id="_2">分支预测<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>如果分支预测跳转，就会结束当前fetch操作，分支指令之前的指令可以继续进入fetchQueue。同时可以直接发起新的cache请求</p>
+<div class="highlight"><pre><span></span><code>2600000: system.cpu.fetch: [tid:0] Instruction PC (0x1514=&gt;0x1518).(0=&gt;1) created [sn:1413].
+2600000: system.cpu.fetch: [tid:0] Instruction is:   ret   
+
+2600000: system.cpu.fetch: [tid:0] [sn:1413] Branch at PC 0x1514 predicted to be taken to (0x6260=&gt;0x6264).(0=&gt;1)
+
+2600000: system.cpu.fetch: [tid:0] Done fetching, predicted branch instruction encountered.
+
+2600000: system.cpu.fetch: [tid:0] Issuing a pipelined I-cache access, starting at PC (0x6260=&gt;0x6264).(0=&gt;1).
+2600000: system.cpu.fetch: [tid:0] Fetching cache line 0x6260 for addr 0x6260
+
+2600000: system.cpu.fetch: [tid:0] [sn:1412] Sending instruction to decode from fetch queue. Fetch queue size: 2.
+2600000: system.cpu.fetch: [tid:0] [sn:1413] Sending instruction to decode from fetch queue. Fetch queue size: 1.
+</code></pre></div>
+<h3 id="quiesce">quiesce 类指令的处理<a class="headerlink" href="#quiesce" title="Permanent link">&para;</a></h3>
+<p>quiesce类指令：</p>
+<ul>
+<li>wfe</li>
+<li>wfet(Gem5 不支持)</li>
+<li>wfi</li>
+<li>wfit(Gem5 不支持)</li>
+</ul>
+<p>以wfi指令举例</p>
+<div class="highlight"><pre><span></span><code>1376000: system.cpu.fetch: [tid:0] Instruction PC (0x1c4=&gt;0x1c8).(0=&gt;1) created [sn:119].
+1376000: system.cpu.fetch: [tid:0] Instruction is:   wfi   
+
+1376000: system.cpu.fetch: Quiesce instruction encountered, halting fetch!
+
+// 下一拍，fetch 开始处于pending的状态
+1376500: system.cpu.fetch: There are no more threads available to fetch from.
+1376500: system.cpu.fetch: [tid:0] Fetch is waiting for a pending quiesce instruction!
+
+// 在这个例子中，wfi指令处于分支错误的路径上，最终执行squash恢复了运行
+1380000: system.cpu.commit: [tid:0] Squashing due to branch mispred PC:0x1c0 [sn:118]
+1380000: system.cpu.commit: [tid:0] Redirecting to PC (0x1cc=&gt;0x1d0).(0=&gt;1)
+
+1380500: system.cpu.fetch: [tid:0] Squashing instructions due to squash from commit.
+1380500: system.cpu.fetch: [tid:0] Squash from commit.
+
+1381000: system.cpu.fetch: [tid:0] Done squashing, switching to running.
+1381000: system.cpu.fetch: Running stage.
+</code></pre></div>
+<h3 id="squash">squash<a class="headerlink" href="#squash" title="Permanent link">&para;</a></h3>
+<p>squash 主要执行如下操作</p>
+<ul>
+<li>将PC设置为Commit stage 返回的PC</li>
+<li>复位与fetch buffer相关的reg</li>
+<li>如果有进行中的icache请求，标记请求无效</li>
+<li>如果有进行中的itlb请求，标记请求无效</li>
+<li>如果有进行中的icache retry请求，标记请求无效</li>
+<li>清空fetchQueue</li>
+</ul>
+<h3 id="stall">stall<a class="headerlink" href="#stall" title="Permanent link">&para;</a></h3>
+<p>来自于decode的stall不会影响fetch将指令存入fetchQueue，会stall从fetchQueue向decode发送指令。</p>
+<hr />
+<h2 id="decode">decode<a class="headerlink" href="#decode" title="Permanent link">&para;</a></h2>
+<p><img alt="decode struct" src="../imgs/gem5_o3cpu/struct_decode.png" /></p>
+<h3 id="decode-squash">decode squash<a class="headerlink" href="#decode-squash" title="Permanent link">&para;</a></h3>
+<h4 id="squash_1">分支预测错误引起的squash<a class="headerlink" href="#squash_1" title="Permanent link">&para;</a></h4>
+<p>decode stage 会判断非条件跳转指令是否分支预测错误。</p>
+<p>如果发现非条件跳转指令分支预测错误，那么会在当拍执行squash操作，假设decode宽度是4，跳转指令是第三条，那么前三条指令都能正常decode，并且发送到rename，此时decode转入squashing的状态，清除掉skidbuffer中的所有指令。</p>
+<p>如果下一个cycle没有收到squash信号或者stall信号，decode将再次转为running状态。</p>
+<p>当前cycle fetch到了 b 0x1570 指令，并且给通过分支预测器获取了不跳转的分支信息，下一条指令地址为 0x1d4</p>
+<div class="highlight"><pre><span></span><code>668000: system.cpu.fetch: [tid:0] Instruction PC (0x1cc=&gt;0x1d0).(0=&gt;1) created [sn:126].
+668000: system.cpu.fetch: [tid:0] Instruction is:   b   0x1570
+668000: system.cpu.fetch: [tid:0] [sn:126] Branch at PC 0x1cc predicted to be not taken
+668000: system.cpu.fetch: [tid:0] [sn:126] Branch at PC 0x1cc predicted to go to (0x1d0=&gt;0x1d4).(0=&gt;1)
+
+// 126 ~ 133 的指令被传入到fetchqueue
+668000: system.cpu.fetch: [tid:0] [sn:126] Sending instruction to decode from fetch queue. Fetch queue size: 8.
+668000: system.cpu.fetch: [tid:0] [sn:127] Sending instruction to decode from fetch queue. Fetch queue size: 7.
+668000: system.cpu.fetch: [tid:0] [sn:128] Sending instruction to decode from fetch queue. Fetch queue size: 6.
+668000: system.cpu.fetch: [tid:0] [sn:129] Sending instruction to decode from fetch queue. Fetch queue size: 5.
+668000: system.cpu.fetch: [tid:0] [sn:130] Sending instruction to decode from fetch queue. Fetch queue size: 4.
+668000: system.cpu.fetch: [tid:0] [sn:131] Sending instruction to decode from fetch queue. Fetch queue size: 3.
+668000: system.cpu.fetch: [tid:0] [sn:132] Sending instruction to decode from fetch queue. Fetch queue size: 2.
+668000: system.cpu.fetch: [tid:0] [sn:133] Sending instruction to decode from fetch queue. Fetch queue size: 1.
+</code></pre></div>
+<p>下一个cycle， decode解析出来的指令跳转地址为0x1570，因此产生squash信号
+由于是8条指令中的第一条指令出现了分支预测错误，因此没有任何指令能够传给rename</p>
+<div class="highlight"><pre><span></span><code>668500: system.cpu.decode: [tid:0] Processing instruction [sn:126] with PC (0x1cc=&gt;0x1d0).(0=&gt;1)
+668500: system.cpu.decode: [tid:0] [sn:126] Squashing due to incorrect branch prediction detected at decode.
+668500: system.cpu.decode: [tid:0] [sn:126] Updating predictions: Wrong predicted target: (0x1d0=&gt;0x1d4).(0=&gt;1)    PredPC: (0x1570=&gt;0x1574).(0=&gt;1)
+
+668500: system.cpu.rename: [tid:0] Not blocked, so attempting to run stage.
+668500: system.cpu.rename: [tid:0] Nothing to do, breaking out early.
+</code></pre></div>
+<p>decode需要通知fetch进行squash操作,同时将fetch与decode之间锁存的指令也清除掉。同时，如果decode当前处于blocked或者unblocking状态，需要通知fetch此状态解除。</p>
+<h4 id="squash_2">squash 代码逻辑<a class="headerlink" href="#squash_2" title="Permanent link">&para;</a></h4>
+<p>fetch.cc
+添加指令到全局指令列表</p>
+<div class="highlight"><pre><span></span><code>    // Add instruction to the CPU&#39;s list of instructions.
+    instruction-&gt;setInstListIt(cpu-&gt;addInst(instruction));
+</code></pre></div>
+<p>decode.cc
+在squash时，给要squash的指令添加 squashed 标记</p>
+<div class="highlight"><pre><span></span><code>    // Squash instructions up until this one
+    cpu-&gt;removeInstsUntil(squash_seq_num, tid);
+</code></pre></div>
+<p>在decode指令时，如果标记了squashed， 直接跳过</p>
+<div class="highlight"><pre><span></span><code>if (inst-&gt;isSquashed()) {​​​​​​​​
+            DPRINTF(Decode, &quot;[tid:%i] Instruction %i with PC %s is &quot;
+                    &quot;squashed, skipping.\n&quot;,
+                    tid, inst-&gt;seqNum, inst-&gt;pcState());
+            ++stats.squashedInsts;
+            --insts_available;
+            continue;
+        }​​​​​​​​
+</code></pre></div>
+<p>所以，flash 中间过程的指令没有额外的耗费cycle</p>
+<h4 id="commitsquash">来自于commit的squash<a class="headerlink" href="#commitsquash" title="Permanent link">&para;</a></h4>
+<ul>
+<li>如果decode处于block或者unbloking状态，通知fetch该状态已解除。因为会刷掉skidbuffer</li>
+<li>清除掉skidbuffer，和来自于fetch的指令</li>
+</ul>
+<p>fetch 到 decode之间on the fly的指令在fetch的squash处理中完成</p>
+<p>fetch.cc</p>
+<div class="highlight"><pre><span></span><code>    // Tell the CPU to remove any instructions that are not in the ROB.
+    cpu-&gt;removeInstsNotInROB(tid);
+</code></pre></div>
+<h3 id="decode-stall">decode stall<a class="headerlink" href="#decode-stall" title="Permanent link">&para;</a></h3>
+<ul>
+<li>如果rename block, 会发送stall信号给decode, decode收到stall信号，转为block状态，当拍不执行任何decode操作。并且会将stall信号传递给fetch。</li>
+<li>rename解除block后，decode进入unblocking状态，从skidbuffer中取指令，skidbuffer空了之后，转入running状态</li>
+</ul>
+<h3 id="unblocking">unblocking<a class="headerlink" href="#unblocking" title="Permanent link">&para;</a></h3>
+<ul>
+<li>如果收到rename发送的解除stall信号，rename进入unblocking状态，从skidbuffer中取指令进行decode。</li>
+<li>当skidbuffer中没有指令时，发送解除stall信号给fetch stage</li>
+</ul>
+<hr />
+<h2 id="rename">Rename<a class="headerlink" href="#rename" title="Permanent link">&para;</a></h2>
+<p><img alt="rename struct" src="../imgs/gem5_o3cpu/struct_rename.png" /></p>
+<h3 id="rename-squash">rename squash<a class="headerlink" href="#rename-squash" title="Permanent link">&para;</a></h3>
+<p>Rename stage 会响应来自于commit stage的squash信号，接收到squashing信号时，Rename进行如下操作</p>
+<ul>
+<li>如果当前rename处于blocked或者unblocking的状态，发送unblock信号给decode stage</li>
+<li>如果当前rename处于serializeStall状态，检查squash的指令是不是更older,如果是，清除掉serialize状态，发送unblock信号给decode；如果不是，保留serializeStall标记,下一拍恢复serializeStall</li>
+<li>清除掉来自于decode的指令</li>
+<li>清除掉skidbuffer中的指令</li>
+<li>一次性恢复RAT(从时序行为上来看仍然是ROB walk的形式)</li>
+</ul>
+<p>rename的squash过程与iew和commit有较大关联，具体行为可以结合commit stage的squash过程进行分析</p>
+<h3 id="rename-stall">rename stall<a class="headerlink" href="#rename-stall" title="Permanent link">&para;</a></h3>
+<p>rename stall 的源比较多，有如下几个</p>
+<ul>
+<li>REW stage block(dispatch)</li>
+<li>no free ROB entries</li>
+<li>no free LSU entries</li>
+<li>no free IQ entries</li>
+<li>no free Phy Regs in freelist</li>
+<li>serializeStall</li>
+</ul>
+<p>当发生stall时，rename stage有如下行为</p>
+<ul>
+<li>将decode传入的指令存入skidbuffer</li>
+<li>如果当前不在blocked或unblocking状态，向decode发送stall信号</li>
+<li>如果不处于serializeStall 状态，标记自己为blocked状态</li>
+</ul>
+<h3 id="rename-unblocking">rename unblocking<a class="headerlink" href="#rename-unblocking" title="Permanent link">&para;</a></h3>
+<p>如果收到了dispatch 发送的解除stall信号，rename可能进入unblocking状态，从skidbuffer中取指令进行rename操作。当skidbuffer中没有指令时，发送解除stall信号给decode stage</p>
+<h3 id="serilizebefore-and-serilizeafter">serilizeBefore and serilizeAfter<a class="headerlink" href="#serilizebefore-and-serilizeafter" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>serializeBefore makes the instruction wait in rename until the ROB is empty.
+serializeAfter marks the next instruction as serializeBefore</p>
+</blockquote>
+<p>serializeBefore类指令：</p>
+<ul>
+<li>mrs</li>
+</ul>
+<p>fetch到mrs指令，分配id=52</p>
+<div class="highlight"><pre><span></span><code>561000: system.cpu.fetch: [tid:0] Instruction PC (0xcc=&gt;0xd0).(0=&gt;1) created [sn:52].
+561000: system.cpu.fetch: [tid:0] Instruction is:   mrs   x0, id_aa64pfr0_el1
+</code></pre></div>
+<p>因为 fetch -&gt; decode 的延迟为3，decode -&gt; rename 延迟为2， 所以5个cycle之后，rename收到mrs指令
+判断指令携带IsSerializeBefore标记,进行如下操作</p>
+<ul>
+<li>不对该指令进行rename操作。</li>
+<li>状态机转为SerializeStall状态</li>
+<li>该指令之前的指令发送给dispatch</li>
+<li>剩余的指令存入skidbuffer</li>
+<li>反压stall信号给decode</li>
+</ul>
+<div class="highlight"><pre><span></span><code>563500: system.cpu.rename: [tid:0] Processing instruction [sn:52] with PC (0xcc=&gt;0xd0).(0=&gt;1).
+563500: system.cpu.rename: Serialize before instruction encountered.
+563500: system.cpu.rename: [tid:0] Blocking.
+</code></pre></div>
+<p>接下来，会一直等待ROB empty(实际上要no on the fly &amp;&amp; ROB empty)</p>
+<div class="highlight"><pre><span></span><code> 564500: system.cpu.rename: [tid:0] Stall: Serialize stall and ROB is not empty.
+ 564500: system.cpu.rename: [tid:0] Blocking.
+</code></pre></div>
+<p>一段时间之后，指令51提交了，意味着mrs指令之前的指令都提交了，因此ROB此时处于empty状态</p>
+<div class="highlight"><pre><span></span><code>567000: system.cpu.commit: [tid:0] [sn:51] Committing instruction with PC (0xc8=&gt;0xcc).(0=&gt;1)
+567000: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0xc8=&gt;0xcc).(0=&gt;1), [sn:51]
+</code></pre></div>
+<p>所以下一个cycle,rename进入unblocking状态，继续进行rename</p>
+<div class="highlight"><pre><span></span><code>567500: system.cpu.rename: [tid:0] Done with serialize stall, switching to unblocking.
+567500: system.cpu.rename: [tid:0] Trying to unblock.
+567500: system.cpu.rename: [tid:0] Processing instruction [52] with PC (0xcc=&gt;0xd0).(0=&gt;1).
+</code></pre></div>
+<p>serilizeAfter类指令：</p>
+<ul>
+<li>rfe(return from exception) only arch32 support?</li>
+<li>svc(supervisor call to EL1)</li>
+<li>hvc(supervisor call to EL2)</li>
+<li>smc(secure monitor call to EL3)</li>
+<li>hlt(halt)</li>
+<li>eret(exception return)</li>
+<li>msr(move to system registers)</li>
+<li>wfe(wait for exception)</li>
+<li>wfi(wait for interrupt)</li>
+<li>mcr( arch32 only?)</li>
+<li>setend(arch32 only?)</li>
+<li>dsb(Data Synchronization Barrier)</li>
+<li>cps(change pe status) arch32 only?</li>
+<li>brk(breakpoint)</li>
+</ul>
+<p>msr指令举例，id=43,它的下一条是adr指令，id=44</p>
+<div class="highlight"><pre><span></span><code>474500: system.cpu.fetch: [tid:0] Instruction PC (0xa8=&gt;0xac).(0=&gt;1) created [sn:43].
+474500: system.cpu.fetch: [tid:0] Instruction is:   msr   vbar_el3, x1
+
+475000: system.cpu.fetch: [tid:0] Instruction PC (0xac=&gt;0xb0).(0=&gt;1) created [sn:44].
+475000: system.cpu.fetch: [tid:0] Instruction is:   adr   x1, #85840
+</code></pre></div>
+<p>若干cycle之后，rename处理msr指令，识别为serializeAfter指令,43号指令正常进行rename，并且发给IEW,
+后面的44号指令</p>
+<div class="highlight"><pre><span></span><code>480500: system.cpu.rename: [tid:0] Processing instruction [sn:43] with PC (0xa8=&gt;0xac).(0=&gt;1).
+480500: system.cpu.rename: Serialize after instruction encountered.
+
+480500: system.cpu.rename: [tid:0] [sn:43] Adding instruction to history buffer (size=3).
+480500: system.cpu.rename: [tid:0] Sending instructions to IEW.
+480500: system.cpu.rename: [tid:0] Removing [sn:44] PC:(0xac=&gt;0xb0).(0=&gt;1) from rename skidBuffer
+480500: system.cpu.rename: [tid:0] Processing instruction [sn:44] with PC (0xac=&gt;0xb0).(0=&gt;1).
+480500: system.cpu.rename: Serialize before instruction encountered.
+480500: system.cpu.rename: [tid:0] Blocking.
+</code></pre></div>
+<p>43号指令提交了</p>
+<div class="highlight"><pre><span></span><code>485500: system.cpu.commit: [tid:0] [sn:43] Committing instruction with PC (0xa8=&gt;0xac).(0=&gt;1)
+485500: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0xa8=&gt;0xac).(0=&gt;1), [sn:43]
+</code></pre></div>
+<p>下一个cycle,44号指令可以继续rename</p>
+<div class="highlight"><pre><span></span><code>486000: system.cpu.rename: [tid:0] Done with serialize stall, switching to unblocking.
+486000: system.cpu.rename: [tid:0] Trying to unblock.
+
+486000: system.cpu.rename: [tid:0] Processing instruction [44] with PC (0xac=&gt;0xb0).(0=&gt;1).
+486000: system.cpu.rename: [tid:0] Instruction must be processed by rename. Adding to front of list.
+
+486000: system.cpu.rename: [tid:0] Sending instructions to IEW.
+486000: system.cpu.rename: [tid:0] Processing instruction [sn:44] with PC (0xac=&gt;0xb0).(0=&gt;1).
+</code></pre></div>
+<hr />
+<h2 id="iew">IEW<a class="headerlink" href="#iew" title="Permanent link">&para;</a></h2>
+<p><img alt="iew struct" src="../imgs/gem5_o3cpu/struct_iew.png" /></p>
+<p>IEW stage 混合了dispatch,issue,execute,writeback的操作。它是多个stage合并在了一起。</p>
+<p>dispath实现了将rename之后的指令放到issueQueue中的操作，O3CPU中，实现了InstQueue,LoadQueue,StoreQueue,三个数据结构，但这不意味着它所模拟的硬件只有三个队列，要从整体效果上分析。</p>
+<h3 id="_3">一般流程<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p><img alt="iew demo" src="../imgs/gem5_o3cpu/iew_demo.png" /></p>
+<p>举例一段顺序指令，可以看出，对于执行周期为1的指令，指令可以背靠背执行。如果指令所有的源都ready,那么在dispath的同时就能进行仲裁。执行之后有一个可以认为是writeback的过程，实际上的唤醒操作在执行的最后一个cycle就进行了</p>
+<h3 id="atomic">atomic类指令<a class="headerlink" href="#atomic" title="Permanent link">&para;</a></h3>
+<h4 id="_4">原子比较交换<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<ul>
+<li>CAS,CASA,CASL,CASAL</li>
+<li>CASB,CASAB,CASLB,CASALB</li>
+<li>CASH,CASAH,CASLH,CASALH</li>
+<li>CASP,CASPA,CASPL,CASPAL</li>
+</ul>
+<h4 id="_5">原子交换<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h4>
+<ul>
+<li>SWP, SWPA, SWPAL, SWPL</li>
+<li>SWPB, SWPAB, SWPALB, SWPLB, SWPH, SWPAH, SWPALH, SWPLH</li>
+</ul>
+<h4 id="_6">原子累加<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<ul>
+<li>LDADD,LDADDA,LDADDAL,LDADDL, LDADDH,LDADDAH,LDADDALH,LDADDLH, LDADDB,LDADDAB,LDADDALB,LDADDLB</li>
+<li>STADD, STADDL, STADDB, STADDLB, STADDH, STADDLH</li>
+</ul>
+<h4 id="_7">原子位操作<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h4>
+<ul>
+<li>LDCLR,LDCLRA,LDCLRAL,LDCLRL</li>
+<li>LDCLRB, LDCLRAB, LDCLRALB, LDCLRLB, LDCLRH, LDCLRAH, LDCLRALH, LDCLRLH</li>
+<li>
+<p>STCLR, STCLRL, STCLRB, STCLRLB, STCLRH, STCLRLH</p>
+</li>
+<li>
+<p>LDEOR, LDEORA, LDEORAL, LDEORL</p>
+</li>
+<li>LDEORB, LDEORAB, LDEORALB, LDEORLB, LDEORH, LDEORAH, LDEORALH, LDEORLH</li>
+<li>
+<p>STEOR, STEORL, STEORB, STEORLB, STEORH, STEORLH</p>
+</li>
+<li>
+<p>LDSET, LDSETA, LDSETAL, LDSETL</p>
+</li>
+<li>LDSETB, LDSETAB, LDSETALB, LDSETLB, LDSETH, LDSETAH, LDSETALH, LDSETLH</li>
+<li>STSET, STSETL, STSETB, STSETLB, STSETH, STSETLH</li>
+</ul>
+<h4 id="_8">原子比较<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h4>
+<ul>
+<li>LDSMAX, LDSMAXA, LDSMAXAL, LDSMAXL</li>
+<li>LDUMAX, LDUMAXA, LDUMAXAL, LDUMAXL</li>
+<li>LDSMAXB, LDSMAXAB, LDSMAXALB, LDSMAXLB</li>
+<li>LDUMAXB, LDUMAXAB, LDUMAXALB, LDUMAXLB</li>
+<li>LDSMAXH, LDSMAXAH, LDSMAXALH, LDSMAXLH</li>
+<li>LDUMAXH, LDUMAXAH, LDUMAXALH, LDUMAXLH</li>
+<li>STSMAX, STSMAXL, STSMAXB, STSMAXLB, STSMAXH, STSMAXLH</li>
+<li>
+<p>STUMAX, STUMAXL, STUMAXB, STUMAXLB, STUMAXH, STUMAXLH</p>
+</li>
+<li>
+<p>LDSMIN, LDSMINA, LDSMINAL, LDSMINL</p>
+</li>
+<li>LDUMIN, LDUMINA, LDUMINAL, LDUMINL</li>
+<li>LDSMINB, LDSMINAB, LDSMINALB, LDSMINLB</li>
+<li>LDUMINB, LDUMINAB, LDUMINALB, LDUMINLB</li>
+<li>LDSMINH, LDSMINAH, LDSMINALH, LDSMINLH</li>
+<li>LDUMINH, LDUMINAH, LDUMINALH, LDUMINLH</li>
+<li>STSMIN, STSMINL, STSMINB, STSMINLB, STSMINH, STSMINLH</li>
+<li>STUMIN, STUMINL, STUMINB, STUMINLB, STUMINH, STUMINLH</li>
+</ul>
+<h3 id="iew-squash">iew squash<a class="headerlink" href="#iew-squash" title="Permanent link">&para;</a></h3>
+<p>todo...</p>
+<h3 id="_9">不能冒险执行的指令<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>对于不能冒险执行的指令，在Gem5的乱序CPU模型中，会将这类指令单独记录在一个表中，并且设置这类指令为CanCommit, 这样，在commit stage, 如果处理到这条指令，就会去尝试提交，但在提交的时候会发现，这条指令没有执行，缺少isExecuted标记，就能识别出这是不能冒险执行的指令，一直等到所有的store指令都已经写回，commit会传递可以执行信号给发射stage,这条指令才会去执行。</p>
+<p>以下类别的指令都是不能冒险执行的指令</p>
+<ul>
+<li>atomic</li>
+<li>StoreConditional</li>
+<li>stlxr, stlxrh, stlxrb, stxr, stxrb, stxrh, stlxp, stxp, strex, strexh, strexb, strexd, stlex, stlexb, stlexh, stlexd</li>
+<li>ReadBarrier</li>
+<li>stlr, stlrb, stlrh, hlt, dmb, dsb, ...</li>
+<li>WriteBarrier</li>
+<li>NonSpeculative</li>
+<li>sev, svc, hlt, smc, ...</li>
+</ul>
+<p>这类指令的处理流程如下：</p>
+<p>46号指令是ldadd指令，是一条atomic指令， 它前面的45号指令是一条store指令</p>
+<div class="highlight"><pre><span></span><code>517500: system.cpu.fetch: [tid:0] Instruction PC (0xb0=&gt;0xb4).(0=&gt;1) created [sn:45].
+517500: system.cpu.fetch: [tid:0] Instruction is:   str   x4, [x7]
+
+517500: system.cpu.fetch: [tid:0] Instruction PC (0xb4=&gt;0xb8).(0=&gt;1) created [sn:46].
+517500: system.cpu.fetch: [tid:0] Instruction is:   ldadd64   x8, x1, [x6]
+</code></pre></div>
+<p>在dispatch时，将这条指令额外的记录在了一个名为nonSpecInsts的结构中，并且atomic指令会存放在发射队列的StoreQueue中，并且这条指令也被记录在了ROB中，并且不是ROB的头</p>
+<div class="highlight"><pre><span></span><code>520500: system.cpu.iew: [tid:0] Issue: Adding PC (0xb4=&gt;0xb8).(0=&gt;1) [sn:46] [tid:0] to IQ.
+520500: system.cpu.iew: [tid:0] Issue: Memory instruction encountered, adding to LSQ.
+520500: system.cpu.iew.lsq.thread0: Inserting store PC (0xb4=&gt;0xb8).(0=&gt;1), idx:3 [sn:46]
+520500: system.cpu.iq: Adding non-speculative instruction [sn:46] PC (0xb4=&gt;0xb8).(0=&gt;1) to the IQ.
+520500: memdepentry: Memory dependency entry created. memdep_count=2 (0xb4=&gt;0xb8).(0=&gt;1)
+520500: system.cpu.memDep0: Inserting store/atomic PC (0xb4=&gt;0xb8).(0=&gt;1) [sn:46].
+
+520500: system.cpu.commit: [tid:0] [sn:46] Inserting PC (0xb4=&gt;0xb8).(0=&gt;1) into ROB.
+520500: system.cpu.rob: Adding inst PC (0xb4=&gt;0xb8).(0=&gt;1) to the ROB.
+520500: system.cpu.rob: [tid:0] Now has 2 instructions.
+</code></pre></div>
+<p>45号指令能够提交，这时发现后面的46号指令是一条nonSpec指令，它要等到前面所有的指令都提交,并且所有的store指令都完成写回。因此commit会一直卡在这条指令</p>
+<div class="highlight"><pre><span></span><code>522500: system.cpu.commit: Trying to commit head instruction, [tid:0] [sn:45]
+522500: system.cpu.commit: [tid:0] [sn:45] Committing instruction with PC (0xb0=&gt;0xb4).(0=&gt;1)
+522500: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0xb0=&gt;0xb4).(0=&gt;1), [sn:45]
+522500: system.cpu: Removing committed instruction [tid:0] PC (0xb0=&gt;0xb4).(0=&gt;1) [sn:45]
+
+522500: system.cpu.commit: Trying to commit head instruction, [tid:0] [sn:46]
+522500: system.cpu.commit: Encountered a barrier or non-speculative instruction [tid:0] [sn:46] at the head of the ROB, PC (0xb4=&gt;0xb8).(0=&gt;1).
+522500: system.cpu.commit: [tid:0] [sn:46] Waiting for all stores to writeback.
+522500: system.cpu.commit: Unable to commit head instruction PC:(0xb4=&gt;0xb8).(0=&gt;1) [tid:0] [sn:46].
+</code></pre></div>
+<p>过了很长时间，前面的store指令写回了，在下一个cycle,commit发送一组nonSpecSeqNum信号给发射队列仲裁逻辑</p>
+<div class="highlight"><pre><span></span><code>567000: system.cpu.commit: Trying to commit instructions in the ROB.
+567000: system.cpu.commit: Trying to commit head instruction, [tid:0] [sn:46]
+567000: system.cpu.commit: Encountered a barrier or non-speculative instruction [tid:0] [sn:46] at the head of the ROB, PC (0xb4=&gt;0xb8).(0=&gt;1).
+567000: system.cpu.commit: Unable to commit head instruction PC:(0xb4=&gt;0xb8).(0=&gt;1) [tid:0] [sn:46].
+567000: system.cpu.commit: [tid:0] Can&#39;t commit, Instruction [sn:46] PC (0xb4=&gt;0xb8).(0=&gt;1) is head of ROB and not ready
+</code></pre></div>
+<p>下一个cycle, 发射队列的仲裁逻辑收到nonSpecSeqNum信号，标记46号指令ready</p>
+<div class="highlight"><pre><span></span><code>567500: system.cpu.iq: Marking nonspeculative instruction [sn:46] as ready to execute.
+567500: system.cpu.memDep0: Marking non speculative instruction PC (0xb4=&gt;0xb8).(0=&gt;1) as ready [sn:46].
+567500: system.cpu.memDep0: Adding instruction [sn:46] to the ready list.
+567500: system.cpu.iq: Instruction is ready to issue, putting it onto the ready list, PC (0xb4=&gt;0xb8).(0=&gt;1) opclass:48 [sn:46].
+</code></pre></div>
+<p>下一个cycle, 将46号指令发射出去</p>
+<div class="highlight"><pre><span></span><code>568000: system.cpu.iq: Thread 0: Issuing instruction PC (0xb4=&gt;0xb8).(0=&gt;1) [sn:46]
+568000: system.cpu.memDep0: Issuing instruction PC 0xb4 [sn:46].
+</code></pre></div>
+<p>两个cycle之后,指令真正的执行</p>
+<div class="highlight"><pre><span></span><code>569000: system.cpu.iew: Execute: Processing PC (0xb4=&gt;0xb8).(0=&gt;1), [tid:0] [sn:46].
+569000: system.cpu.iew: Execute: Calculating address for memory reference.
+569000: system.cpu.iew.lsq.thread0: Executing store PC (0xb4=&gt;0xb8).(0=&gt;1) [sn:46]
+569000: global: RegFile: Access to int register 78, has data 0x140
+569000: global: RegFile: Access to int register 50, has data 0
+569000: global: RegFile: Access to int register 77, has data 0x2
+569000: system.cpu.iew.lsq.thread0: Doing write to store idx 3, addr 0x140 | storeHead:3 [sn:46]
+569000: system.cpu: Activity: 6
+569000: system.cpu.iq: Attempting to schedule ready instructions from the IQ.
+569000: system.cpu.iq: Not able to schedule any instructions.
+569000: system.cpu.iew.lsq: [tid:0] Writing back stores. 1 stores available for Writeback.
+569000: system.cpu.iew.lsq.thread0: D-Cache: Writing back store idx:4 PC:(0xb4=&gt;0xb8).(0=&gt;1) to Addr:0x140, data:0 [sn:46]
+569000: system.cpu.iew.lsq.thread0: Memory request (pkt: SwapReq [140:147] (s) UC) from inst [sn:46] was sent (cache is blocked: 0, cache_got_blocked: 0)
+</code></pre></div>
+<p>一段时间之后，指令执行完成,LSU标记指令完成</p>
+<div class="highlight"><pre><span></span><code>613000: system.cpu.iew.lsq.thread0: Completing store [sn:46], idx:3, store head idx:4
+
+613000: system.cpu.iew: Sending instructions to commit, [sn:46] PC (0xb4=&gt;0xb8).(0=&gt;1).
+613000: system.cpu.iq: Waking dependents of completed instruction.
+613000: system.cpu.memDep0: Completed mem instruction PC (0xb4=&gt;0xb8).(0=&gt;1) [sn:46].
+613000: memdepentry: Memory dependency entry deleted. memdep_count=5 (0xb4=&gt;0xb8).(0=&gt;1)
+613000: system.cpu.iq: Completing mem instruction PC: (0xb4=&gt;0xb8).(0=&gt;1) [sn:46]
+</code></pre></div>
+<p>下一个cycle,ROB标记指令可以提交</p>
+<div class="highlight"><pre><span></span><code>613500: system.cpu.commit: [tid:0] Marking PC (0xb4=&gt;0xb8).(0=&gt;1), [sn:46] ready within ROB.
+613500: system.cpu.commit: [tid:0] Instruction [sn:46] PC (0xb4=&gt;0xb8).(0=&gt;1) is head of ROB and ready to commit
+</code></pre></div>
+<p>下一个cycle, 指令retire</p>
+<div class="highlight"><pre><span></span><code>614000: system.cpu.commit: Trying to commit head instruction, [tid:0] [sn:46]
+614000: system.cpu.commit: [tid:0] [sn:46] Committing instruction with PC (0xb4=&gt;0xb8).(0=&gt;1)
+614000: system.cpu.rob: [tid:0] Retiring head instruction, instruction PC (0xb4=&gt;0xb8).(0=&gt;1), [sn:46]
+</code></pre></div>
+<h3 id="_10">发射队列仲裁逻辑<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p><img alt="iew struct" src="../imgs/gem5_o3cpu/iew_arbiter.png" /></p>
+<p>从整体逻辑上看，Gem5实现的发射队列是完全的age优先的逻辑，而且似乎是非存储指令实现了一个大队列，这个队列支持issue_width的仲裁，能够优先挑选出oldest的多条指令</p>
+<p>其中dependGraph处理非存储指令的寄存器依赖，以物理寄存器编号进行寻址，addToProducers()接口添加一个新的指令，地址为这个指令的目的寄存器编号。
+addToDependents()添加一个新的指令，地址为这个指令的源物理寄存器编号，如果一条指令有多个源，那么会添加到多条依赖链上，同一条依赖链上的指令以链表的形式管理。</p>
+<p>readyInst存放了目前所有的已经ready的指令，按照opclass编号进行寻址。每一个opclass中最老的指令被放在了一个名为listorder的按照age排序的有序队列中，发射指令时，从listorder中按照顺序进行发射，如果某一个opclass的指令被发射了，那么会从那个opclass的readylist中找到yonger的指令继续添加到listorder中</p>
+<p>这样就实现了一个完全age优先的仲裁逻辑</p>
+<h3 id="_11">执行过程的流水线<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p><img alt="iew struct" src="../imgs/gem5_o3cpu/execute_pip.png" /></p>
+<p>Gem5使用FU抽象来管理计算单元，对于一般的指令，执行时间都是确定的，通过注册FUCompletion事件来实现模拟指令在运算单元中花费的周期，事件完成会在下一拍释放占用的FU.</p>
+<p>名为issueToExecQueue的队列存放了在下一拍就能执行完的指令，在下一个周期，exec stage处理队列中的指令，调用指令的执行函数，将处理完的指令放到iewQueue中，同时进行writeback操作.</p>
+<h3 id="_12">执行过程中的分支预测错误<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="lsu">LSU<a class="headerlink" href="#lsu" title="Permanent link">&para;</a></h2>
+<p>todo...</p>
+<hr />
+<h2 id="commit">commit<a class="headerlink" href="#commit" title="Permanent link">&para;</a></h2>
+<p><img alt="commit struct" src="../imgs/gem5_o3cpu/struct_commit.png" /></p>
+<h3 id="squash_3">分支预测引起的squash<a class="headerlink" href="#squash_3" title="Permanent link">&para;</a></h3>
+<p>sn:1639 是一条b.eq指令</p>
+<div class="highlight"><pre><span></span><code>3021500: system.cpu.fetch: [tid:0] Instruction PC (0x6008=&gt;0x600c).(0=&gt;1) created [sn:1639].
+3021500: system.cpu.fetch: [tid:0] Instruction is:   b.eq   0x61ec
+3021500: system.cpu.fetch: [tid:0] Fetch queue entry created (3/32).
+3021500: system.cpu.fetch: [tid:0] [sn:1639] Branch at PC 0x6008 predicted to be not taken
+3021500: system.cpu.fetch: [tid:0] [sn:1639] Branch at PC 0x6008 predicted to go to (0x600c=&gt;0x6010).(0=&gt;1)
+</code></pre></div>
+<p>执行时发现分支预测错误(cycle0)</p>
+<div class="highlight"><pre><span></span><code>3027500: system.cpu.iew: [tid:0] [sn:1639] Execute: Branch mispredict detected.
+3027500: system.cpu.iew: [tid:0] [sn:1639] Predicted target was PC: (0x600c=&gt;0x6010).(0=&gt;1)
+3027500: system.cpu.iew: [tid:0] [sn:1639] Execute: Redirecting fetch to PC: (0x6008=&gt;0x61ec).(0=&gt;1)
+</code></pre></div>
+<p>下一个cycle(cycle1)，commit响应分支预测错误，发起squash操作,squash宽度为8，因此只能squash到1641号指令</p>
+<div class="highlight"><pre><span></span><code>3028000: system.cpu.commit: [tid:0] Squashing due to branch mispred PC:0x6008 [sn:1639]
+3028000: system.cpu.commit: [tid:0] Redirecting to PC (0x61ec=&gt;0x61f0).(0=&gt;1)
+3028000: system.cpu.rob: Starting to squash within the ROB.
+3028000: system.cpu.rob: [tid:0] Squashing instructions until [sn:1639].
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6038=&gt;0x603c).(0=&gt;1), seq num 1653.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6034=&gt;0x6038).(0=&gt;1), seq num 1652.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6030=&gt;0x6034).(0=&gt;1), seq num 1651.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x602c=&gt;0x6030).(0=&gt;1), seq num 1650.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6028=&gt;0x602c).(0=&gt;1), seq num 1649.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6024=&gt;0x6028).(0=&gt;1), seq num 1648.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6020=&gt;0x6024).(2=&gt;3), seq num 1647.
+3028000: system.cpu.rob: [tid:0] Squashing instruction PC (0x6020=&gt;0x6024).(1=&gt;2), seq num 1646.
+</code></pre></div>
+<p>下一个cycle(cycle2)，rename stage收到squash信号，利用 history buffer 恢复 RAT, 一拍内完成恢复</p>
+<div class="highlight"><pre><span></span><code>3028500: system.cpu.rename: [tid:0] Squashing instructions due to squash from commit.
+3028500: system.cpu.rename: [tid:0] [squash sn:1639] Squashing instructions.
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1657 (archReg: 0, newPhysReg: 27, prevPhysReg: 14).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1656 (archReg: 3, newPhysReg: 31, prevPhysReg: 80).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1655 (archReg: 0, newPhysReg: 14, prevPhysReg: 112).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1654 (archReg: 2, newPhysReg: 125, prevPhysReg: 118).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1653 (archReg: 0, newPhysReg: 112, prevPhysReg: 107).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1652 (archReg: 1, newPhysReg: 71, prevPhysReg: 108).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1651 (archReg: 2, newPhysReg: 118, prevPhysReg: 122).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1649 (archReg: 1, newPhysReg: 605, prevPhysReg: 602).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1649 (archReg: 2, newPhysReg: 604, prevPhysReg: 601).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1649 (archReg: 0, newPhysReg: 603, prevPhysReg: 600).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1649 (archReg: 0, newPhysReg: 65535, prevPhysReg: 65535).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1645 (archReg: 35, newPhysReg: 117, prevPhysReg: 46).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1643 (archReg: 1, newPhysReg: 602, prevPhysReg: 599).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1643 (archReg: 2, newPhysReg: 601, prevPhysReg: 598).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1643 (archReg: 0, newPhysReg: 600, prevPhysReg: 597).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1643 (archReg: 0, newPhysReg: 65535, prevPhysReg: 65535).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1642 (archReg: 3, newPhysReg: 80, prevPhysReg: 127).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1641 (archReg: 1, newPhysReg: 108, prevPhysReg: 11).
+3028500: system.cpu.rename: [tid:0] Removing history entry with sequence number 1640 (archReg: 1, newPhysReg: 11, prevPhysReg: 64).
+</code></pre></div>
+<p>issue stage 收到commit发来的squash信号，进入squash状态，清除queue中需要squash的指令</p>
+<div class="highlight"><pre><span></span><code>3028500: system.cpu.iew: [tid:0] Squashing all instructions.
+3028500: system.cpu.iq: [tid:0] Starting to squash instructions in the IQ.
+3028500: system.cpu.iq: [tid:0] Squashing until sequence number 1639!
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1654] PC (0x603c=&gt;0x6040).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1653] PC (0x6038=&gt;0x603c).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1651] PC (0x6030=&gt;0x6034).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1650] PC (0x602c=&gt;0x6030).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1649] PC (0x6028=&gt;0x602c).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1648] PC (0x6024=&gt;0x6028).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1647] PC (0x6020=&gt;0x6024).(2=&gt;3) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1646] PC (0x6020=&gt;0x6024).(1=&gt;2) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1644] PC (0x601c=&gt;0x6020).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1643] PC (0x6018=&gt;0x601c).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1642] PC (0x6014=&gt;0x6018).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1641] PC (0x6010=&gt;0x6014).(0=&gt;1) squashed.
+3028500: system.cpu.iq: [tid:0] Instruction [sn:1640] PC (0x600c=&gt;0x6010).(0=&gt;1) squashed.
+</code></pre></div>
+<p>commit stage继续squash 指令，并且向issue 发送 robsquashing 信号</p>
+<div class="highlight"><pre><span></span><code>3028500: system.cpu.commit: [tid:0] Still Squashing, cannot commit any insts this cycle.
+3028500: system.cpu.rob: [tid:0] Squashing instructions until [sn:1639].
+3028500: system.cpu.rob: [tid:0] Squashing instruction PC (0x6020=&gt;0x6024).(0=&gt;1), seq num 1645.
+3028500: system.cpu.rob: [tid:0] Squashing instruction PC (0x601c=&gt;0x6020).(0=&gt;1), seq num 1644.
+3028500: system.cpu.rob: [tid:0] Squashing instruction PC (0x6018=&gt;0x601c).(0=&gt;1), seq num 1643.
+3028500: system.cpu.rob: [tid:0] Squashing instruction PC (0x6014=&gt;0x6018).(0=&gt;1), seq num 1642.
+3028500: system.cpu.rob: [tid:0] Squashing instruction PC (0x6010=&gt;0x6014).(0=&gt;1), seq num 1641.
+3028500: system.cpu.rob: [tid:0] Squashing instruction PC (0x600c=&gt;0x6010).(0=&gt;1), seq num 1640.
+</code></pre></div>
+<p>下一个cycle(cycle3)，commit继续开始提交指令</p>
+<div class="highlight"><pre><span></span><code>3029000: system.cpu.commit: Trying to commit instructions in the ROB.
+3029000: system.cpu.commit: Trying to commit head instruction, [tid:0] [sn:1635]
+3029000: system.cpu.commit: [tid:0] [sn:1635] Committing instruction with PC (0x5ff8=&gt;0x5ffc).(0=&gt;1)
+3029000: system.cpu.commit: [tid:0] [sn:1636] Committing instruction with PC (0x5ffc=&gt;0x6000).(0=&gt;1)
+3029000: system.cpu.commit: [tid:0] [sn:1637] Committing instruction with PC (0x6000=&gt;0x6004).(0=&gt;1)
+3029000: system.cpu.commit: [tid:0] [sn:1638] Committing instruction with PC (0x6004=&gt;0x6008).(0=&gt;1)
+3029000: system.cpu.commit: [tid:0] [sn:1639] Committing instruction with PC (0x6008=&gt;0x61ec).(0=&gt;1)
+</code></pre></div>
+<p>dispatch 和 issue stage 因为收到commit的robsquashing信号，进入blocking(stall)状态,并且将自身的stall状态传递到rename stage</p>
+<div class="highlight"><pre><span></span><code>3029000: system.cpu.iew: [tid:0] ROB is still squashing.
+3029000: system.cpu.iew: [tid:0] Removing incoming rename instructions
+3029000: system.cpu.iew: [tid:0] Stall from Commit stage detected.
+3029000: system.cpu.iew: [tid:0] Blocking.
+</code></pre></div>
+<p>下一个cycle(cycle4), rename接收到dispatch发送的stall信号，进入blocking状态</p>
+<div class="highlight"><pre><span></span><code>3029500: system.cpu.rename: [tid:0] Stall from IEW stage detected.
+3029500: system.cpu.rename: [tid:0] Blocking.
+</code></pre></div>
+<p>dispatch 进入unblocking状态，发现skidbuffer中没有指令，转入running状态</p>
+<div class="highlight"><pre><span></span><code>3029500: system.cpu.iew: [tid:0] Done blocking, switching to unblocking.
+3029500: system.cpu.iew: [tid:0] Reading instructions out of the skid buffer 0.
+3029500: system.cpu.iew: [tid:0] Done unblocking.
+3029500: system.cpu.iew: [tid:0] Not blocked, so attempting to run dispatch.
+3029500: system.cpu.iq: Attempting to schedule ready instructions from the IQ.
+3029500: system.cpu.iq: Not able to schedule any instructions.
+</code></pre></div>
+<p>下一个cycle(cycle5), decode stage 因为rename stall 的反压进入blocking状态</p>
+<div class="highlight"><pre><span></span><code>3030000: system.cpu.decode: [tid:0] Stall fom Rename stage detected.
+3030000: system.cpu.decode: [tid:0] Blocking.
+</code></pre></div>
+<p>再下一个cycle(cycle6), fetch stage 收到decode的stall信号，不会从fetchqueue中将指令送给decode stage</p>
+<p>汇总的各个stage状态如下表所示</p>
+<p>stage |cycle0 | cycle1 | cycle2 | cycle3 | cycle4 | cycle5 | cycle6
+---|---|---|---|---|---|---|---|
+fetch | running | running | squashing | running | running | running |running
+decode | running | running | squashing | running | running | block | unblocking
+rename | running |running | squashing | running | block | unblocking | running
+dispatch | running | running | squashing | block | unblocking | running | running
+issue | running | running | squashing | block | unblocking | running  |running
+E &amp; W | branch | mispred | - | - | - | - | - | running
+commit | running | squashing | squashing | running | running | running | running</p>
+<p>从行为上，可以理解为分支预测错误的回滚是使用ROB walk的方式进行的，一拍能够回滚的指令个数可以由squshwidth指定</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>

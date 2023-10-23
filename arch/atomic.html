@@ -1,0 +1,2849 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+        <link rel="canonical" href="https://chsgcxy.github.io/messy_notes/arch/atomic.html">
+      
+      
+        <link rel="prev" href="arm_training_day2.html">
+      
+      
+        <link rel="next" href="cache.html">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>RISCV原子操作 - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#riscv" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RISCV原子操作
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
+          Arch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arch_demo.html" class="md-nav__link">
+        XS Arch simple
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arm_training_day1.html" class="md-nav__link">
+        ARM Training Day1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arm_training_day2.html" class="md-nav__link">
+        ARM Training Day2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          RISCV原子操作
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="atomic.html" class="md-nav__link md-nav__link--active">
+        RISCV原子操作
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#riscva" class="md-nav__link">
+    RISCV的A扩展
+  </a>
+  
+    <nav class="md-nav" aria-label="RISCV的A扩展">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-reservedstore-conditional" class="md-nav__link">
+    load-reserved/store-conditional(加载保留/条件存储)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic-memory-operationsamo" class="md-nav__link">
+    Atomic Memory Operations(AMO)
+  </a>
+  
+    <nav class="md-nav" aria-label="Atomic Memory Operations(AMO)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    实现分析
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linuxriscv" class="md-nav__link">
+    linux内核对于RISCV原子操作的支持
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="computer_arch.html" class="md-nav__link">
+        计算机体系结构量化研究方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="numa.html" class="md-nav__link">
+        numa架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="superscalar.html" class="md-nav__link">
+        超标量处理器设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_17" type="checkbox" id="__nav_2_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_17" tabindex="0" aria-expanded="false">
+          Hotchip33
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Hotchip33" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_17">
+          <span class="md-nav__icon md-icon"></span>
+          Hotchip33
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hotchip33/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          C
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/int_uint.html" class="md-nav__link">
+        符号扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/reverse.html" class="md-nav__link">
+        如何写一个又高效又美观的reverse
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/stl_containers.html" class="md-nav__link">
+        C++ STL容器
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          Chisel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Chisel" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Chisel
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/chisel.html" class="md-nav__link">
+        chisel
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/rocketchip.html" class="md-nav__link">
+        rocket chip分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/sbt.html" class="md-nav__link">
+        sbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/scala.html" class="md-nav__link">
+        scala
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          Debug
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          Deeplearning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Design patterns
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          Ic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/axi4.html" class="md-nav__link">
+        AXI4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/pcie.html" class="md-nav__link">
+        PCIE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator2.html" class="md-nav__link">
+        再谈模拟器
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/usb.html" class="md-nav__link">
+        USB
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/lzma_transplant.html" class="md-nav__link">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          Mcu
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" tabindex="0" aria-expanded="false">
+          Misc
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" tabindex="0" aria-expanded="false">
+          Python
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" tabindex="0" aria-expanded="false">
+          Riscv
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/opensbi.html" class="md-nav__link">
+        OpenSBI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-rvv.html" class="md-nav__link">
+        RISCV向量扩展实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" tabindex="0" aria-expanded="false">
+          Simulator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Simulator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Simulator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/dramsim_ddr.html" class="md-nav__link">
+        DDR and DRAMSim3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5.html" class="md-nav__link">
+        GEM5 设计与实现分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_introduction.html" class="md-nav__link">
+        Gem5 Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_isa.html" class="md-nav__link">
+        Gem5指令集框架解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_o3cpu.html" class="md-nav__link">
+        O3CPU 代码分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/simplesim.html" class="md-nav__link">
+        simpleScalar解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/trace_format.html" class="md-nav__link">
+        利用Trace进行性能分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" tabindex="0" aria-expanded="false">
+          Smt pnp
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_16" type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" tabindex="0" aria-expanded="false">
+          Tools
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/arm-atp.html" class="md-nav__link">
+        ATP(Adaptive Traffic Profiles)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/engine.html" class="md-nav__link">
+        engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git.html" class="md-nav__link">
+        git技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/protobuf.html" class="md-nav__link">
+        protobuf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/screen.html" class="md-nav__link">
+        screen
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/wsl.html" class="md-nav__link">
+        WSL
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_17" type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" tabindex="0" aria-expanded="false">
+          Tvm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/codebase-struct.html" class="md-nav__link">
+        directory-structure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/tvm-start.html" class="md-nav__link">
+        tvm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_18" type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" tabindex="0" aria-expanded="false">
+          Verilog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Verilog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          Verilog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/round_robin_algo.html" class="md-nav__link">
+        一种round_robin算法实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#riscva" class="md-nav__link">
+    RISCV的A扩展
+  </a>
+  
+    <nav class="md-nav" aria-label="RISCV的A扩展">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-reservedstore-conditional" class="md-nav__link">
+    load-reserved/store-conditional(加载保留/条件存储)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atomic-memory-operationsamo" class="md-nav__link">
+    Atomic Memory Operations(AMO)
+  </a>
+  
+    <nav class="md-nav" aria-label="Atomic Memory Operations(AMO)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    实现分析
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linuxriscv" class="md-nav__link">
+    linux内核对于RISCV原子操作的支持
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="riscv">RISCV原子操作<a class="headerlink" href="#riscv" title="Permanent link">&para;</a></h1>
+<p>在宝华的《atomic实现原理》一文中提及了atomic(原子操作)的实现方式(其实他还是想说cache相关的东西), 但文中提到了几种通常的atomic实现方式</p>
+<ul>
+<li>一种是bus lock，锁住总线，不让其他CPU进行内存操作，但这种方式破坏性比较大</li>
+<li>一种是Cacheline Lock，借助多核cache一致性MESI协议</li>
+</ul>
+<p>在看文章的时候，我想到了riscv的指令集扩展中，有atomic扩展，即原子操作指令扩展。那么就有了如下疑问</p>
+<ul>
+<li>RISCV指令集的A扩展是什么？目的是解决什么问题？目前处于什么开发状态？</li>
+<li>linux内核中对于RISCV的原子操作支持目前是什么样的？涉及到A扩展吗?</li>
+</ul>
+<h2 id="riscva">RISCV的A扩展<a class="headerlink" href="#riscva" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>The standard atomic-instruction extension, named “A”, contains instructions that atomically read-modify-write memory to support synchronization between multiple RISC-V harts running in the same memory space.</p>
+</blockquote>
+<p>很显然，RISCV的A扩展正是为了实现原子操作而设计的</p>
+<blockquote>
+<p>The two forms of atomic instruction provided are load-reserved/store-conditional instructions and atomic fetch-and-op memory instructions.</p>
+</blockquote>
+<p>A扩展提供了两种形式的原子操作指令，一种load-reserved/store-conditional， 另一种fetch-and-op memory instructions</p>
+<h3 id="load-reservedstore-conditional">load-reserved/store-conditional(加载保留/条件存储)<a class="headerlink" href="#load-reservedstore-conditional" title="Permanent link">&para;</a></h3>
+<p>提供了LR.W/D 和 SC.W/D两组指令,LR指令从存储器读一个数值,同时处理器会监视这个存储器地址,看它是否会被其他处理器修改;
+SC指令发现在此期间没有其他处理器修改这个值,则将新值写入该地址。因此一个原子的LR/SC指令对,就是LR读取值,进行一些计算,
+然后试图保存新值。如果保存失败,那么需要重新开始整个序列。这样就保证了每一个处理器都能准确的执行完读改写流程</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># a0 holds address of memory location</span>
+<span class="c1"># a1 holds expected value</span>
+<span class="c1"># a2 holds desired value</span>
+<span class="c1"># a0 holds return value, 0 if successful, !0 otherwise</span>
+<span class="nl">cas:</span>
+<span class="w">    </span><span class="nf">lr.w</span><span class="w"> </span><span class="no">t0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="no">a0</span><span class="p">)</span><span class="w"> </span><span class="c1"># Load original value.</span>
+<span class="w">    </span><span class="nf">bne</span><span class="w"> </span><span class="no">t0</span><span class="p">,</span><span class="w"> </span><span class="no">a1</span><span class="p">,</span><span class="w"> </span><span class="no">fail</span><span class="w"> </span><span class="c1"># Doesn’t match, so fail.</span>
+<span class="w">    </span><span class="nf">sc.w</span><span class="w"> </span><span class="no">t0</span><span class="p">,</span><span class="w"> </span><span class="no">a2</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="no">a0</span><span class="p">)</span><span class="w"> </span><span class="c1"># Try to update.</span>
+<span class="w">    </span><span class="nf">bnez</span><span class="w"> </span><span class="no">t0</span><span class="p">,</span><span class="w"> </span><span class="no">cas</span><span class="w"> </span><span class="c1"># Retry if store-conditional failed.</span>
+<span class="w">    </span><span class="nf">li</span><span class="w"> </span><span class="no">a0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c1"># Set return to success.</span>
+<span class="w">    </span><span class="nf">jr</span><span class="w"> </span><span class="no">ra</span><span class="w"> </span><span class="c1"># Return.</span>
+<span class="nl">fail:</span>
+<span class="w">    </span><span class="nf">li</span><span class="w"> </span><span class="no">a0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="c1"># Set return to failure.</span>
+<span class="w">    </span><span class="nf">jr</span><span class="w"> </span><span class="no">ra</span><span class="w"> </span><span class="c1"># Return.</span>
+</code></pre></div>
+<p>通过sc.w的返回值可以判定是否完成了原子操作，如果失败了，要从lr.w开始重新进行，在LR指令和SC指令之间执行的动态代码,只能
+来自于基本“I”的子集,不能包括load指令、store指令、向后跳转指令或者向后的分支指令、FENCE指令、SYSTEM指令，且必须由不超
+过16条整数指令的代码顺序存放在存储器中构成</p>
+<p>通过spike的代码能够进一步理解spec中所谓的</p>
+<blockquote>
+<p>An SC instruction can never be observed by another RISC-V hart before the LR instruction that established the reservation.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="c1">// lr.w</span>
+<span class="n">require_extension</span><span class="p">(</span><span class="sc">&#39;A&#39;</span><span class="p">);</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MMU</span><span class="p">.</span><span class="n">load_int32</span><span class="p">(</span><span class="n">RS1</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="n">MMU</span><span class="p">.</span><span class="n">acquire_load_reservation</span><span class="p">(</span><span class="n">RS1</span><span class="p">);</span>
+<span class="n">WRITE_RD</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+
+<span class="c1">// sc.w</span>
+<span class="n">require_extension</span><span class="p">(</span><span class="sc">&#39;A&#39;</span><span class="p">);</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">have_reservation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MMU</span><span class="p">.</span><span class="n">check_load_reservation</span><span class="p">(</span><span class="n">RS1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">have_reservation</span><span class="p">)</span>
+<span class="w">  </span><span class="n">MMU</span><span class="p">.</span><span class="n">store_uint32</span><span class="p">(</span><span class="n">RS1</span><span class="p">,</span><span class="w"> </span><span class="n">RS2</span><span class="p">);</span>
+
+<span class="n">MMU</span><span class="p">.</span><span class="n">yield_load_reservation</span><span class="p">();</span>
+
+<span class="n">WRITE_RD</span><span class="p">(</span><span class="o">!</span><span class="n">have_reservation</span><span class="p">);</span>
+</code></pre></div>
+<p>可以看出，lr.w会将当前要存储的地址记录在reservation中，在执行sc.w时，会检查之前的lr指令标记的reservation地址是否是sc指令要存储地址，如果是，那么执行存储操作，如果不是，那么跳过存储操作，复位该reservation地址，并返回失败。当然，spike只是一个功能模拟器，
+它在同一时间其实只有一个CPU在执行指令，所以它在step函数中在切换CPU时处理reservation标记即可。</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">sim_t::step</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">steps</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">INTERLEAVE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">current_step</span><span class="p">);</span>
+<span class="w">    </span><span class="n">procs</span><span class="p">[</span><span class="n">current_proc</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">step</span><span class="p">(</span><span class="n">steps</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">current_step</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">steps</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">current_step</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">INTERLEAVE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="n">current_step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="n">procs</span><span class="p">[</span><span class="n">current_proc</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">get_mmu</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">yield_load_reservation</span><span class="p">();</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>但其实已经能够看出，LR/SC不会锁住总线，能够更高效的处理并发访问。</p>
+<h3 id="atomic-memory-operationsamo">Atomic Memory Operations(AMO)<a class="headerlink" href="#atomic-memory-operationsamo" title="Permanent link">&para;</a></h3>
+<ul>
+<li>AMOSWAP.W/D</li>
+<li>AMOADD.W/D</li>
+<li>AMOAND.W/D</li>
+<li>AMOOR.W/D</li>
+<li>AMOXOR.W/D</li>
+<li>AMOMAX[U].W/D</li>
+<li>AMOMIN[U].W/D</li>
+</ul>
+<p>目前支持上述原子内存操作指令，来看一下spec中给出的用法，其中a0为锁所在地址</p>
+<div class="highlight"><pre><span></span><code><span class="nf">li</span><span class="w"> </span><span class="no">t0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="c1"># Initialize swap value.</span>
+<span class="nl">again:</span>
+<span class="nf">lw</span><span class="w"> </span><span class="no">t1</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="no">a0</span><span class="p">)</span><span class="w"> </span><span class="c1"># Check if lock is held.</span>
+<span class="nf">bnez</span><span class="w"> </span><span class="no">t1</span><span class="p">,</span><span class="w"> </span><span class="no">again</span><span class="w"> </span><span class="c1"># Retry if held.</span>
+<span class="nf">amoswap.w.aq</span><span class="w"> </span><span class="no">t1</span><span class="p">,</span><span class="w"> </span><span class="no">t0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="no">a0</span><span class="p">)</span><span class="w"> </span><span class="c1"># Attempt to acquire lock.</span>
+<span class="nf">bnez</span><span class="w"> </span><span class="no">t1</span><span class="p">,</span><span class="w"> </span><span class="no">again</span><span class="w"> </span><span class="c1"># Retry if held.</span>
+<span class="c1"># ...</span>
+<span class="c1"># Critical section.</span>
+<span class="c1"># ...</span>
+<span class="nf">amoswap.w.rl</span><span class="w"> </span><span class="no">x0</span><span class="p">,</span><span class="w"> </span><span class="no">x0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="no">a0</span><span class="p">)</span><span class="w"> </span><span class="c1"># Release lock by storing 0.</span>
+</code></pre></div>
+<h4 id="_1">实现分析<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h4>
+<p>举例amoadd.w来分析设计与实现</p>
+<p>spike实现</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#define amo_func(type) \</span>
+<span class="cp">    template&lt;typename op&gt; \</span>
+<span class="cp">    type##_t amo_##type(reg_t addr, op f) { \</span>
+<span class="cp">      try { \</span>
+<span class="cp">        auto lhs = load_##type(addr, true); \</span>
+<span class="cp">        store_##type(addr, f(lhs)); \</span>
+<span class="cp">        return lhs; \</span>
+<span class="cp">      } catch (trap_load_address_misaligned&amp; t) { \</span>
+<span class="cp">        </span><span class="cm">/* AMO faults should be reported as store faults */</span><span class="cp"> \</span>
+<span class="cp">        throw trap_store_address_misaligned(t.get_tval(), t.get_tval2(), t.get_tinst()); \</span>
+<span class="cp">      } catch (trap_load_page_fault&amp; t) { \</span>
+<span class="cp">        </span><span class="cm">/* AMO faults should be reported as store faults */</span><span class="cp"> \</span>
+<span class="cp">        throw trap_store_page_fault(t.get_tval(), t.get_tval2(), t.get_tinst()); \</span>
+<span class="cp">      } catch (trap_load_access_fault&amp; t) { \</span>
+<span class="cp">        </span><span class="cm">/* AMO faults should be reported as store faults */</span><span class="cp"> \</span>
+<span class="cp">        throw trap_store_access_fault(t.get_tval(), t.get_tval2(), t.get_tinst()); \</span>
+<span class="cp">      } \</span>
+<span class="cp">    }</span>
+
+<span class="n">amo_func</span><span class="p">(</span><span class="n">uint32</span><span class="p">)</span>
+
+<span class="c1">// amoadd.w实现</span>
+<span class="n">require_extension</span><span class="p">(</span><span class="sc">&#39;A&#39;</span><span class="p">);</span>
+<span class="n">WRITE_RD</span><span class="p">(</span><span class="n">sext32</span><span class="p">(</span><span class="n">MMU</span><span class="p">.</span><span class="n">amo_uint32</span><span class="p">(</span><span class="n">RS1</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">lhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">RS2</span><span class="p">;</span><span class="w"> </span><span class="p">})));</span>
+</code></pre></div>
+<p>我们可以看到，在spike中，直接将load和store组合起来实现了原子操作，这里spec的设计有些难以理解，
+amoadd.w返回的rd是加法运算之前的内存中的值，而不是加法之后的结果，或许后续我能理解这样设计的目的吧，
+现在总感觉是写错了。</p>
+<p>riscv-test中的测试case实现</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nf">li</span><span class="w"> </span><span class="no">a0</span><span class="p">,</span><span class="w"> </span><span class="mi">0xffffffff80000000</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">li</span><span class="w"> </span><span class="no">a1</span><span class="p">,</span><span class="w"> </span><span class="mi">0xfffffffffffff800</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">la</span><span class="w"> </span><span class="no">a3</span><span class="p">,</span><span class="w"> </span><span class="no">amo_operand</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">sd</span><span class="w"> </span><span class="no">a0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">a3</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">amoadd.d</span><span class="w"> </span><span class="no">a4</span><span class="p">,</span><span class="w"> </span><span class="no">a1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">a3</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">li</span><span class="w">  </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">MASK_XLEN</span><span class="p">(</span><span class="mi">0xffffffff80000000</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">bne</span><span class="w"> </span><span class="no">a4</span><span class="p">,</span><span class="w"> </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">fail</span><span class="c1">;</span>
+
+<span class="w">    </span><span class="nf">ld</span><span class="w"> </span><span class="no">a5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">a3</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">li</span><span class="w">  </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">MASK_XLEN</span><span class="p">(</span><span class="mi">0xffffffff7ffff800</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">bne</span><span class="w"> </span><span class="no">a5</span><span class="p">,</span><span class="w"> </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">fail</span><span class="c1">;</span>
+
+<span class="w">    </span><span class="c1"># try again after a cache miss</span>
+<span class="w">    </span><span class="nf">amoadd.d</span><span class="w"> </span><span class="no">a4</span><span class="p">,</span><span class="w"> </span><span class="no">a1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">a3</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">li</span><span class="w">  </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">MASK_XLEN</span><span class="p">(</span><span class="mi">0xffffffff7ffff800</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">bne</span><span class="w"> </span><span class="no">a4</span><span class="p">,</span><span class="w"> </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">fail</span><span class="c1">;</span>
+
+<span class="w">    </span><span class="nf">ld</span><span class="w"> </span><span class="no">a5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">(</span><span class="no">a3</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">li</span><span class="w">  </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">MASK_XLEN</span><span class="p">(</span><span class="mi">0xffffffff7ffff000</span><span class="p">)</span><span class="c1">;</span>
+<span class="w">    </span><span class="nf">bne</span><span class="w"> </span><span class="no">a5</span><span class="p">,</span><span class="w"> </span><span class="no">x29</span><span class="p">,</span><span class="w"> </span><span class="no">fail</span><span class="c1">;</span>
+
+<span class="w">  </span><span class="na">.bss</span>
+<span class="w">  </span><span class="na">.align</span><span class="w"> </span><span class="mi">3</span>
+<span class="nl">amo_operand:</span>
+<span class="w">  </span><span class="na">.dword</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p>也是认为返回值为累加之前的内存值</p>
+<h2 id="linuxriscv">linux内核对于RISCV原子操作的支持<a class="headerlink" href="#linuxriscv" title="Permanent link">&para;</a></h2>
+<p>在最新的linux5.11版本中，很容易在arch/riscv/include/asm/atomic.h中找到内存原子操作</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/*</span>
+<span class="cm"> * First, the atomic ops that have no ordering constraints and therefor don&#39;t</span>
+<span class="cm"> * have the AQ or RL bits set.  These don&#39;t return anything, so there&#39;s only</span>
+<span class="cm"> * one version to worry about.</span>
+<span class="cm"> */</span>
+<span class="cp">#define ATOMIC_OP(op, asm_op, I, asm_type, c_type, prefix)      \</span>
+<span class="cp">static __always_inline                          \</span>
+<span class="cp">void atomic##prefix##_##op(c_type i, atomic##prefix##_t *v)     \</span>
+<span class="cp">{                                   \</span>
+<span class="cp">    __asm__ __volatile__ (                      \</span>
+<span class="cp">        &quot;   amo&quot; #asm_op &quot;.&quot; #asm_type &quot; zero, %1, %0&quot;  \</span>
+<span class="cp">        : &quot;+A&quot; (v-&gt;counter)                 \</span>
+<span class="cp">        : &quot;r&quot; (I)                       \</span>
+<span class="cp">        : &quot;memory&quot;);                        \</span>
+<span class="cp">}                                   \</span>
+
+<span class="cp">#ifdef CONFIG_GENERIC_ATOMIC64</span>
+<span class="cp">#define ATOMIC_OPS(op, asm_op, I)                   \</span>
+<span class="cp">        ATOMIC_OP (op, asm_op, I, w, int,   )</span>
+<span class="cp">#else</span>
+<span class="cp">#define ATOMIC_OPS(op, asm_op, I)                   \</span>
+<span class="cp">        ATOMIC_OP (op, asm_op, I, w, int,   )               \</span>
+<span class="cp">        ATOMIC_OP (op, asm_op, I, d, s64, 64)</span>
+<span class="cp">#endif</span>
+
+<span class="n">ATOMIC_OPS</span><span class="p">(</span><span class="n">add</span><span class="p">,</span><span class="w"> </span><span class="n">add</span><span class="p">,</span><span class="w">  </span><span class="n">i</span><span class="p">)</span>
+<span class="n">ATOMIC_OPS</span><span class="p">(</span><span class="n">sub</span><span class="p">,</span><span class="w"> </span><span class="n">add</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">i</span><span class="p">)</span>
+<span class="n">ATOMIC_OPS</span><span class="p">(</span><span class="n">and</span><span class="p">,</span><span class="w"> </span><span class="n">and</span><span class="p">,</span><span class="w">  </span><span class="n">i</span><span class="p">)</span>
+<span class="n">ATOMIC_OPS</span><span class="p">(</span><span class="w"> </span><span class="n">or</span><span class="p">,</span><span class="w">  </span><span class="n">or</span><span class="p">,</span><span class="w">  </span><span class="n">i</span><span class="p">)</span>
+<span class="n">ATOMIC_OPS</span><span class="p">(</span><span class="n">xor</span><span class="p">,</span><span class="w"> </span><span class="n">xor</span><span class="p">,</span><span class="w">  </span><span class="n">i</span><span class="p">)</span>
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3293 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+        <link rel="canonical" href="https://chsgcxy.github.io/messy_notes/tvm/tvm-start.html">
+      
+      
+        <link rel="prev" href="runtime.html">
+      
+      
+        <link rel="next" href="../verilog/round_robin_algo.html">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>tvm - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tvm" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              tvm
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          Arch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_demo.html" class="md-nav__link">
+        XS Arch simple
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arm_training_day1.html" class="md-nav__link">
+        ARM Training Day1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arm_training_day2.html" class="md-nav__link">
+        ARM Training Day2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/atomic.html" class="md-nav__link">
+        RISCV原子操作
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/computer_arch.html" class="md-nav__link">
+        计算机体系结构量化研究方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/numa.html" class="md-nav__link">
+        numa架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/superscalar.html" class="md-nav__link">
+        超标量处理器设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_17" type="checkbox" id="__nav_2_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_17" tabindex="0" aria-expanded="false">
+          Hotchip33
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Hotchip33" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_17">
+          <span class="md-nav__icon md-icon"></span>
+          Hotchip33
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/hotchip33/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          C
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/int_uint.html" class="md-nav__link">
+        符号扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/reverse.html" class="md-nav__link">
+        如何写一个又高效又美观的reverse
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/stl_containers.html" class="md-nav__link">
+        C++ STL容器
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          Chisel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Chisel" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Chisel
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/chisel.html" class="md-nav__link">
+        chisel
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/rocketchip.html" class="md-nav__link">
+        rocket chip分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/sbt.html" class="md-nav__link">
+        sbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/scala.html" class="md-nav__link">
+        scala
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          Debug
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          Deeplearning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Design patterns
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          Ic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/axi4.html" class="md-nav__link">
+        AXI4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/pcie.html" class="md-nav__link">
+        PCIE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator2.html" class="md-nav__link">
+        再谈模拟器
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/usb.html" class="md-nav__link">
+        USB
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/lzma_transplant.html" class="md-nav__link">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          Mcu
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" tabindex="0" aria-expanded="false">
+          Misc
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" tabindex="0" aria-expanded="false">
+          Python
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" tabindex="0" aria-expanded="false">
+          Riscv
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/opensbi.html" class="md-nav__link">
+        OpenSBI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-rvv.html" class="md-nav__link">
+        RISCV向量扩展实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" tabindex="0" aria-expanded="false">
+          Simulator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Simulator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Simulator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/dramsim_ddr.html" class="md-nav__link">
+        DDR and DRAMSim3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5.html" class="md-nav__link">
+        GEM5 设计与实现分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_introduction.html" class="md-nav__link">
+        Gem5 Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_isa.html" class="md-nav__link">
+        Gem5指令集框架解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_o3cpu.html" class="md-nav__link">
+        O3CPU 代码分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/simplesim.html" class="md-nav__link">
+        simpleScalar解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/trace_format.html" class="md-nav__link">
+        利用Trace进行性能分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" tabindex="0" aria-expanded="false">
+          Smt pnp
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_16" type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" tabindex="0" aria-expanded="false">
+          Tools
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/arm-atp.html" class="md-nav__link">
+        ATP(Adaptive Traffic Profiles)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/engine.html" class="md-nav__link">
+        engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git.html" class="md-nav__link">
+        git技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/protobuf.html" class="md-nav__link">
+        protobuf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/screen.html" class="md-nav__link">
+        screen
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/wsl.html" class="md-nav__link">
+        WSL
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_17" type="checkbox" id="__nav_17" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" tabindex="0" aria-expanded="true">
+          Tvm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="codebase-struct.html" class="md-nav__link">
+        directory-structure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          tvm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="tvm-start.html" class="md-nav__link md-nav__link--active">
+        tvm
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#concept" class="md-nav__link">
+    Concept
+  </a>
+  
+    <nav class="md-nav" aria-label="Concept">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module" class="md-nav__link">
+    Module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pass" class="md-nav__link">
+    Pass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#op" class="md-nav__link">
+    Op
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tensor" class="md-nav__link">
+    Tensor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#func" class="md-nav__link">
+    Func
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packedfunc" class="md-nav__link">
+    PackedFunc
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node" class="md-nav__link">
+    Node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relay" class="md-nav__link">
+    relay
+  </a>
+  
+    <nav class="md-nav" aria-label="relay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relaybuild_modulebuild" class="md-nav__link">
+    relay.build_module.build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    流程
+  </a>
+  
+    <nav class="md-nav" aria-label="流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build" class="md-nav__link">
+    build过程
+  </a>
+  
+    <nav class="md-nav" aria-label="build过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relay_1" class="md-nav__link">
+    relay前端
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphexper" class="md-nav__link">
+    转换原始graph为exper
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relaybuild" class="md-nav__link">
+    Relay层Build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codebase-structure-overview" class="md-nav__link">
+    codebase-structure-overview
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_18" type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" tabindex="0" aria-expanded="false">
+          Verilog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Verilog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          Verilog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/round_robin_algo.html" class="md-nav__link">
+        一种round_robin算法实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#concept" class="md-nav__link">
+    Concept
+  </a>
+  
+    <nav class="md-nav" aria-label="Concept">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module" class="md-nav__link">
+    Module
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pass" class="md-nav__link">
+    Pass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#op" class="md-nav__link">
+    Op
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tensor" class="md-nav__link">
+    Tensor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#func" class="md-nav__link">
+    Func
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packedfunc" class="md-nav__link">
+    PackedFunc
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#node" class="md-nav__link">
+    Node
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relay" class="md-nav__link">
+    relay
+  </a>
+  
+    <nav class="md-nav" aria-label="relay">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relaybuild_modulebuild" class="md-nav__link">
+    relay.build_module.build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    流程
+  </a>
+  
+    <nav class="md-nav" aria-label="流程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build" class="md-nav__link">
+    build过程
+  </a>
+  
+    <nav class="md-nav" aria-label="build过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#relay_1" class="md-nav__link">
+    relay前端
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graphexper" class="md-nav__link">
+    转换原始graph为exper
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relaybuild" class="md-nav__link">
+    Relay层Build
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codebase-structure-overview" class="md-nav__link">
+    codebase-structure-overview
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="tvm">tvm<a class="headerlink" href="#tvm" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#tvm">tvm</a><ul>
+<li><a href="#concept">Concept</a><ul>
+<li><a href="#module">Module</a></li>
+<li><a href="#pass">Pass</a></li>
+<li><a href="#op">Op</a></li>
+<li><a href="#tensor">Tensor</a></li>
+<li><a href="#func">Func</a></li>
+</ul>
+</li>
+<li><a href="#packedfunc">PackedFunc</a></li>
+<li><a href="#node">Node</a></li>
+<li><a href="#relay">relay</a><ul>
+<li><a href="#relaybuild_modulebuild">relay.build_module.build</a></li>
+</ul>
+</li>
+<li><a href="#_1">流程</a><ul>
+<li><a href="#build">build过程</a><ul>
+<li><a href="#relay_1">relay前端</a></li>
+<li><a href="#graphexper">转换原始graph为exper</a></li>
+<li><a href="#relaybuild">Relay层Build</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#codebase-structure-overview">codebase-structure-overview</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="concept">Concept<a class="headerlink" href="#concept" title="Permanent link">&para;</a></h2>
+<h3 id="module">Module<a class="headerlink" href="#module" title="Permanent link">&para;</a></h3>
+<p>一个编译好的对象。可以通过Module以PackedFunc的形式来获取编译后的Func。runtime可以动态获取Func</p>
+<h3 id="pass">Pass<a class="headerlink" href="#pass" title="Permanent link">&para;</a></h3>
+<h3 id="op">Op<a class="headerlink" href="#op" title="Permanent link">&para;</a></h3>
+<h3 id="tensor">Tensor<a class="headerlink" href="#tensor" title="Permanent link">&para;</a></h3>
+<h3 id="func">Func<a class="headerlink" href="#func" title="Permanent link">&para;</a></h3>
+<h2 id="packedfunc">PackedFunc<a class="headerlink" href="#packedfunc" title="Permanent link">&para;</a></h2>
+<p>tvm使用c++实现了一堆接口，这些接口通过PackedFunc封装，使得python调用c++非常easy.</p>
+<div class="highlight"><pre><span></span><code>class Registry {
+    {field} -std::string name_;
+    {field} -PackedFunc func_;
+    {field} +struct Manager;
+
+    {method} +TVM_DLL Registry&amp; set_body(PackedFunc f);
+    {method} +Registry&amp; set_body(PackedFunc::FType f);
+    {method} +TVM_DLL static Registry&amp; Register(const std::string&amp; name, bool override = false);
+    {method} +TVM_DLL static const PackedFunc* Get(const std::string&amp; name);
+}
+
+class PackedFunc {
+    {field} -FType body_;
+
+    +using FType = std::function&lt;void (TVMArgs args, TVMRetValue* rv)&gt;;
+
+    {method} +explicit PackedFunc(FType body) : body_(body) {}
+    {method} +template&lt;typename... Args&gt; 
+    inline TVMRetValue operator()(Args&amp;&amp; ...args) const;
+    {method} +inline void CallPacked(TVMArgs args, TVMRetValue* rv) const;
+}
+
+class manager {
+    {field} +std::unordered_map&lt;std::string, Registry*&gt; fmap;
+    {method} +static Manager* Global();
+}
+
+Registry --&gt; PackedFunc
+Registry --&gt; manager
+</code></pre></div>
+<p>c++中实现了对c++函数的管理</p>
+<p>python中，<strong>get_global_func</strong> 调用_LIB.TVMFuncGetGlobal来获取PackedFunc指针，然后将其作为handle实例化Function</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">_FunctionBase</span><span class="p">):</span>
+
+<span class="k">class</span> <span class="nc">FunctionBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handle</span><span class="p">,</span> <span class="n">is_global</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="n">handle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_global</span> <span class="o">=</span> <span class="n">is_global</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">temp_args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">values</span><span class="p">,</span> <span class="n">tcodes</span><span class="p">,</span> <span class="n">num_args</span> <span class="o">=</span> <span class="n">_make_tvm_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">temp_args</span><span class="p">)</span>
+        <span class="n">ret_val</span> <span class="o">=</span> <span class="n">TVMValue</span><span class="p">()</span>
+        <span class="n">ret_tcode</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">TVMFuncCall</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">tcodes</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">num_args</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_val</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_tcode</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">get_last_ffi_error</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">temp_args</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="k">return</span> <span class="n">RETURN_SWITCH</span><span class="p">[</span><span class="n">ret_tcode</span><span class="o">.</span><span class="n">value</span><span class="p">](</span><span class="n">ret_val</span><span class="p">)</span>
+</code></pre></div>
+<p>在python端调用Function的过程也就是调用其__call__方法，其中又调用了_LIB.TVMFuncCall来实现对PackedFunc的实际调用</p>
+<p>调用过程实际上是调用了PackedFunc的**CallPacked**方法</p>
+<div class="highlight"><pre><span></span><code><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">PackedFunc::CallPacked</span><span class="p">(</span><span class="n">TVMArgs</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">TVMRetValue</span><span class="o">*</span><span class="w"> </span><span class="n">rv</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">body_</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">rv</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>**_LIB**是直接以CDLL的方式加载了libtvm.so动态链接库</p>
+<p>python/tvm/_ffi/base.py</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">_load_lib</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load libary by searching possible path.&quot;&quot;&quot;</span>
+    <span class="n">lib_path</span> <span class="o">=</span> <span class="n">libinfo</span><span class="o">.</span><span class="n">find_lib_path</span><span class="p">()</span>
+    <span class="n">lib</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">CDLL</span><span class="p">(</span><span class="n">lib_path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">RTLD_GLOBAL</span><span class="p">)</span>
+    <span class="c1"># DMatrix functions</span>
+    <span class="n">lib</span><span class="o">.</span><span class="n">TVMGetLastError</span><span class="o">.</span><span class="n">restype</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span>
+    <span class="k">return</span> <span class="n">lib</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">lib_path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># version number</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="n">libinfo</span><span class="o">.</span><span class="n">__version__</span>
+<span class="c1"># library instance of nnvm</span>
+<span class="n">_LIB</span><span class="p">,</span> <span class="n">_LIB_NAME</span> <span class="o">=</span> <span class="n">_load_lib</span><span class="p">()</span>
+</code></pre></div>
+<p>编译和部署都用到了PackedFunc</p>
+<ul>
+<li>All TVM’s compiler pass functions are exposed to frontend as PackedFunc, see here</li>
+<li>The compiled module also returns the compiled function as PackedFunc</li>
+</ul>
+<h2 id="node">Node<a class="headerlink" href="#node" title="Permanent link">&para;</a></h2>
+<p><a href="node.html">跳转到Node子系统介绍</a></p>
+<h2 id="relay">relay<a class="headerlink" href="#relay" title="Permanent link">&para;</a></h2>
+<h3 id="relaybuild_modulebuild">relay.build_module.build<a class="headerlink" href="#relaybuild_modulebuild" title="Permanent link">&para;</a></h3>
+<p><strong>relay.build_module.build</strong> returns three components:</p>
+<ul>
+<li>the execution graph in json format</li>
+<li>the TVM module library of compiled functions specifically for this graph on the target hardware</li>
+<li>the parameter blobs of the model</li>
+</ul>
+<p>about optimization</p>
+<blockquote>
+<p>During the compilation, Relay does the graph-level optimization while TVM does the tensor-level optimization, resulting in an optimized runtime module for model serving.</p>
+</blockquote>
+<p>about tvm schedule</p>
+<blockquote>
+<p>TVM asks the user to provide a description of the computation called a schedule. A schedule is a set of transformation of computation that transforms the loop of computations in the program</p>
+</blockquote>
+<h2 id="_1">流程<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>(relay python frontend) as rpf
+note right
+    @目录 python/tvm/relay/frontend/
+end note
+
+rectangle model-formats {
+    (MXNet) -down-&gt; rpf: relay.frontend.from_mxnet
+    (TensorFlow) -down-&gt;rpf: relay.frontend.from_tensorflow
+    (CoreML) -down-&gt;rpf: relay.frontend.from_coreml
+    (ONNX) -down-&gt;rpf: relay.frontend.from_onnx
+    (***) -down-&gt;rpf: relay.frontend.from_***
+}
+
+rpf -down-&gt; (mod): output
+note left
+    @包含了funcs的全局的relay module
+    @目录 python/tvm/relay/module.py
+    @是对src/relay/目录下的一些接口的封装
+    @module 本质上也是一个node
+    @每一个global func 都通过一个唯一的
+    tvm.relay.GlobalVar来区别
+end note
+
+rpf -down-&gt; (params): output
+note left
+    @dict of str to NDArray
+     Input parameters to the graph
+     that do not change during inference time.
+    @Used for constant folding.
+end note
+
+(mod) -down-&gt; (func): mod[mod.entry_func]
+note left
+    @A function declaration expression
+    @python/tvm/relay/expr.py
+    @继承于Expr, Expr 是RelayNode的子类
+end note
+
+(relay.build) as rb
+(target) as target
+note right 
+    {&quot;aocl&quot;, &quot;aocl_sw_emu&quot;, &quot;c&quot;,
+    &quot;cuda&quot;, &quot;ext_dev&quot;, &quot;hybrid&quot;,
+    &quot;llvm&quot;, &quot;metal&quot;, &quot;nvptx&quot;, &quot;opencl&quot;,
+    &quot;opengl&quot;, &quot;rocm&quot;, &quot;sdaccel&quot;,
+    &quot;stackvm&quot;, &quot;vulkan&quot;}
+end note
+
+target -left-&gt; rb: input
+(target_host) as th
+note left: can be:cuda
+th -&gt; rb: input
+(func) -down-&gt; rb: input
+(params) -down-&gt; rb: input
+
+rb -down-&gt; (graph): output
+rb -down-&gt; (lib): output
+rb -down-&gt; (-params): output
+
+(graph_runtime.create) as grc
+(graph) -down-&gt; grc: input
+(lib) -down-&gt; grc: input
+(ctx: tvm.cpu0) -&gt; grc: input
+
+grc -down-&gt; (runtime): output
+(runtime.setinput) as rs
+(-params) -down-&gt; rs: input
+(image data) -down-&gt; rs: input
+(runtime) -down-&gt; rs: runtime method
+(runtime.run) as rr
+(runtime.getoutput) as rg
+rs -&gt; rr: runtime method
+rr -&gt; rg: runtime method
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>(python/tvm/relay/build_module.py\n\n build) as ptrbb
+rectangle input {
+    entity func
+    entity target
+    entity target_host
+    entity params
+}
+func .down-&gt; ptrbb: input
+target .down-&gt; ptrbb: input
+target_host .down-&gt; ptrbb: input
+params .down-&gt; ptrbb: input
+
+(python/tvm/relay/build_module.py\n\n BuildModule.build) as bmb
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.SetParam) as rbmsp
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.Build) as rbmb
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.BuildRelay) as rbmbr
+ptrbb -right-&gt; bmb: func, target, target_host, params
+bmb -right-&gt; rbmsp: params
+rbmsp -down-&gt; rbmb: func, target, target_host
+rbmb -left-&gt; rbmbr: in RelayBuildModule
+
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.BindParamsByName) as rbmbpbn
+(src/relay/backend/build_module.cc\n\n RelayBuildModule.Optimize) as rbmo
+(relay::ModuleNode::FromExpr creat a relay::module) as rmfe
+rbmbr -left-&gt; rbmbpbn: func, params
+rbmbpbn -down-&gt; rmfe: func
+rmfe -right-&gt; rbmo: &quot;relay::Module, target, params&quot;
+
+(src/relay/backend/build_module.cc\n\n new a GraphCodegen) as nag
+rbmo -right-&gt; nag
+
+(src/relay/backend/graph_runtime_codegen.cc\n\n GraphRuntimeCodegenModule.init) as grcmi
+(src/relay/backend/graph_runtime_codegen.cc\n\n GraphRuntimeCodegenModule.codegen) as grcmc
+nag -down-&gt; grcmi: target
+grcmi -left-&gt; grcmc: func
+
+(src/codegen/build_module.cc\n\n tvm::build) as tb
+rectangle output {
+    entity &quot;graph&quot; as graph
+    entity &quot;new params&quot; as np
+    entity &quot;mod&quot; as mod
+}
+grcmc .down-&gt; graph: output
+grcmc .down-&gt; np: output
+grcmc -left-&gt; tb: LowerFunc, target_host
+tb .down-&gt; mod: output
+</code></pre></div>
+<h3 id="build">build过程<a class="headerlink" href="#build" title="Permanent link">&para;</a></h3>
+<h4 id="relay_1">relay前端<a class="headerlink" href="#relay_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="c1"># tvm/tutorials/frontend/from_mxnet.py</span>
+<span class="k">def</span> <span class="nf">from_mxnet</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span>
+               <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+               <span class="n">arg_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">aux_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">_module</span><span class="o">.</span><span class="n">Module</span><span class="p">()</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">_from_mxnet_impl</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+    <span class="n">mod</span><span class="p">[</span><span class="s2">&quot;main&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+    <span class="k">return</span> <span class="n">mod</span><span class="p">,</span> <span class="n">params</span>
+</code></pre></div>
+<p>Module是一个python类，通过register_relay_node注册到了一个python全局的node字典中。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/relay/module.py</span>
+<span class="nd">@register_relay_node</span>
+<span class="k">class</span> <span class="nc">Module</span><span class="p">(</span><span class="n">RelayNode</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">functions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_definitions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_handle_by_constructor__</span><span class="p">(</span><span class="n">_make</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">type_definitions</span><span class="p">)</span>
+</code></pre></div>
+<p>_make.Module是获取了c++实现的一个Module构建方法。_init_api将c++中的global_func按照模块动态组成了python中各个模块的方法。_init_api 主要调用了_init_api_prefix来实现功能，其中get_global_func返回了一个Function实例，
+Function继承于FunctionBase，其中实现了__call__方法，所以Python中module类的方法中可以通过类似_module.Module_ContainGlobalVar(self, var)的操作来实现对c++的调用</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/relay/_make.py</span>
+<span class="n">_init_api</span><span class="p">(</span><span class="s2">&quot;relay._make&quot;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># python/tvm/_ffi/function.py</span>
+<span class="k">def</span> <span class="nf">_init_api_prefix</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">list_global_func_names</span><span class="p">():</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">get_global_func</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">ff</span> <span class="o">=</span> <span class="n">_get_api</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">ff</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">fname</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">target_module</span><span class="p">,</span> <span class="n">ff</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">ff</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_global_func</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">handle</span> <span class="o">=</span> <span class="n">FunctionHandle</span><span class="p">()</span>
+    <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">TVMFuncGetGlobal</span><span class="p">(</span><span class="n">c_str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">handle</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Function</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Function</span><span class="p">(</span><span class="n">_FunctionBase</span><span class="p">):</span>
+
+<span class="k">class</span> <span class="nc">FunctionBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">TVMFuncCall</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">tcodes</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">num_args</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_val</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_tcode</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">get_last_ffi_error</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">RETURN_SWITCH</span><span class="p">[</span><span class="n">ret_tcode</span><span class="o">.</span><span class="n">value</span><span class="p">](</span><span class="n">ret_val</span><span class="p">)</span>
+</code></pre></div>
+<p>c++中的接口通过TVM_REGISTER_API进行注册,其中ModuleNode::make返回了Module实例</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/relay/ir/module.cc</span>
+<span class="n">TVM_REGISTER_API</span><span class="p">(</span><span class="s">&quot;relay._make.Module&quot;</span><span class="p">)</span>
+<span class="p">.</span><span class="n">set_body_typed</span><span class="p">(</span><span class="n">ModuleNode</span><span class="o">::</span><span class="n">make</span><span class="p">);</span>
+
+<span class="n">Module</span><span class="w"> </span><span class="n">ModuleNode</span><span class="o">::</span><span class="n">make</span><span class="p">(</span><span class="n">tvm</span><span class="o">::</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">GlobalVar</span><span class="p">,</span><span class="w"> </span><span class="n">Function</span><span class="o">&gt;</span><span class="w"> </span><span class="n">global_funcs</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">tvm</span><span class="o">::</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">GlobalTypeVar</span><span class="p">,</span><span class="w"> </span><span class="n">TypeData</span><span class="o">&gt;</span><span class="w"> </span><span class="n">global_type_defs</span><span class="p">)</span>
+</code></pre></div>
+<p>self.__init_handle_by_constructor__最终通过_LIB.TVMFuncCall完成真正的c++函数执行，这个调用是不是很熟悉？对的，在FunctionBase的__call__方法中也是这样实现的PackedFunc的由Python到c++的调用</p>
+<p>其中RETURN_SWITCH是一个字典，实现了c++变量类型到python变量类型的转换</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/_ffi/_ctypes/function.py</span>
+<span class="k">def</span> <span class="nf">__init_handle_by_constructor__</span><span class="p">(</span><span class="n">fconstructor</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">TVMFuncCall</span><span class="p">(</span>
+            <span class="n">fconstructor</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">tcodes</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">num_args</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_val</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_tcode</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">RETURN_SWITCH</span><span class="p">[</span><span class="n">ret_tcode</span><span class="o">.</span><span class="n">value</span><span class="p">](</span><span class="n">ret_val</span><span class="p">)</span>
+
+<span class="n">RETURN_SWITCH</span><span class="p">[</span><span class="n">TypeCode</span><span class="o">.</span><span class="n">FUNC_HANDLE</span><span class="p">]</span> <span class="o">=</span> <span class="n">_handle_return_func</span>
+<span class="n">RETURN_SWITCH</span><span class="p">[</span><span class="n">TypeCode</span><span class="o">.</span><span class="n">MODULE_HANDLE</span><span class="p">]</span> <span class="o">=</span> <span class="n">_return_module</span>
+
+<span class="c1"># python/tvm/_ffi/_ctypes/types.py</span>
+<span class="n">RETURN_SWITCH</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">INT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">v_int64</span><span class="p">,</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">v_float64</span><span class="p">,</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">HANDLE</span><span class="p">:</span> <span class="n">_return_handle</span><span class="p">,</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">NULL</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">STR</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">py_str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">v_str</span><span class="p">),</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">BYTES</span><span class="p">:</span> <span class="n">_return_bytes</span><span class="p">,</span>
+    <span class="n">TypeCode</span><span class="o">.</span><span class="n">TVM_CONTEXT</span><span class="p">:</span> <span class="n">_return_context</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="graphexper">转换原始graph为exper<a class="headerlink" href="#graphexper" title="Permanent link">&para;</a></h4>
+<p>创建完成modudle实例之后，_from_mxnet_impl 遍历了原始graph的node, 根据op名称的不同，填充不同的expr实例到node_map
+并且把最终输出节点对应的Function实例返回，module实例的'main'节点安装为该func</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/relay/frontend/mxnet.py</span>
+<span class="k">def</span> <span class="nf">_from_mxnet_impl</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">shape_dict</span><span class="p">,</span> <span class="n">dtype_info</span><span class="p">,</span> <span class="n">mod</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">jgraph</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">symbol</span><span class="o">.</span><span class="n">tojson</span><span class="p">())</span>
+    <span class="n">jnodes</span> <span class="o">=</span> <span class="n">jgraph</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span>
+    <span class="n">node_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">nid</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">jnodes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">op_name</span> <span class="o">==</span> <span class="s2">&quot;null&quot;</span><span class="p">:</span>
+            <span class="n">node_map</span><span class="p">[</span><span class="n">nid</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">_expr</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="n">op_name</span> <span class="ow">in</span> <span class="n">_convert_map</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_convert_map</span><span class="p">[</span><span class="n">op_name</span><span class="p">](</span><span class="n">children</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">node_map</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">jgraph</span><span class="p">[</span><span class="s2">&quot;heads&quot;</span><span class="p">]]</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">_expr</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">free_vars</span><span class="p">(</span><span class="n">outputs</span><span class="p">),</span> <span class="n">outputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">func</span>
+</code></pre></div>
+<p>其中_convert_map是relay 的 mxnet前端准备好的一个字典，记录着每个op对应的relay的表达。null node代表占位/变量或者输入节点，被实例化为Var(A local variable in Relay)</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/relay/expr.py</span>
+<span class="nd">@register_relay_node</span>
+<span class="k">class</span> <span class="nc">Var</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name_hint</span><span class="p">,</span> <span class="n">type_annotation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_handle_by_constructor__</span><span class="p">(</span>
+            <span class="n">_make</span><span class="o">.</span><span class="n">Var</span><span class="p">,</span> <span class="n">name_hint</span><span class="p">,</span> <span class="n">type_annotation</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Expr</span><span class="p">(</span><span class="n">RelayNode</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+<span class="nd">@register_relay_node</span>
+<span class="k">class</span> <span class="nc">Call</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">type_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">type_args</span><span class="p">:</span>
+            <span class="n">type_args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_handle_by_constructor__</span><span class="p">(</span>
+            <span class="n">_make</span><span class="o">.</span><span class="n">Call</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">type_args</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="relaybuild">Relay层Build<a class="headerlink" href="#relaybuild" title="Permanent link">&para;</a></h4>
+<p>通过调用 relay.build_module._BuildModule 创建RelayBuildModule，该函数返回一个c++的Module类实例，
+在python端转换该实例为Pthon Module类实例（_init_api()接口中会进行处理）</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/relay/backend/build_module.cc</span>
+<span class="n">runtime</span><span class="o">::</span><span class="n">Module</span><span class="w"> </span><span class="nf">RelayBuildCreate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">RelayBuildModule</span><span class="o">&gt;</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">RelayBuildModule</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">runtime</span><span class="o">::</span><span class="n">Module</span><span class="p">(</span><span class="n">exec</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/module.py</span>
+<span class="n">_init_api</span><span class="p">(</span><span class="s2">&quot;tvm.module&quot;</span><span class="p">)</span>
+<span class="n">_set_class_module</span><span class="p">(</span><span class="n">Module</span><span class="p">)</span>
+</code></pre></div>
+<p>python中 class Module对应于c++中的class Module, ModuleBase 提供了__getitem__方法，可以使得
+module[func_string] 能够调用到c++中的ModuleNode对应的function.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/module.py</span>
+<span class="k">class</span> <span class="nc">Module</span><span class="p">(</span><span class="n">ModuleBase</span><span class="p">):</span>
+
+<span class="c1"># python/tvm/_ffi/function.py</span>
+<span class="k">class</span> <span class="nc">ModuleBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">query_imports</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">ret_handle</span> <span class="o">=</span> <span class="n">FunctionHandle</span><span class="p">()</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">TVMModGetFunction</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">c_str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">query_imports</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ret_handle</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">Function</span><span class="p">(</span><span class="n">ret_handle</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can only take string as function name&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</code></pre></div>
+<p>在c++中，module的GetFunction实际上会调用ModuleNode的GetFunction</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// src/runtime/c_runtime_api.cc</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">TVMModGetFunction</span><span class="p">(</span><span class="n">TVMModuleHandle</span><span class="w"> </span><span class="n">mod</span><span class="p">,</span>
+<span class="w">                      </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">func_name</span><span class="p">,</span>
+<span class="w">                      </span><span class="kt">int</span><span class="w"> </span><span class="n">query_imports</span><span class="p">,</span>
+<span class="w">                      </span><span class="n">TVMFunctionHandle</span><span class="w"> </span><span class="o">*</span><span class="n">func</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">PackedFunc</span><span class="w"> </span><span class="n">pf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Module</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetFunction</span><span class="p">(</span>
+<span class="w">        </span><span class="n">func_name</span><span class="p">,</span><span class="w"> </span><span class="n">query_imports</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="o">*</span><span class="n">func</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PackedFunc</span><span class="p">(</span><span class="n">pf</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// include/tvm/runtime/packed_func.h</span>
+<span class="kr">inline</span><span class="w"> </span><span class="n">PackedFunc</span><span class="w"> </span><span class="nf">Module::GetFunction</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">query_imports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">PackedFunc</span><span class="w"> </span><span class="n">pf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">node_</span><span class="o">-&gt;</span><span class="n">GetFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">node_</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">pf</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>可以参考如下类图</p>
+<div class="highlight"><pre><span></span><code>(host module\nclass tvm::runtime::Module) as hm
+(device module\nclass tvm::runtime::Module) as dm
+
+(param \n以graph中的node的name为key的参数字典) as param
+
+(graph \n包含所有node的json表达) as graph
+
+[device.so] --&gt; dm
+
+hm --&gt; (runtime Init): input
+dm &lt;-- hm : call
+(param) --&gt; (runtime Init): input
+(graph) --&gt; (runtime Init): input
+</code></pre></div>
+<p>这样，在python中调用self.mod["build"]，则真正执行了c++中的RelayBuildModule的build功能</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># python/tvm/relay/build_module.py</span>
+<span class="k">class</span> <span class="nc">BuildModule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mod</span> <span class="o">=</span> <span class="n">_build_module</span><span class="o">.</span><span class="n">_BuildModule</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mod</span><span class="p">[</span><span class="s2">&quot;build&quot;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">target_host</span><span class="p">)</span>
+</code></pre></div>
+<p>RelayBuildModule 的 build, 必须要注意的是，<strong><em>Module</em></strong> 和 <strong><em>ModuleNode</em></strong> 存在于多个命名空间中，要注意区分，这里返回的是包含 <strong>runtime::ModuleNode</strong> 的 <strong>runtime::Module</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">RelayBuildModule</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">runtime</span><span class="o">::</span><span class="n">ModuleNode</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">PackedFunc</span><span class="w"> </span><span class="nf">GetFunction</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+<span class="w">                            </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">ModuleNode</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">sptr_to_self</span><span class="p">)</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;build&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">PackedFunc</span><span class="p">([</span><span class="n">sptr_to_self</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">](</span><span class="n">TVMArgs</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">TVMRetValue</span><span class="o">*</span><span class="w"> </span><span class="n">rv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Build</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="codebase-structure-overview">codebase-structure-overview<a class="headerlink" href="#codebase-structure-overview" title="Permanent link">&para;</a></h2>
+<p><a href="codebase-struct.html">跳转到软件目录结构</a></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>

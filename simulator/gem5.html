@@ -1,0 +1,3679 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+        <link rel="canonical" href="https://chsgcxy.github.io/messy_notes/simulator/gem5.html">
+      
+      
+        <link rel="prev" href="gem5-se.html">
+      
+      
+        <link rel="next" href="gem5_introduction.html">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>GEM5 设计与实现分析 - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gem5" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GEM5 设计与实现分析
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          Arch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_demo.html" class="md-nav__link">
+        XS Arch simple
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arm_training_day1.html" class="md-nav__link">
+        ARM Training Day1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/arm_training_day2.html" class="md-nav__link">
+        ARM Training Day2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/atomic.html" class="md-nav__link">
+        RISCV原子操作
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/computer_arch.html" class="md-nav__link">
+        计算机体系结构量化研究方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/numa.html" class="md-nav__link">
+        numa架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/superscalar.html" class="md-nav__link">
+        超标量处理器设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_17" type="checkbox" id="__nav_2_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_17" tabindex="0" aria-expanded="false">
+          Hotchip33
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Hotchip33" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_17">
+          <span class="md-nav__icon md-icon"></span>
+          Hotchip33
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arch/hotchip33/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          C
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/int_uint.html" class="md-nav__link">
+        符号扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/reverse.html" class="md-nav__link">
+        如何写一个又高效又美观的reverse
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/stl_containers.html" class="md-nav__link">
+        C++ STL容器
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          Chisel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Chisel" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Chisel
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/chisel.html" class="md-nav__link">
+        chisel
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/rocketchip.html" class="md-nav__link">
+        rocket chip分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/sbt.html" class="md-nav__link">
+        sbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/scala.html" class="md-nav__link">
+        scala
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          Debug
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          Deeplearning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Design patterns
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          Ic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/axi4.html" class="md-nav__link">
+        AXI4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/pcie.html" class="md-nav__link">
+        PCIE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator2.html" class="md-nav__link">
+        再谈模拟器
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/usb.html" class="md-nav__link">
+        USB
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/lzma_transplant.html" class="md-nav__link">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          Mcu
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" tabindex="0" aria-expanded="false">
+          Misc
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" tabindex="0" aria-expanded="false">
+          Python
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" tabindex="0" aria-expanded="false">
+          Riscv
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/opensbi.html" class="md-nav__link">
+        OpenSBI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-rvv.html" class="md-nav__link">
+        RISCV向量扩展实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_14" type="checkbox" id="__nav_14" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" tabindex="0" aria-expanded="true">
+          Simulator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Simulator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Simulator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dramsim_ddr.html" class="md-nav__link">
+        DDR and DRAMSim3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          GEM5 设计与实现分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="gem5.html" class="md-nav__link md-nav__link--active">
+        GEM5 设计与实现分析
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    前言
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    分析点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    简介
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gem5_1" class="md-nav__link">
+    理解gem5的模块化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gem5_2" class="md-nav__link">
+    理解gem5事件机制
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timebuffer" class="md-nav__link">
+    TimeBuffer 机制
+  </a>
+  
+    <nav class="md-nav" aria-label="TimeBuffer 机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    机制介绍
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    代码分析
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timerbuffer" class="md-nav__link">
+    TimerBuffer总结
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    misc
+  </a>
+  
+    <nav class="md-nav" aria-label="misc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boardgem5" class="md-nav__link">
+    从board层面理解gem5
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#socgem5" class="md-nav__link">
+    从soc层面理解gem5
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpugem5" class="md-nav__link">
+    从cpu微架构层面理解gem5
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    事件驱动模型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simobject" class="md-nav__link">
+    simobject
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isa" class="md-nav__link">
+    isa定制语法
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    内存系统
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-port" class="md-nav__link">
+    memory &amp; port
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pythonc" class="md-nav__link">
+    Python与C++的参数传递
+  </a>
+  
+    <nav class="md-nav" aria-label="Python与C++的参数传递">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    添加参数的方法
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simobject_1" class="md-nav__link">
+    添加简单SimObject
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event" class="md-nav__link">
+    添加event
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    关于编译
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o3-cpurob" class="md-nav__link">
+    O3 CPU的ROB模块分析
+  </a>
+  
+    <nav class="md-nav" aria-label="O3 CPU的ROB模块分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rob" class="md-nav__link">
+    ROB作用机制
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rob_1" class="md-nav__link">
+    ROB代码结构分析
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rob_2" class="md-nav__link">
+    ROB操作
+  </a>
+  
+    <nav class="md-nav" aria-label="ROB操作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rob_3" class="md-nav__link">
+    指令加入ROB
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rob_4" class="md-nav__link">
+    指令移出ROB
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#squash" class="md-nav__link">
+    squash的操作
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o3cpucommit" class="md-nav__link">
+    O3CPU的Commit阶段分析
+  </a>
+  
+    <nav class="md-nav" aria-label="O3CPU的Commit阶段分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    commit阶段数据结构
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit_1" class="md-nav__link">
+    commit阶段流程
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_introduction.html" class="md-nav__link">
+        Gem5 Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_isa.html" class="md-nav__link">
+        Gem5指令集框架解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_o3cpu.html" class="md-nav__link">
+        O3CPU 代码分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="simplesim.html" class="md-nav__link">
+        simpleScalar解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="trace_format.html" class="md-nav__link">
+        利用Trace进行性能分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" tabindex="0" aria-expanded="false">
+          Smt pnp
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_16" type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" tabindex="0" aria-expanded="false">
+          Tools
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/arm-atp.html" class="md-nav__link">
+        ATP(Adaptive Traffic Profiles)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/engine.html" class="md-nav__link">
+        engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git.html" class="md-nav__link">
+        git技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/protobuf.html" class="md-nav__link">
+        protobuf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/screen.html" class="md-nav__link">
+        screen
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/wsl.html" class="md-nav__link">
+        WSL
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_17" type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" tabindex="0" aria-expanded="false">
+          Tvm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/codebase-struct.html" class="md-nav__link">
+        directory-structure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/tvm-start.html" class="md-nav__link">
+        tvm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_18" type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" tabindex="0" aria-expanded="false">
+          Verilog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Verilog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          Verilog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/round_robin_algo.html" class="md-nav__link">
+        一种round_robin算法实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    前言
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    分析点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    简介
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gem5_1" class="md-nav__link">
+    理解gem5的模块化
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gem5_2" class="md-nav__link">
+    理解gem5事件机制
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timebuffer" class="md-nav__link">
+    TimeBuffer 机制
+  </a>
+  
+    <nav class="md-nav" aria-label="TimeBuffer 机制">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    机制介绍
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    代码分析
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timerbuffer" class="md-nav__link">
+    TimerBuffer总结
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misc" class="md-nav__link">
+    misc
+  </a>
+  
+    <nav class="md-nav" aria-label="misc">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boardgem5" class="md-nav__link">
+    从board层面理解gem5
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#socgem5" class="md-nav__link">
+    从soc层面理解gem5
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cpugem5" class="md-nav__link">
+    从cpu微架构层面理解gem5
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    事件驱动模型
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simobject" class="md-nav__link">
+    simobject
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isa" class="md-nav__link">
+    isa定制语法
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    内存系统
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-port" class="md-nav__link">
+    memory &amp; port
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pythonc" class="md-nav__link">
+    Python与C++的参数传递
+  </a>
+  
+    <nav class="md-nav" aria-label="Python与C++的参数传递">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    添加参数的方法
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simobject_1" class="md-nav__link">
+    添加简单SimObject
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event" class="md-nav__link">
+    添加event
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    关于编译
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o3-cpurob" class="md-nav__link">
+    O3 CPU的ROB模块分析
+  </a>
+  
+    <nav class="md-nav" aria-label="O3 CPU的ROB模块分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rob" class="md-nav__link">
+    ROB作用机制
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rob_1" class="md-nav__link">
+    ROB代码结构分析
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rob_2" class="md-nav__link">
+    ROB操作
+  </a>
+  
+    <nav class="md-nav" aria-label="ROB操作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rob_3" class="md-nav__link">
+    指令加入ROB
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rob_4" class="md-nav__link">
+    指令移出ROB
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#squash" class="md-nav__link">
+    squash的操作
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#o3cpucommit" class="md-nav__link">
+    O3CPU的Commit阶段分析
+  </a>
+  
+    <nav class="md-nav" aria-label="O3CPU的Commit阶段分析">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commit" class="md-nav__link">
+    commit阶段数据结构
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit_1" class="md-nav__link">
+    commit阶段流程
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="gem5">GEM5 设计与实现分析<a class="headerlink" href="#gem5" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#gem5">GEM5 设计与实现分析</a><ul>
+<li><a href="#_1">前言</a></li>
+<li><a href="#_2">分析点</a></li>
+<li><a href="#_3">简介</a></li>
+<li><a href="#gem5_1">理解gem5的模块化</a></li>
+<li><a href="#gem5_2">理解gem5事件机制</a></li>
+<li><a href="#timebuffer">TimeBuffer 机制</a><ul>
+<li><a href="#_4">机制介绍</a></li>
+<li><a href="#_5">代码分析</a></li>
+<li><a href="#timerbuffer">TimerBuffer总结</a></li>
+</ul>
+</li>
+<li><a href="#misc">misc</a><ul>
+<li><a href="#boardgem5">从board层面理解gem5</a></li>
+<li><a href="#socgem5">从soc层面理解gem5</a></li>
+<li><a href="#cpugem5">从cpu微架构层面理解gem5</a></li>
+<li><a href="#_6">事件驱动模型</a></li>
+<li><a href="#simobject">simobject</a></li>
+<li><a href="#isa">isa定制语法</a></li>
+<li><a href="#_7">内存系统</a></li>
+<li><a href="#memory-port">memory &amp; port</a></li>
+</ul>
+</li>
+<li><a href="#pythonc">Python与C++的参数传递</a><ul>
+<li><a href="#_8">添加参数的方法</a></li>
+</ul>
+</li>
+<li><a href="#simobject_1">添加简单SimObject</a></li>
+<li><a href="#event">添加event</a></li>
+<li><a href="#_9">关于编译</a></li>
+<li><a href="#o3-cpurob">O3 CPU的ROB模块分析</a><ul>
+<li><a href="#rob">ROB作用机制</a></li>
+<li><a href="#rob_1">ROB代码结构分析</a></li>
+<li><a href="#rob_2">ROB操作</a><ul>
+<li><a href="#rob_3">指令加入ROB</a></li>
+<li><a href="#rob_4">指令移出ROB</a></li>
+<li><a href="#squash">squash的操作</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#o3cpucommit">O3CPU的Commit阶段分析</a><ul>
+<li><a href="#commit">commit阶段数据结构</a></li>
+<li><a href="#commit_1">commit阶段流程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<p><strong>一次ppt汇报</strong></p>
+<p><a href="gem5%E6%B5%85%E6%9E%90.pdf">gem5浅析</a></p>
+<hr />
+<h2 id="_1">前言<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>gem5是一款可以实现时钟精确仿真的SOC模拟器。它本身的目的并不是帮助产品开发，它更偏向于教育和架构探索。
+但是研究它仍然是有意义的，它的意义在于能够让你学习到一款时钟级模拟器的构建思路。</p>
+<p>官网：[<a href="http://www.gem5.org">http://www.gem5.org</a>]
+学习指导：[<a href="http://www.gem5.org/documentation/learning_gem5/introduction">http://www.gem5.org/documentation/learning_gem5/introduction</a>]
+相关资料：[<a href="http://daystrom.m5sim.org/Main_Page">http://daystrom.m5sim.org/Main_Page</a>]</p>
+<h2 id="_2">分析点<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>单元的设计思路</li>
+<li>如何解决寄存器冲突</li>
+<li>流水线的实现方式</li>
+<li>时钟如何统一</li>
+<li>多核设计</li>
+<li>总线，端口的抽象</li>
+<li>debug如何支持</li>
+<li>地址映射的处理方法</li>
+</ul>
+<h2 id="_3">简介<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>gem5是一个模块化的计算机系统（computer-system）模拟器，它结合了M5(多处理器模拟器)和GEMS（存储层次模拟器）中最优秀的部分，最初用于计算机架构以及微处理器架构探索，当然在研究行业，教学行业也有推广。
+但总体来讲，gem5是偏向于学术的一款模块化模拟器平台。
+gem5目前还在发展，支持的CPU类型有：Alpha, ARM, MIPS, Power, SPARC, RISC-V 以及 64 bit x86。</p>
+</blockquote>
+<p>如上是对于gem5官网描述的概括，其中最关键的应该就是模块化。gem5可以做到时钟精确，当然也可以利用它的模块化，忽略掉一些模块的latency。本文主要侧重的是RISC-V架构。对于RISC-V, 目前gem5主线还不支持vector扩展，但amf扩展都已经支持。</p>
+<p>gem5能够模拟出一块具体的板卡，包含由各个模块组成的SOC、DDR以及部分外设的具体板卡，但它模拟的核心仍在于SOC内部。</p>
+<p>gem5也能运行linux系统</p>
+<h2 id="gem5_1">理解gem5的模块化<a class="headerlink" href="#gem5_1" title="Permanent link">&para;</a></h2>
+<p>linux系统提供了设备树，让开发者通过组合系统硬件的一系列模块，从而匹配自己的板卡。gem5也是一样的，它有很多模块都有多种实现，你可以指定具体的某一种实现来组合出你想模拟的系统。</p>
+<p>gem5的核心内容（各个模块和机制的具体实现）使用c++编写，内部集成了python2.7解析器。这些模块实现完成之后就像linux内核中实现的一个个device，比如：cpu,cache,memory,power,process,tlb等等。python解析器会解析外部输入的配置文件（python脚本)，这个脚本就像设备树一样，描述了整个系统是如何由这些device组合起来的，并且定义了这些device的一些必不可少的参数。在系统初始化的时候，根据配置文件的描述，对相应的c++类进行实例化，这样就实现了一个具体的系统。</p>
+<p>有些模块是通过静态编译绑定系统的，有些模块是通过解析配置脚本动态绑定的。比如ARCH相关的就是通过静态编译绑定的，在编译的时候我们需要指定要编译的ARCH，而cpu类型我们可以在
+配置脚本中指定。</p>
+<p>当然了，就像乐高玩具一样，空有一堆零件，没有图纸，也很难做出来像样的玩具（天才可能除外）。如果让我们从0开始组合这些模块，是很困难的一件事情，但好在gem5提供了一些demo的config文件，并且tests中也提供了一些config文件，我们可以模改这些文件实现自己的系统。</p>
+<p>社区正在开发基于图形拖拽就能生成config文件的功能，这会使它的config文件写起来更直观。</p>
+<h2 id="gem5_2">理解gem5事件机制<a class="headerlink" href="#gem5_2" title="Permanent link">&para;</a></h2>
+<p>gem5的运行是靠事件机制来完成的，事件按照tick和优先级进行排序，同一tick和优先级的事件被称为“InBin”, 按照栈的方式来管理
+事件管理的核心代码在src/sim/eventq.cc及eventq.hh中</p>
+<p>Event及EventQueue是核心的数据结构，显然，Event实现了对事件的抽象，EventQueue实现了对事件的封装和管理</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">EventBase</span><span class="p">,</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">Serializable</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">friend</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EventQueue</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">nextBin</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">nextInBin</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Tick</span><span class="w"> </span><span class="n">_when</span><span class="p">;</span><span class="w">         </span><span class="c1">//!&lt; timestamp when event should be processed</span>
+<span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="n">_priority</span><span class="p">;</span><span class="w"> </span><span class="c1">//!&lt; event priority</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EventQueue</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">head</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Tick</span><span class="w"> </span><span class="n">_curTick</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>上述代码罗列了Event的几个重要字段，其中nextBin指向下一个Event，并且下一个Event一定与当前Event的in bin不同(不同when或者不同priority)。
+nextInBin是指向下一个同when同priority的Event, nextInBin这个链表被作为栈的逻辑来管理。
+上述两点都是由Event的插入策略（insertBefore）决定的。
+EventQueue保存了Event链表的表头，这是遍历的起点，_curTick保存了当前的周期时间，这个时间总是被设置为head的_when,这是在执行的时候决定的。</p>
+<p>显然，EventQueue保存了一个事件队列，这个队列是一个单向链表，使用nextBin指针指向下一个Event,以_when+_priority的方式进行插入。
+同时，这个单向链表中的每一个Event都是当前相同_when + _priority的Event的栈顶，每插入一个相同_when + _priority的Event，当前这个Event就会被压栈，使用nextInBin进行管理，新的Event替代原有Event的位置，这是插入方法insertBefore决定的。</p>
+<div class="highlight"><pre><span></span><code><span class="n">Event</span><span class="w"> </span><span class="o">*</span>
+<span class="nf">Event::insertBefore</span><span class="p">(</span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">curr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Either way, event will be the top element in the &#39;in bin&#39; list</span>
+<span class="w">    </span><span class="c1">// which is the pointer we need in order to look into the list, so</span>
+<span class="w">    </span><span class="c1">// we need to insert that into the bin list.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">curr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">*</span><span class="n">event</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">curr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Insert the event before the current list since it is in the future.</span>
+<span class="w">        </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">nextBin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span>
+<span class="w">        </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">nextInBin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Since we&#39;re on the correct list, we need to point to the next list</span>
+<span class="w">        </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">nextBin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">nextBin</span><span class="p">;</span><span class="w">  </span><span class="c1">// curr-&gt;nextBin can now become stale</span>
+
+<span class="w">        </span><span class="c1">// Insert event at the top of the stack</span>
+<span class="w">        </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">nextInBin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">curr</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">event</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>insertBefore负责插入待执行的事件，一般由schedule触发。</p>
+<p>serviceOne负责执行当前EventQueue中的一个事件，为了更方便理解，下面的代码做了一些删减。
+我们可以看到，每次都是执行头节点，而且如果当前头节点有相同_when + _priority的事件，那么按照
+出栈的顺序依次执行事件，直到当前相同_when + _priority执行完成后，再通过setCurTick(event-&gt;when())来
+修改当前系统的时间，最终event-&gt;process()执行Event回调函数。</p>
+<div class="highlight"><pre><span></span><code><span class="n">Event</span><span class="w"> </span><span class="o">*</span>
+<span class="nf">EventQueue::serviceOne</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">nextInBin</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// update the next bin pointer since it could be stale</span>
+<span class="w">        </span><span class="n">next</span><span class="o">-&gt;</span><span class="n">nextBin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">nextBin</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// pop the stack</span>
+<span class="w">        </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// this was the only element on the &#39;in bin&#39; list, so get rid of</span>
+<span class="w">        </span><span class="c1">// the &#39;in bin&#39; list and point to the next bin list</span>
+<span class="w">        </span><span class="n">head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">head</span><span class="o">-&gt;</span><span class="n">nextBin</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">     </span><span class="n">setCurTick</span><span class="p">(</span><span class="n">event</span><span class="o">-&gt;</span><span class="n">when</span><span class="p">());</span>
+<span class="w">    </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">process</span><span class="p">();</span>
+<span class="w">    </span><span class="n">event</span><span class="o">-&gt;</span><span class="n">release</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>从总入口上看来，整个事件机制的运行就是在一个大while循环中，不断调用eventQueue的serviceOne</p>
+<div class="highlight"><pre><span></span><code><span class="n">doSimLoop</span><span class="p">(</span><span class="n">EventQueue</span><span class="w"> </span><span class="o">*</span><span class="n">eventq</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Event</span><span class="w"> </span><span class="o">*</span><span class="n">exit_event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eventq</span><span class="o">-&gt;</span><span class="n">serviceOne</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">exit_event</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">exit_event</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="timebuffer">TimeBuffer 机制<a class="headerlink" href="#timebuffer" title="Permanent link">&para;</a></h2>
+<h3 id="_4">机制介绍<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>TimeBuffer是gem5实现的一个循环buffer，这个循环buffer可以按照tick来推进，每advance()一次，buffer的指针就前进一个。
+TimeBuffer通过模板参数可以用来存放任何想要存放的数据，特别适合在流水前后传递数据，能够体现出流水的延时。</p>
+<p>TimeBuffer提供了一个past和future的概念。</p>
+<table>
+<thead>
+<tr>
+<th>past/future</th>
+<th>past2</th>
+<th>past1</th>
+<th>past0</th>
+<th>current</th>
+<th>future0</th>
+<th>future1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td>index</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>从时间(tick)的角度,基于当前，往前推，有多个tick的延迟，就可以设置past值为多少。比如当前是fetch阶段,下一阶段为decode阶段，指令从fetch流到decode需要一个tick，那么就需要至少设置past为1。同理future。</p>
+<p>循环buffer会从future0开始被刷新，随着每次advance(), 从future0开始，data中的数据会被析构并重新构造。与此同时，内部名为base的数据指针也会循环增加。</p>
+<p>假设我们实例了一个TimeBuffer, past=3, future=3,那么随着tick的进行，大致会有如下的关系</p>
+<p>TimeBuffer 提供了wire来实现对Buffer数据的间接访问。在实现这个访问接口的时候，需要提供一个index，这个index是一个tick的概念。比如我们实例两个wire，wire0的index为0, wire1的index为-2, 那么就意味着wire0改写的buffer单元在两个tick之后，wire1才能访问到。</p>
+<table>
+<thead>
+<tr>
+<th>tick</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>ptr</td>
+<td></td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr>
+<td>wire0</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>wire1</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>如上图所示，在tick0时，wire0可以访问data0, wire1可以访问data5。当t系统tick走到1时，调用advance(), 此时TimeBuffer内部指针base变为1,
+TimeBuffer重构了ptr所指向的data4（ptr = future + base)，此时wire0能够访问data1, wire1能够访问data6。</p>
+<p>加入在tick2, wire0更新了data2, 那么在tick4, wire1才能拿到更新后的data2, 体现出了延迟2个tick。</p>
+<h3 id="_5">代码分析<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeBuffer</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="k">protected</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">past</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">future</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="w"> </span><span class="o">*&gt;</span><span class="w"> </span><span class="n">index</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">TimeBuffer</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">f</span><span class="p">)</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">past</span><span class="p">(</span><span class="n">p</span><span class="p">),</span><span class="w"> </span><span class="n">future</span><span class="p">(</span><span class="n">f</span><span class="p">),</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">past</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">future</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">          </span><span class="n">data</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">char</span><span class="p">[</span><span class="n">size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">)]),</span><span class="w"> </span><span class="n">index</span><span class="p">(</span><span class="n">size</span><span class="p">),</span><span class="w"> </span><span class="n">base</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">assert</span><span class="p">(</span><span class="n">past</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">future</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ptr</span><span class="p">;</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">));</span>
+<span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span><span class="w"> </span><span class="n">T</span><span class="p">;</span>
+<span class="w">            </span><span class="n">ptr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>TimeBuffer通过new char[size * sizeof(T)]一次性的为所有元素开辟存储空间。通过palcement new来实现在已经开辟的空间上对buffer对象的构造。同时，为了访问的方便，提供了一个index的指针向量指向buffer中的每一个元素。</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="kt">void</span>
+<span class="w">    </span><span class="nf">advance</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">++</span><span class="n">base</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">size</span><span class="p">)</span>
+<span class="w">            </span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">future</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ptr</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">size</span><span class="p">)</span>
+<span class="w">            </span><span class="n">ptr</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">        </span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">ptr</span><span class="p">]))</span><span class="o">-&gt;~</span><span class="n">T</span><span class="p">();</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">T</span><span class="p">));</span>
+<span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">ptr</span><span class="p">])</span><span class="w"> </span><span class="n">T</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div>
+<p>每次advance都去更新base， base通过size控制来实现循环，进而实现循环buffer。每次advance都会析构并重构当前base对应的future数据。</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">wire</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">TimeBuffer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">wire</span><span class="p">(</span><span class="n">TimeBuffer</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">buffer</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span><span class="w"> </span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">T</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">*</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="o">-&gt;</span><span class="n">access</span><span class="p">(</span><span class="n">index</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">buffer</span><span class="o">-&gt;</span><span class="n">access</span><span class="p">(</span><span class="n">index</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeBuffer</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kr">inline</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">calculateVectorIndex</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">vector_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">base</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">vector_index</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">vector_index</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">vector_index</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">vector_index</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">vector_index</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">T</span><span class="w"> </span><span class="o">*</span><span class="nf">access</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">vector_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calculateVectorIndex</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">vector_index</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>wire通过不同的index来实现对timebuffer中不同的元素的访问，其中calculateVectorIndex仍然是为了实现循环buffer。当然，wire的字段index的命名容易引发歧义，或许可以用一个更不容易混淆的名字。</p>
+<h3 id="timerbuffer">TimerBuffer总结<a class="headerlink" href="#timerbuffer" title="Permanent link">&para;</a></h3>
+<p>尽管TimeBuffer的核心是一个固定的数组，数据在buffer中实际上是不动的。但它通过base及一些辅助计数，实现了一个类似队列的功能，而且，数据移出队列就会消失。
+我们可以认为其中的数据是按照tick进行流动的，而且通过wire访问的方式，实现了信号传递及数据流动的延迟。</p>
+<h2 id="misc">misc<a class="headerlink" href="#misc" title="Permanent link">&para;</a></h2>
+<p>gem5能够模拟一块板卡</p>
+<p><img alt="一个较为复杂的开发板系统框图" src="../imgs/developboard.png" />
+上图是一个较为复杂的开发板系统框图，从图中可以看到，soc通过它的外部接口连接了板上的各个外设。比如通过DDR4接口连接外部DDR,通过PCIE接口连接外部PCIE设备，通过USB接口链接4G模块等等。</p>
+<p>gem5能够模拟出类似上图的一块板卡，包括SOC以及部分外设。但是，有两点需要注意</p>
+<ul>
+<li>gem5的核心任务还是模拟SOC内部行为，目前实现的外设比较少</li>
+<li>gem5的外设功能是在控制器侧做的。</li>
+</ul>
+<p>假如我们要做一个模拟器，要实现SOC访问外部TMP75温度传感器的模拟。假如我们的重点是在SOC内部，那我们可能会想着去实现这个TMP75传感器，并且实现这个总线连接。</p>
+<p>但这样存在的问题是，会让实现很复杂，同时会让工作的重心从CPU转到了外设上，已经脱离了作为一款CPU模拟器最核心的东西。这很没有性价比。gem5的实现是在控制器上做文章，比如同样要实现通过I2C访问TMP75传感器，它会直接在I2C控制器上实现TMP75传感器的功能，并且只需要设置好数据返回的latency，就完全可以实现这个过程的模拟，并且保证一定的时钟精确。（当然这个例子在gem5中没有实现）</p>
+<p>gem5的内存系统支持DDR，同样的，gem5在DDR控制器上做文章，只需要设置DDR控制器的一些Latency参数，就可以在DDR访问的性能方面做到类似真实的DDR，而不需要真实的去模拟出来一个DDR芯片并且再设计DDR总线连接SOC和DDR芯片。</p>
+<p>参考gem5官网的文档，大致有下面几个核心机制需要理解</p>
+<ul>
+<li>gem5是基于事件驱动模型而设计的，那么事件驱动模型是如何实现与运行的？</li>
+<li>大多数模块的基类都是SimObject，gem5是如何管理这些SimObject的，这些SimObject又是如何组成系统的？</li>
+<li>gem5的isa实现可以理解为自创了一套语法，并且实现了isa_parser的解析器。解析器解析固定语法的ias描述文件，生成isa实现的c++代码，并参与编译。</li>
+<li>gem5如何实现内存系统</li>
+</ul>
+<p>上述这些，都可以在gem5官网中找到蛛丝马迹。
+但换一个角度，从更高的层面来看gem5。gem5是如何抽象板卡（board）, soc, cpu子系统的？
+似乎这个问题在官网中并无法直接找到答案，然而这恰恰是我认为理解gem5最重要的部分。
+对于上面提到的几点，我们稍后再分析。首先我们**站在gem5设计者的角度，分别从board,soc,cpu微架构三个层面来理解它的设计**</p>
+<h3 id="boardgem5">从board层面理解gem5<a class="headerlink" href="#boardgem5" title="Permanent link">&para;</a></h3>
+<h3 id="socgem5">从soc层面理解gem5<a class="headerlink" href="#socgem5" title="Permanent link">&para;</a></h3>
+<p><img alt="FE310_G000" src="../imgs/SOC_FE310_G0000.png" />
+上图是SiFive的RISCV架构FE310_G000 SOC，可以看到它有一个E31核，虚线框是核内微架构，它是一个比较简单的MCU核。
+E31核通过P-Bus总线连接一些外设控制器。理论上，使用gem5可以实现一个与上图几乎一样的SOC模型。</p>
+<p>不关注CPU内部微架构，从大的模块上来讲，我们需要实现CPU核，总线，外设控制器。并且让他们能够连接起来组成一个SOC。那么gem5是如何实现这些的呢？</p>
+<p><img alt="simple_system" src="../imgs/simple_system.svg" />
+上图是通过graphviz依据config.ini文件生成的一个简单系统框图，它足以说明gem5的设计思路。
+system抽象了整个SOC系统，system中包含一系列的基于SimObject的模块，当然root和system本身也是一个SimObject。DerivO3CPU, membus, memctrl这三大模块都是SimObject。涉及到数据传输的模块都有port，分为master和slave两种类型，master和slave可以进行连接。从而使得模块相连。</p>
+<p>要想将这种连接方式做的通用，就需要把port设计的通用</p>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<h3 id="cpugem5">从cpu微架构层面理解gem5<a class="headerlink" href="#cpugem5" title="Permanent link">&para;</a></h3>
+<h3 id="_6">事件驱动模型<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="simobject">simobject<a class="headerlink" href="#simobject" title="Permanent link">&para;</a></h3>
+<h3 id="isa">isa定制语法<a class="headerlink" href="#isa" title="Permanent link">&para;</a></h3>
+<h3 id="_7">内存系统<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="memory-port">memory &amp; port<a class="headerlink" href="#memory-port" title="Permanent link">&para;</a></h3>
+<p>所有内存对象都是通过port连接起来的，port实现了三种不同的内存模式</p>
+<ul>
+<li>atomic</li>
+<li>timing</li>
+<li>functional</li>
+</ul>
+<p>timing模式是唯一一个能产生正确的仿真结果的模式; atomic模式是一个快速仿真模式; functional模式是一个debug模式，支持从host端读入内存数据</p>
+<p>port包含master ports 和 slave ports两种，port传递的是packets,</p>
+<h2 id="pythonc">Python与C++的参数传递<a class="headerlink" href="#pythonc" title="Permanent link">&para;</a></h2>
+<p>gem5官网Documentation的作者认为，gem5的python接口的亮点在于能够向C++传递参数。（tvm也能够实现C++与Python的数据互传，这一点我觉得可以对比着分析两者的实现）</p>
+<h3 id="_8">添加参数的方法<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<ol>
+<li>在src的.py文件中添加python参数的定义，这个参数可以在config文件中赋值</li>
+<li>在src的.cc文件中，在类中添加参数字段</li>
+<li>在src的.cc文件中，在类的构造函数中添加参数字段的赋值，参数由python传入</li>
+<li>在config文件中添加必要的参数赋值</li>
+</ol>
+<h2 id="simobject_1">添加简单SimObject<a class="headerlink" href="#simobject_1" title="Permanent link">&para;</a></h2>
+<ol>
+<li>在src目录中添加demo.py, demo.cc, demo.hh</li>
+<li>在demo.py中添加Demo类</li>
+<li>在demo.hh中添加Demo类</li>
+<li>在demo.cc中添加Demo类构造函数，必要方法，构造函数需要有默认参数DemoParams</li>
+<li>在src目录下的Sconscript中添加文件编译和必要的debug flag</li>
+<li>在config文件中使用新添加的Demo实例</li>
+</ol>
+<h2 id="event">添加event<a class="headerlink" href="#event" title="Permanent link">&para;</a></h2>
+<ol>
+<li>添加EventFunctionWrapper类型的event字段到Demo类中</li>
+<li>添加processEvent 方法用来做event回调函数</li>
+<li>在构造函数中，初始化event为processEvent</li>
+<li>创建startup方法，在该方法中添加event的schedule，用于在启动时触发event</li>
+</ol>
+<h2 id="_9">关于编译<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<p>gem5使用Scons来组织编译，Scons类似于make。
+Scons需要使用名为SConstruct的文件来组织编译, Scons还提供了一系列的API，用于在SConstruct中方便的定制构建规则。
+我们可以认为，Scons是make的升级版，它能更简单，更容易的实现make实现的功能，Scons使用Python脚本来组织构建,有良好的跨平台性。</p>
+<h2 id="o3-cpurob">O3 CPU的ROB模块分析<a class="headerlink" href="#o3-cpurob" title="Permanent link">&para;</a></h2>
+<h3 id="rob">ROB作用机制<a class="headerlink" href="#rob" title="Permanent link">&para;</a></h3>
+<p>在乱序CPU中，指令在流水线中执行的时候是乱序的。但从程序员的角度，是不允许这种乱序发生的，在程序员看来，指令一定要顺序的执行。因此产生了ROB模块，ROB使得在流水线中乱序执行的指令在程序员看来是顺序的，即将乱序的指令结果“重排序”。</p>
+<p>显然，ROB模块必须有一个指令顺序的记录功能，在乱序执行之前应该做顺序记录，乱序执行后，应该按照记录的顺序完成指令的最终提交。只有这样，才能保证在程序员看来，指令仍然是顺序执行的。</p>
+<p><img alt="rob_pos" src="../imgs/rob_pos.png" /></p>
+<p>如上图，在乱序CPU的pipeline中，Rename及以前的流水都可以认为是顺序的，尽管它实际上可以在一个周期处理多条指令，但多条仍然是顺序的。但在Execute阶段就开始乱序了，所以，要在Rename之后，将指令顺序记录在ROB中。WriteBack阶段完成后，我们基本可以认为指令已经执行完成，那么在Commit阶段，就需要按照ROB中记录的指令的顺序来提交指令，这样就既加速了指令的运行，提高了流水线的利用率，又保证指令的顺序是正确的。
+<strong>在gem5的实现中，是在commit的代码中将指令添加到ROB，乍看起来有些费解，但实际上仍然是基于Rename传递的指令队列，对整体效果没有影响</strong></p>
+<h3 id="rob_1">ROB代码结构分析<a class="headerlink" href="#rob_1" title="Permanent link">&para;</a></h3>
+<p>ROB的实现支持多硬线程(代码中应该把硬线程做抽象)。从硬件线程的角度来分析，ROB结构就比较好理解</p>
+<p><img alt="rob_struct" src="../imgs/rob_struct.png" /></p>
+<p>代码实现的核心是对list\<DynInstPtr>的访问， 猜测robStatus的本意是ROB中当前硬件线程的状态机，但实际上用doneSquashing来表示了。也就是说，实际上ROB只有两个状态，Squashing(因为Squashing操作有宽度限制，可能不能在一个tick完成)和running。通常来讲，当ROB的指令list满了之后，也应该有一个状态，不过，ROB代码的实现将这个状态的判断交给了ROB使用者。Rename模块需要通过maxEntries和threadEntries来判定ROB是否已经满了，不能再填入。这看起来有些奇怪。<strong>实质上，ROB模块在gem5中的实现就是对一个双向链表的封装</strong></p>
+<h3 id="rob_2">ROB操作<a class="headerlink" href="#rob_2" title="Permanent link">&para;</a></h3>
+<p>ROB的代码实质是双向链表，对于ROB的操作，全部在Commit代码中完成，但这并不意味着它硬件对ROB的操作都是在Commit阶段完成的。软件只需要保证最终效果基本一致即可。<strong>这是模拟器实现和真实硬件逻辑的区别</strong></p>
+<p><img alt="rob_in_out" src="../imgs/rob_inout.png" /></p>
+<h4 id="rob_3">指令加入ROB<a class="headerlink" href="#rob_3" title="Permanent link">&para;</a></h4>
+<p>如上图所示，ROB指令来源为Rename之后的指令，gem5中实现为一个名为RenameQueue的TimeBuffer，并且默认Rename的下一个tick即可拿到Rename后的指令。
+RenameQueue中的指令在Commit-&gt;tick()中加入到ROB(通过insertInst()加入到InstList的尾部)，这虽然不符合硬件逻辑，但Rename模块操作RenameQueue是通过wire(0), Commit模块操作RenameQueue是通过Wire(-1)。所以，在Commit中调用insertInst()并不影响流水线效果，这也简化了软件的实现。这是指令加入ROB的唯一方式。</p>
+<h4 id="rob_4">指令移出ROB<a class="headerlink" href="#rob_4" title="Permanent link">&para;</a></h4>
+<p>在Commit阶段，通过调用retireHead()来将指令移出ROB并完成提交。当然，是否能够移出的判断逻辑是在Commit中做的，具体逻辑可以在Commit章节中看到。这是指令移出ROB的唯一方式。</p>
+<h4 id="squash">squash的操作<a class="headerlink" href="#squash" title="Permanent link">&para;</a></h4>
+<p>如果发生中断、异常或分支预测失败，那么ROB中的记录当然也需要被刷新。这个过程被成为squash（这似乎是一个业界通用术语）。ROB提供了squash()方法来支持这个功能，值得注意的是**squash()操作只是对指令状态进行标记，将指令标记为Squashed且CanCommit。真正的移出操作仍然是Commit阶段通过判断指令状态调用retireHead()来完成的**。</p>
+<p>由于没有基于真实硬件做分析，个人认为，这只是软件的一个讨巧的操作。因为在代码的实现逻辑中，标记指令状态时，由于有squash宽度的限制，可能在一个tick无法完成squash操作，就需要标记ROB为squashing状态，当ROB处于squashing状态时，图中指令9是不会被commit的。</p>
+<p>squash()的参数squash_num实际上是指令的一个唯一的seqNum(gem5中通过一个顺序增长的uint64变量为每一条指令分配一个号码，真实硬件也有类似实现吗？)这个seqNum被记录在squashedSeqNum中，这个number标识的指令及其之后加入ROB的指令都会被标记为Squash/CanCommit。</p>
+<div class="highlight"><pre><span></span><code><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Impl</span><span class="o">&gt;</span>
+<span class="kt">void</span>
+<span class="n">ROB</span><span class="o">&lt;</span><span class="n">Impl</span><span class="o">&gt;::</span><span class="n">squash</span><span class="p">(</span><span class="n">InstSeqNum</span><span class="w"> </span><span class="n">squash_num</span><span class="p">,</span><span class="w"> </span><span class="n">ThreadID</span><span class="w"> </span><span class="n">tid</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">doneSquashing</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">squashedSeqNum</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">squash_num</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">instList</span><span class="p">[</span><span class="n">tid</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">InstIt</span><span class="w"> </span><span class="n">tail_thread</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">instList</span><span class="p">[</span><span class="n">tid</span><span class="p">].</span><span class="n">end</span><span class="p">();</span>
+<span class="w">        </span><span class="n">tail_thread</span><span class="o">--</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">squashIt</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tail_thread</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">doSquash</span><span class="p">(</span><span class="n">tid</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">class</span><span class="w"> </span><span class="nc">Impl</span><span class="o">&gt;</span>
+<span class="kt">void</span>
+<span class="n">ROB</span><span class="o">&lt;</span><span class="n">Impl</span><span class="o">&gt;::</span><span class="n">doSquash</span><span class="p">(</span><span class="n">ThreadID</span><span class="w"> </span><span class="n">tid</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">numSquashed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">         </span><span class="n">numSquashed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">squashWidth</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">         </span><span class="n">squashIt</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">instList</span><span class="p">[</span><span class="n">tid</span><span class="p">].</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">         </span><span class="p">(</span><span class="o">*</span><span class="n">squashIt</span><span class="p">[</span><span class="n">tid</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">seqNum</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">squashedSeqNum</span><span class="p">[</span><span class="n">tid</span><span class="p">];</span>
+<span class="w">         </span><span class="o">++</span><span class="n">numSquashed</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="p">(</span><span class="o">*</span><span class="n">squashIt</span><span class="p">[</span><span class="n">tid</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">setSquashed</span><span class="p">();</span>
+
+<span class="w">        </span><span class="p">(</span><span class="o">*</span><span class="n">squashIt</span><span class="p">[</span><span class="n">tid</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">setCanCommit</span><span class="p">();</span>
+
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>如上为截取squash()处理，这里squashIt用来控制squash进度。那么这里有一个疑问，当已经有一个squash发生，但在一个tick中squash没有完成，那么下一个tick会调用doSquash继续进行squash操作。此时如果有新的squash()调用，那么可能上一个tick中的squash操作就浪费掉了，doSquash又会重新进行squash标记。可能会导致squash的周期数与实际硬件不一致，但真是硬件的处理逻辑是怎样的呢？</p>
+<h2 id="o3cpucommit">O3CPU的Commit阶段分析<a class="headerlink" href="#o3cpucommit" title="Permanent link">&para;</a></h2>
+<p>当已经了解TimeBuffer机制，Rename机制及ROB机制之后，再来理解O3CPU的Commit阶段就相对容易了</p>
+<p>Commit阶段主要是完成可以提交的指令，从程序员的角度，这表示指令执行的最终完成。</p>
+<h3 id="commit">commit阶段数据结构<a class="headerlink" href="#commit" title="Permanent link">&para;</a></h3>
+<p><img alt="commit_struct" src="../imgs/commit_struct.png" /></p>
+<p>commit内部仍然支持多硬件线程。每个硬件线程都有自己的一些运行状态与计数，commit根据硬件线程调度策略来执行相应的硬件线程，当然，很多时候，硬件线程是并行运行的。</p>
+<p>对于单个硬件线程来讲，它包含了trapSquash，tcSquash这样的squash标记，当收到这样的信号之后，会驱动ROB及自身进行squashing操作。</p>
+<p>commitStatus标识了该线程在commit阶段的状态，同时通过pc来保存及传递系统pc状态。同时自身还拥有status及nextstatus状态，用来标识自身运行状态。</p>
+<p>youngestSeqNum计数和lastCommitedSeqNum计数用来辅助控制ROB的squash操作及提交操作。</p>
+<p>同时，还有大量的统计信息用来查看及debug。</p>
+<p>commit需要iew阶段的一些状态，通过保留的iewStage指针实现。多个TimeBuffer的wire接口，用来实现与其他模块的数据交互。</p>
+<p>ROB模块在commit的控制下运行。</p>
+<h3 id="commit_1">commit阶段流程<a class="headerlink" href="#commit_1" title="Permanent link">&para;</a></h3>
+<p>为了更方便排版，将commit的流程分为了两大部分，一部分包含对squash状态的处理，另一部分包含指令添加到ROB以及指令的提交</p>
+<p><img alt="commit_flow1" src="../imgs/commit_flow1.png" />
+接上
+<img alt="commit_flow2" src="../imgs/commit_flow2.png" /></p>
+<p>上面的流程图涉及了commit阶段的绝大部分内容，但对于一些微小细节，比如对于store指令的特殊处理，硬件线程的调度策略等，没有涉及。
+store指令的提交实际上在LSQ中实现，这会在IEW及LSQ的章节中详细描述。</p>
+<p>另外，关于trap的处理，是比较值得关注的细节。为了保持主体流程图能够清晰易懂，这部分细节没有添加到流程图中，这部分更合适在了解
+主体流程之后单独理解。下面的几个引用的代码都做了或多或少的特殊处理，包含一些对理解流程更方便的展开、拼凑和删除处理。但完全可以在源代码中找到下面的对应。</p>
+<div class="highlight"><pre><span></span><code><span class="n">DefaultCommit</span><span class="o">&lt;</span><span class="n">Impl</span><span class="o">&gt;::</span><span class="n">commit</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">checkInterrupts</span><span class="p">(</span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">tcBase</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">commitStatus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TrapPending</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">interrupt</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">trapSquash</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">||</span>
+<span class="w">                </span><span class="n">tcSquash</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">drainImminent</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">interrupt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">getInterrupts</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">interrupt</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">NoFault</span><span class="p">)</span>
+<span class="w">            </span><span class="n">toIEW</span><span class="o">-&gt;</span><span class="n">commitInfo</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">interruptPending</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>或许将判断中断状态放在commit函数中让人费解，但不必较真。interrupt 保存了更新的中断状态。中断状态的类型是Fault，这也能解释的通，或许他们认为中断可以理解成正常流程中的错误。如果有中断，那么就会通过TimeStruct传递出去。</p>
+<div class="highlight"><pre><span></span><code><span class="n">DefaultCommit</span><span class="o">&lt;</span><span class="n">Impl</span><span class="o">&gt;::</span><span class="n">getInsts</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">inst</span><span class="o">-&gt;</span><span class="n">isSquashed</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">        </span><span class="n">commitStatus</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ROBSquashing</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">        </span><span class="n">commitStatus</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TrapPending</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rob</span><span class="o">-&gt;</span><span class="n">insertInst</span><span class="p">(</span><span class="n">inst</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>一但产生TrapPending状态，便不会再向ROB中添加指令，这是挂起的含义之一。那么必然存在一个由interrupt到TrapPending转换,看下面的代码，
+在提交指令的处理中，首先对interrupt进行了处理，转换成了TrapPending，并且发送了一个包含 trapSquash[tid] = true的schedule, 延迟为trapLatency，这也就意味着在延迟trapLatency个cycle后，trapSquash被置位，此时再结合前面流程图中讲述的squash处理流程，就能完全理解对于trap是如何进行处理的。当然，提交指令的操作也会被挂起，这也是挂起的含义之一。当然，这部分代码是在可提交线程的查找中处理的。</p>
+<div class="highlight"><pre><span></span><code><span class="n">DefaultCommit</span><span class="o">&lt;</span><span class="n">Impl</span><span class="o">&gt;::</span><span class="n">commitInsts</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// 发送trap</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">interrupt</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">NoFault</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">commitStatus</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TrapPending</span><span class="p">;</span>
+<span class="w">            </span><span class="n">EventFunctionWrapper</span><span class="w"> </span><span class="o">*</span><span class="n">trap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EventFunctionWrapper</span><span class="p">(</span>
+<span class="w">        </span><span class="p">[</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">tid</span><span class="p">]{</span><span class="w"> </span><span class="n">trapSquash</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="s">&quot;Trap&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="n">Event</span><span class="o">::</span><span class="n">CPU_Tick_Pri</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">schedule</span><span class="p">(</span><span class="n">trap</span><span class="p">,</span><span class="w"> </span><span class="n">cpu</span><span class="o">-&gt;</span><span class="n">clockEdge</span><span class="p">(</span><span class="n">trapLatency</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// 挂起也不会再提交指令</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rob</span><span class="o">-&gt;</span><span class="n">isEmpty</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">        </span><span class="p">(</span><span class="n">commitStatus</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Running</span><span class="w"> </span><span class="o">||</span>
+<span class="w">            </span><span class="n">commitStatus</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Idle</span><span class="w"> </span><span class="o">||</span>
+<span class="w">            </span><span class="n">commitStatus</span><span class="p">[</span><span class="n">tid</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FetchTrapPending</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">commit_success</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">commitHead</span><span class="p">(</span><span class="n">head_inst</span><span class="p">,</span><span class="w"> </span><span class="n">num_committed</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>tcSquash也是类似的处理，这里不再赘述。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>

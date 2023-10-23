@@ -1,0 +1,3308 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Chsgcxy">
+      
+      
+        <link rel="canonical" href="https://chsgcxy.github.io/messy_notes/arch/superscalar.html">
+      
+      
+        <link rel="prev" href="rob.html">
+      
+      
+        <link rel="next" href="think1.html">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.6">
+    
+    
+      
+        <title>超标量处理器设计 - Messy Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Messy Notes" class="md-header__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Messy Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              超标量处理器设计
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Messy Notes" class="md-nav__button md-logo" aria-label="Messy Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Messy Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/chsgcxy/messy_notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        Welcome To Messy Notes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
+          Arch
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Arch" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Arch
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arch_demo.html" class="md-nav__link">
+        XS Arch simple
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arch_design.html" class="md-nav__link">
+        芯片架构设计
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arm_training_day1.html" class="md-nav__link">
+        ARM Training Day1
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arm_training_day2.html" class="md-nav__link">
+        ARM Training Day2
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="atomic.html" class="md-nav__link">
+        RISCV原子操作
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cache.html" class="md-nav__link">
+        Cache之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chiplet.html" class="md-nav__link">
+        chiplet
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="computer_arch.html" class="md-nav__link">
+        计算机体系结构量化研究方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="numa.html" class="md-nav__link">
+        numa架构
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="register_rename.html" class="md-nav__link">
+        乱序CPU的寄存器重命名(Register Renaming)机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rob.html" class="md-nav__link">
+        ROB模块
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          超标量处理器设计
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="superscalar.html" class="md-nav__link md-nav__link--active">
+        超标量处理器设计
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    什么是超标量处理器
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache" class="md-nav__link">
+    cache
+  </a>
+  
+    <nav class="md-nav" aria-label="cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-line" class="md-nav__link">
+    cache line的替换策略
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache_1" class="md-nav__link">
+    cache性能优化
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mmu" class="md-nav__link">
+    MMU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache_2" class="md-nav__link">
+    Cache
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    分支预测
+  </a>
+  
+    <nav class="md-nav" aria-label="分支预测">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    局部历史分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    全局历史分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    竞争的分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    分支预测器的更新
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    直接跳转的地址预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    间接跳转的分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    一个完整的分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    预测失败的恢复
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    寄存器重命名
+  </a>
+  
+    <nav class="md-nav" aria-label="寄存器重命名">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    为什么会出现假相关
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    寄存器重命名的实现方式
+  </a>
+  
+    <nav class="md-nav" aria-label="寄存器重命名的实现方式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rob" class="md-nav__link">
+    使用ROB进行寄存器重命名
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arf" class="md-nav__link">
+    将ARF扩展
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prf" class="md-nav__link">
+    使用统一的PRF
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    超标量处理器重命名的设计
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    发射
+  </a>
+  
+    <nav class="md-nav" aria-label="发射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    发射队列
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    数据捕捉与非数据捕捉
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    压缩与非压缩
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    发射过程的流水线
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oldest-first" class="md-nav__link">
+    为什么要实现oldest-first功能
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    获取指令年龄信息
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="think1.html" class="md-nav__link">
+        一个微架构设计引发的思考
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tlb.html" class="md-nav__link">
+        TLB
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="vector.html" class="md-nav__link">
+        各家向量指令扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_17" type="checkbox" id="__nav_2_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_17" tabindex="0" aria-expanded="false">
+          Hotchip33
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Hotchip33" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_17">
+          <span class="md-nav__icon md-icon"></span>
+          Hotchip33
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="hotchip33/hotchip33.html" class="md-nav__link">
+        hotchip33
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
+          C
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="C" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          C
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cast.html" class="md-nav__link">
+        搞清楚各种cast
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/complement.html" class="md-nav__link">
+        补码经典案例
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cplus.html" class="md-nav__link">
+        C++操作符重载
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/cpp-param-pack.html" class="md-nav__link">
+        c++ parameter pack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/gcc_tools.html" class="md-nav__link">
+        GCC 工具及相关介绍
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/int_uint.html" class="md-nav__link">
+        符号扩展
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/lvalue_and_rvalue.html" class="md-nav__link">
+        引用，左值，右值
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/makefile.html" class="md-nav__link">
+        makefile语法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/omp.html" class="md-nav__link">
+        多线程编程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/reverse.html" class="md-nav__link">
+        如何写一个又高效又美观的reverse
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../c/stl_containers.html" class="md-nav__link">
+        C++ STL容器
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
+          Chisel
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Chisel" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Chisel
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/chisel.html" class="md-nav__link">
+        chisel
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/rocketchip.html" class="md-nav__link">
+        rocket chip分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/sbt.html" class="md-nav__link">
+        sbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chisel/scala.html" class="md-nav__link">
+        scala
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
+          Debug
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Debug" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Debug
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/objcopy.html" class="md-nav__link">
+        objcopy
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="false">
+          Deeplearning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deeplearning" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Deeplearning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/bert.html" class="md-nav__link">
+        Bert(Bidirectional Encoder Representations from Transformers)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/deeplearning.html" class="md-nav__link">
+        deeplearning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeplearning/onehot.html" class="md-nav__link">
+        one-hot
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" tabindex="0" aria-expanded="false">
+          Design patterns
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Design patterns" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Design patterns
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../design-patterns/design-patterns.html" class="md-nav__link">
+        design-patterns
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8" tabindex="0" aria-expanded="false">
+          Ic
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ic" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Ic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/axi4.html" class="md-nav__link">
+        AXI4
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/cordic.html" class="md-nav__link">
+        硬件三角函数算法CORDIC
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/esl.html" class="md-nav__link">
+        ESL
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/ic_develop.html" class="md-nav__link">
+        IC设计与开发流程
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/pcie.html" class="md-nav__link">
+        PCIE
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/qemu.html" class="md-nav__link">
+        QEMU
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator.html" class="md-nav__link">
+        模拟器之我见
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/simulator2.html" class="md-nav__link">
+        再谈模拟器
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/tlm.html" class="md-nav__link">
+        TLM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ic/usb.html" class="md-nav__link">
+        USB
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_9" type="checkbox" id="__nav_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_9" tabindex="0" aria-expanded="false">
+          Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_9">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/arm-linux-kmodule-load.html" class="md-nav__link">
+        arm linux 内核模块加载过程详解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/kernel-status.html" class="md-nav__link">
+        Kernel status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/lzma_transplant.html" class="md-nav__link">
+        transplant LZMA compression algo from linux2.6.32 to linux2.6.29
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/sync-and-exclusion.html" class="md-nav__link">
+        Linux的同步和互斥机制
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linux/syscall.html" class="md-nav__link">
+        linux系统调用
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_10" type="checkbox" id="__nav_10" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_10" tabindex="0" aria-expanded="false">
+          Mcu
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Mcu" data-md-level="1">
+        <label class="md-nav__title" for="__nav_10">
+          <span class="md-nav__icon md-icon"></span>
+          Mcu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/ads7843.html" class="md-nav__link">
+        ADS7843 无中断响应问题定位
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/emwin_debug.html" class="md-nav__link">
+        stm32f207 emwin + freertos 调试过程问题简要记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/fatfs_f_readdir.html" class="md-nav__link">
+        f_readdir 在使用长文件名时的问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcu/lpc1114_hex2bin.html" class="md-nav__link">
+        LPC1114 使用USER命令实现hex转bin
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_11" type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" tabindex="0" aria-expanded="false">
+          Misc
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Misc" data-md-level="1">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          Misc
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/howtolearn.html" class="md-nav__link">
+        学习技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/latex.html" class="md-nav__link">
+        Latex
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pcie.html" class="md-nav__link">
+        基于linux 的 PCI & PCIe 总线分析总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/photograph.html" class="md-nav__link">
+        摄影与视听基础理论
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/pytest.html" class="md-nav__link">
+        pytest测试框架
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/randomx.html" class="md-nav__link">
+        RandomX 简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/roadmap.html" class="md-nav__link">
+        My Road Map
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/shell.html" class="md-nav__link">
+        shell 小点总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/skiing.html" class="md-nav__link">
+        Skiing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/vlog.html" class="md-nav__link">
+        Vlog
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/words.html" class="md-nav__link">
+        Words
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/work-201904-202102.html" class="md-nav__link">
+        工作总结2019.04～2021.04
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/xmr.html" class="md-nav__link">
+        XMR
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_12" type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" tabindex="0" aria-expanded="false">
+          Python
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Python" data-md-level="1">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Python
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/env_requirement.html" class="md-nav__link">
+        python 虚拟环境及依赖
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/numpy_softfloat.html" class="md-nav__link">
+        numpy 使用softfloat的方法
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../python/python.html" class="md-nav__link">
+        python
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_13" type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" tabindex="0" aria-expanded="false">
+          Riscv
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Riscv" data-md-level="1">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Riscv
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/RISC-V.html" class="md-nav__link">
+        RISC-V
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/la.html" class="md-nav__link">
+        LA指令的理解
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/opensbi.html" class="md-nav__link">
+        OpenSBI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/pma.html" class="md-nav__link">
+        PMA
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-rvv.html" class="md-nav__link">
+        RISCV向量扩展实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/riscv-torture.html" class="md-nav__link">
+        riscv-torture 总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/virtual_mem_manage.html" class="md-nav__link">
+        RISCV虚拟内存管理
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../riscv/wfi.html" class="md-nav__link">
+        wfi遇到的问题
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_14" type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" tabindex="0" aria-expanded="false">
+          Simulator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Simulator" data-md-level="1">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Simulator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/dramsim_ddr.html" class="md-nav__link">
+        DDR and DRAMSim3
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5-se.html" class="md-nav__link">
+        gem5的SE模式
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5.html" class="md-nav__link">
+        GEM5 设计与实现分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_introduction.html" class="md-nav__link">
+        Gem5 Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_isa.html" class="md-nav__link">
+        Gem5指令集框架解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_o3cpu.html" class="md-nav__link">
+        O3CPU 代码分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/gem5_random.html" class="md-nav__link">
+        单核双发射5级流水CPU的IPC性能分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/simplesim.html" class="md-nav__link">
+        simpleScalar解析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/spike.html" class="md-nav__link">
+        从spike分析一款模拟器的设计与实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../simulator/trace_format.html" class="md-nav__link">
+        利用Trace进行性能分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_15" type="checkbox" id="__nav_15" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_15" tabindex="0" aria-expanded="false">
+          Smt pnp
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smt pnp" data-md-level="1">
+        <label class="md-nav__title" for="__nav_15">
+          <span class="md-nav__icon md-icon"></span>
+          Smt pnp
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../smt-pnp/smt-pnp-introduction.html" class="md-nav__link">
+        SMT-PNP 笔记
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_16" type="checkbox" id="__nav_16" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_16" tabindex="0" aria-expanded="false">
+          Tools
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_16">
+          <span class="md-nav__icon md-icon"></span>
+          Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/arm-atp.html" class="md-nav__link">
+        ATP(Adaptive Traffic Profiles)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cache-size.html" class="md-nav__link">
+        cache大小测试工具
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/chrome-tracing.html" class="md-nav__link">
+        使用chrome-tracing工具查看性能分析log
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/cii-and-crontable.html" class="md-nav__link">
+        自动化部署之gitlab.ci 和 crontable
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/engine.html" class="md-nav__link">
+        engine
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git-hooks.html" class="md-nav__link">
+        git 钩子与自动编码风格检查
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/git.html" class="md-nav__link">
+        git技巧
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/llvm-symbolizer.html" class="md-nav__link">
+        使用llvm-symbolizer查找符号
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/markdown.html" class="md-nav__link">
+        How to use markdown with vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/ntfs-mount.html" class="md-nav__link">
+        移动硬盘 Ubuntu挂载问题
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/perf.html" class="md-nav__link">
+        linux性能统计工具使用总结
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/protobuf.html" class="md-nav__link">
+        protobuf
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/screen.html" class="md-nav__link">
+        screen
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/stream.html" class="md-nav__link">
+        评估DDR通道数
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/vscode-remotessh.html" class="md-nav__link">
+        vscode
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/wsl.html" class="md-nav__link">
+        WSL
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_17" type="checkbox" id="__nav_17" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_17" tabindex="0" aria-expanded="false">
+          Tvm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Tvm" data-md-level="1">
+        <label class="md-nav__title" for="__nav_17">
+          <span class="md-nav__icon md-icon"></span>
+          Tvm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/codebase-struct.html" class="md-nav__link">
+        directory-structure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/node.html" class="md-nav__link">
+        Node-SubSystem
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/runtime.html" class="md-nav__link">
+        runtime
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tvm/tvm-start.html" class="md-nav__link">
+        tvm
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_18" type="checkbox" id="__nav_18" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_18" tabindex="0" aria-expanded="false">
+          Verilog
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Verilog" data-md-level="1">
+        <label class="md-nav__title" for="__nav_18">
+          <span class="md-nav__icon md-icon"></span>
+          Verilog
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/round_robin_algo.html" class="md-nav__link">
+        一种round_robin算法实现
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog1.html" class="md-nav__link">
+        verilog第一篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog2.html" class="md-nav__link">
+        verilog第二篇
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verilog/verilog3.html" class="md-nav__link">
+        verilog 第三篇
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    什么是超标量处理器
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache" class="md-nav__link">
+    cache
+  </a>
+  
+    <nav class="md-nav" aria-label="cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-line" class="md-nav__link">
+    cache line的替换策略
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache_1" class="md-nav__link">
+    cache性能优化
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mmu" class="md-nav__link">
+    MMU
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache_2" class="md-nav__link">
+    Cache
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    分支预测
+  </a>
+  
+    <nav class="md-nav" aria-label="分支预测">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    局部历史分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    全局历史分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    竞争的分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    分支预测器的更新
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    直接跳转的地址预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    间接跳转的分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    一个完整的分支预测
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    预测失败的恢复
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    寄存器重命名
+  </a>
+  
+    <nav class="md-nav" aria-label="寄存器重命名">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    为什么会出现假相关
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    寄存器重命名的实现方式
+  </a>
+  
+    <nav class="md-nav" aria-label="寄存器重命名的实现方式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rob" class="md-nav__link">
+    使用ROB进行寄存器重命名
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arf" class="md-nav__link">
+    将ARF扩展
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prf" class="md-nav__link">
+    使用统一的PRF
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    超标量处理器重命名的设计
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    发射
+  </a>
+  
+    <nav class="md-nav" aria-label="发射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    发射队列
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    数据捕捉与非数据捕捉
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    压缩与非压缩
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    发射过程的流水线
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oldest-first" class="md-nav__link">
+    为什么要实现oldest-first功能
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    获取指令年龄信息
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="_1">超标量处理器设计<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>本文是对《超标量处理器设计》的个人总结</p>
+<h2 id="_2">什么是超标量处理器<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>如果一个处理器在每个cycle可以取出多于一条指令送到流水线中，并且使用硬件来对指令进行调度，那么这个处理器就可以被成为超标量处理器。超标量处理器可以是顺序执行的也可以是乱序执行的。
+这里重点讨论乱序(发射和执行可以乱序)执行的超标量处理器。首先应该明白，超标量处理器没有一套固定的设计原则，更多的时候，需要根据实际的场景，结合对性能，功耗，能效比，单核还是多核，成本等各种因素进行有针对性的设计。</p>
+<p>现代的超标量处理器一般包含下面几个步骤, 后续针对每一个步骤会展开讨论</p>
+<div class="highlight"><pre><span></span><code>        -----------
+        | icache  |
+        -----------
+             |
+             |
+             V
+           fetch
+             |
+             |
+             V
+           decode
+             |
+             |
+             V
+        register rename
+             |
+             |
+             V
+          dispatch
+             |
+             |
+             V
+           issue
+             |
+             |
+             V
+      register file read
+             |
+             |
+             V
+          execute
+             |
+             |
+             V
+          write back
+             |
+             |
+             V
+           commit
+</code></pre></div>
+<hr />
+<h2 id="cache">cache<a class="headerlink" href="#cache" title="Permanent link">&para;</a></h2>
+<p>我觉得随着硬件技术的进步，我们可能不再需要cache， DRAM的性能能够接近甚至达到cache水平。但在未来的一段时间，cache仍然是解决CPU与DRAM之间速度的唯一手段。
+当然，最重要的还是cache的思维，在计算机领域，通过增加一层来解决问题的思维。</p>
+<p>这里不讨论Cache原理，重点讨论Cache的实现。
+ICache只有读操作，相对简单，对于DCache, 它需要有多端口设计。这就牵扯到Cache的多端口设计下的，容量和面积以及速度的关系。</p>
+<p>多路组相联的Cache因为要按照一定顺序比较多个Tag, 因此延迟要比直接映射Cache的延迟大。甚至为了保证时序，还需要拆解成多级流水。</p>
+<p><img alt="../imgs/cache_2way.png" src="../imgs/cache_2way.PNG" />
+<img alt="../imgs/cache_multi_cycle.png" src="../imgs/cache_multi_cycle.PNG" /></p>
+<p>cache的tag与data的串行访问还是并行访问也会对性能和功耗有影响，并行访问会导致主频上不去，功耗大，但访问cache的周期能够缩短。</p>
+<p>全相联cache没有index，需要用到CAM(Content Address Memory), 在整个Cache中进行Tag比较。这种有着最大的灵活度，不容易出现miss, 但延迟也是最大的。</p>
+<p>注意区分write back and write allocate 与 write through and no-Write allocate.</p>
+<h3 id="cache-line">cache line的替换策略<a class="headerlink" href="#cache-line" title="Permanent link">&para;</a></h3>
+<ul>
+<li>LRU(Least Recently Used)方法, 2选一就用1bit寄存器来标识。伪LRU就使用分级的多级二选一进行选择。</li>
+<li>随机替换(Random Replacement),当cache容量较大时，miss率和LRU差不多。一般采用时钟算法来实现近似随机，本质上是计数器，宽度等于cahce的way的个数，硬件复杂度低。</li>
+</ul>
+<h3 id="cache_1">cache性能优化<a class="headerlink" href="#cache_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Write buffer: 被替换的 dirty cache line 先写入write buffer， 择机写入下级存储器。这会增加cache的复杂度，当发生cache miss的时候，不仅需要从下级存储器查找数据，还需要从write buffer中查找，并且write buffer中的数据优先。</li>
+<li>pipline: 往往为了保证设计主频，需要对cache访问进行流水化。尤其是在写操作时，必须保证先比较完tag再写数据。常见的可以将tag SRAM的读取和比较放在一个周期，写Data Sram放在下一个周期。一旦分流水，那么就会产生读的数据正好在写流水线中的情况。这就又需要将load指令携带的地址和store指令的流水线寄存器进行比较。</li>
+<li>多级结构。这里又分了Inclusive和Exclusive。即L2 Cache是否包含L1 Cache中的内容。虽然Exclusive类型的cache策略可以提高容量利用，但现代大多数处理器都采用Inclusive的Cache.</li>
+<li>Victim Cache. 保存最近被踢出的cache数据。<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></li>
+<li>Filter Cache. 先过滤掉偶然访问的数据，避免这类数据进入cache占资源</li>
+<li>预取。可以提前取数据进入cache，但为了避免cache污染，可以将预取的放到一个单独的缓存中。当然预取就有成功率，就会因为判断错误而浪费功耗和带宽。<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup></li>
+<li>多端口Cache. Data SRAM一般采用multi-banking的组织方式。影响这种方式性能的关键因素就是bank conflict。可以通过更多的bank来降低冲突概率。<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup></li>
+</ul>
+<p>AMD Opteron 双端口D-Cache设计实例</p>
+<p><img alt="../imgs/multi-bank-cache.png" src="../imgs/multi-bank-cache.PNG" />
+<img alt="../imgs/amd_opteron_dcache.png" src="../imgs/amd_opteron_dcache.PNG" /></p>
+<hr />
+<h2 id="mmu">MMU<a class="headerlink" href="#mmu" title="Permanent link">&para;</a></h2>
+<p>使用虚拟地址的好处</p>
+<ul>
+<li>解决了程序空间比实际内存空间大，需要认为拆解的问题</li>
+<li>解决了运行多个程序的问题</li>
+<li>提供了内存保护和共享机制</li>
+</ul>
+<p>页大小：</p>
+<ul>
+<li>太小的页，造成了页表占用空间大，TLB需要容量大的问题，效率低下</li>
+<li>太大的页，造成了页利用率降低，需要swap的数据更多，Page Fault的处理时间也更长</li>
+</ul>
+<p>为了更加灵活，现代处理器普遍支持大小可变的页。</p>
+<p>TLB的替换算法：</p>
+<p>随机替换就比较合适，可以使用简单的时钟算法来实现近似的随机。</p>
+<p>操作系统需要对TLB进行干预的原因：</p>
+<ul>
+<li>当进程结束时，需要无效掉它所使用的页表，此时应该保证存在于TLB中的相同页表被无效掉</li>
+<li>当进程占用物理内存过大时，也需要将这个进程中不常用的页进行swap</li>
+</ul>
+<p>MMU提供的TLB管理手段：</p>
+<ul>
+<li>能够flush整个TLB</li>
+<li>能够flush掉ASID对应的entry</li>
+<li>能够flush掉某个VPN对应的entry</li>
+</ul>
+<h2 id="cache_2">Cache<a class="headerlink" href="#cache_2" title="Permanent link">&para;</a></h2>
+<p>物理cache与虚拟cache</p>
+<p><img alt="../imgs/cache_virtual_phy.png" src="../imgs/cache_virtual_phy.png" /></p>
+<p>物理cache逻辑简单，但分支预测失败或者异常跳转的处罚也更大；虚拟cache的效率高，但会引入同名和同义的问题。</p>
+<p>同义问题：可以使用多bank的方法来解决cache的同义问题，但随着cache容量的增大，硬件复杂度和功耗都会增加很多。
+同名问题：通过ASID和G标识来解决，可以增加一级表来解决引入ASID带来的查找问题</p>
+<h2 id="_3">分支预测<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>分支预测要解决两个方面的预测：</p>
+<ul>
+<li>分支方向</li>
+<li>跳转地址</li>
+</ul>
+<p>分支预测的最好时机就是在当前周期得到取指令地址的时候，再取指令的同时进行分支预测，这样在下一个周期就可以根据预测结果继续取指。
+主流处理器更广泛的采用基于两位饱和计数器的分支预测器，并以此为基础进行延申。两位饱和计数器的核心理念就是当一条分支指令连续两次执行方向都一样时，
+那么该分支指令在第三次执行时也会有同样的方向，如果一条分支指令只是偶尔发生了方向的改变，那么分支预测结果不会立马跟着改变，也就是滤波。</p>
+<p>PHT(Pattern History Table)由于容量的限制，只能对应PC值中的一部分，因此会产生别名的问题。可以通过hash来降低别名发生的概率。</p>
+<h3 id="_4">局部历史分支预测<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>局部历史分支预测，通过记录过去几次分支执行的情况，来预测未来分支执行的情况，以PC值为索引，通过将PC值进行hash来降低别名问题，hash后的PC值用来寻址分支历史表(BHT),为了降低因为BHR中的值相同引起的重名问题，将BHR的值和PC值的一部分进行操作(或操作，组合操作)后，寻址饱和计数器表</p>
+<p><img alt="../imgs/branch_predictor_local_history.PNG" src="../imgs/branch_predictor_local_history.PNG" /></p>
+<h3 id="_5">全局历史分支预测<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>通过分支之间的关系来进行预测，GHR不按照PC来进行，所有的分支都被记录到GHR,hash后的PC和GHR中的值进行XOR操作后，来索引PHT。</p>
+<p><img alt="../imgs/branch_predictor_global_history.PNG" src="../imgs/branch_predictor_global_history.PNG" /></p>
+<h3 id="_6">竞争的分支预测<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>局部历史和全局历史都有局限性，因此，如果把这两个都包含进去，在适当的时机进行切换，应该会得到更好的效果。通过Choice PHT来进行选择，寻址Choise PHT时，使用了查找全局分支的PHT的index。</p>
+<p><img alt="../imgs/branch_predicter_GHR_checkpoint.PNG" src="../imgs/branch_predictor_choice.PNG" /></p>
+<h3 id="_7">分支预测器的更新<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>GHR在取指令阶段更新会比较好，可以使后续的分支指令使用到最新的GHR。在取指令阶段更新GHR是推测的，在预测失败的时候需要有一种机制对GHR进行修复，使GHR能够恢复到正确值。
+可以使用checkpoint方法来将GHR进行恢复,将每次要修复成的值(取非操作)填入一个GHR栈。</p>
+<p><img alt="../imgs/branch_predicter_GHR_checkpoint.PNG" src="../imgs/branch_predicter_GHR_checkpoint.PNG" /></p>
+<p>对于BHR的更新，可以在分支指令retire的时候，这样可以简化设计，也不会对性能产生太大的负面影响。
+对于饱和计数器，一般都是在分支指令retire的时候对PHT中的饱和计数器进行更新。</p>
+<h3 id="_8">直接跳转的地址预测<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>对于一条特定的直接跳转指令来说，它的目标地址是固定的，指令又与PC相关，因此使用一个PC寻址的cache来缓存这些指令的跳转地址，就能进行地址预测了，这就是BTB。一般可以采用组相联cache来实现BTB。</p>
+<p><img alt="../imgs/btb_set.PNG" src="../imgs/btb_set.PNG" /></p>
+<p>如果BTB发生miss,那么可以阻塞流水线，停止执行，这样能够节省功耗，但效率可能会低一些。也可以继续执行，一旦发现最终计算出来的跳转地址和speculative执行的地址不一样，再进行flush，这样有可能会蒙对，但功耗相对高一些。</p>
+<h3 id="_9">间接跳转的分支预测<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>其实大多数间接跳转都是CALL/Return指令，CALL指令的地址也是固定的，因此BTB就能进行预测。Return指令虽然地址是不固定的，但CALL与Return一般是成对出现，return的地址总是等于最近一次执行的CALL指令的下一条指令的地址。使用RAS能够很好的对Return指令的跳转地址进行预测。</p>
+<p><img alt="../imgs/ras_push_pop.PNG" src="../imgs/ras_push_pop.PNG" /></p>
+<p>对于不是CALL/Return的间接跳转，也有方法能够进行地址预测。因为具有正常功能的代码，分支跳转的地址总是有限的，比如switch，case。那么可以借鉴局部历史的分支预测，将BHT替换成target-Cache就能比较好的进行分支预测。</p>
+<h3 id="_10">一个完整的分支预测<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>一个完整的分支预测，结合上面所述的各个部分</p>
+<p><img alt="../imgs/branch_predictor_all.PNG" src="../imgs/branch_predictor_all.PNG" /></p>
+<h3 id="_11">预测失败的恢复<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>可以在下面几个时间点对指令的分支预测结果进行检查</p>
+<ul>
+<li>解码阶段。对一部分直接跳转指令进行分支预测检查，比如无条件跳转指令。</li>
+<li>读取寄存器阶段。获取到寄存器值就能知道目标地址，对于一部分间接跳转就能进行预测检查</li>
+<li>执行阶段。penalty最大。可以利用ROB或者checkpoint进行预测失败恢复。利用ROB实现起来相对简单，使用checkpoint会使用更多的硬件资源。</li>
+</ul>
+<h2 id="_12">寄存器重命名<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<p>在<a href="register_rename.html">寄存器重命名</a>中已经分析了其实现原理，但没有提及的是，为什么会出现WAW和WAR假相关。这本书的好处就是很多地方实现了软硬结合，它就给出了答案：</p>
+<h3 id="_13">为什么会出现假相关<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<ul>
+<li>有限个数的寄存器，导致寄存器重复使用</li>
+<li>程序中的循环体，这会产生大量的WAW</li>
+<li>代码重用，函数调用</li>
+</ul>
+<p>虽然可以通过拆解循环体来部分解决问题，但占用更多的存储空间也意味着I-Cache的miss率会上升。芯片设计领域还真是处处都需要trade off。
+这里还有一个问题，既然根本原因是寄存器个数有限导致的，那么在定义指令集之初为什么不定义很多寄存器？要是说x64，arm都是历史原因，那么新晋的riscv为什么也仅仅是32个寄存器？
+直接提供128寄存器会有什么问题吗？会有问题</p>
+<ul>
+<li>面积和功耗，更多的寄存器意味着更多的面积和功耗，这使得在指令集层面上就限制了CPU的工作场景，这种架构的CPU显然天生无法实现低功耗的小芯片。</li>
+<li>仍然很难解决寄存器不足的问题，软件的静态寄存器分配比不上硬件的动态寄存器分配。</li>
+</ul>
+<h3 id="_14">寄存器重命名的实现方式<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h4 id="rob">使用ROB进行寄存器重命名<a class="headerlink" href="#rob" title="Permanent link">&para;</a></h4>
+<p>ROB的编号与物理寄存器的编号一致，指令从ROB retire，ROB中的物理寄存器值转存到架构寄存器中。
+优点是容易实现，设计复杂度不高，可以获得不错的性能。缺点是对于不需要寄存器重命名的指令也会占用物理寄存器，浪费资源。ARF和ROB都需要多个读端口。</p>
+<h4 id="arf">将ARF扩展<a class="headerlink" href="#arf" title="Permanent link">&para;</a></h4>
+<p>它实际上是对ROB扩展方式的一种优化，解决了ROB方式导致的部分表象浪费的问题。</p>
+<h4 id="prf">使用统一的PRF<a class="headerlink" href="#prf" title="Permanent link">&para;</a></h4>
+<ul>
+<li>寄存器的值只需要被写入一次，不需要由FRF转到ARF</li>
+<li>一条指令的源寄存器只会存在于PRF,不需要判断去哪里读取</li>
+</ul>
+<h3 id="_15">超标量处理器重命名的设计<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>一个四路rename的设计</p>
+<p><img alt="docs\imgs\rename_4way_rat.PNG" src="../imgs/rename_4way_rat.PNG" /></p>
+<p>对于RAT来讲，要面对分支预测失败或者异常的恢复，这个过程有三种典型方法：</p>
+<ul>
+<li>checkpoint 方法，会消耗面积，增加功耗，但恢复比较快。尤其是对于cRAT，这种方法很消耗面积和功耗。</li>
+<li>walk方法。ROB中的每条指令都存储了这条指令之前对应的物理寄存器，通过这些信息能够把RAT逐步的还原。恢复时间比较慢，但是消耗硬件资源少，更适合发生异常时的恢复。</li>
+<li>architecture state. 在流水线的提交阶段也有一个aRAT,指令只有提交了才记录到这里，这样只要等到发生异常或分支预测错误的指令提交时，就可以用aRAT对RAT进行恢复。
+缺点在于分支预测失败的惩罚可能会变大，因为要等到之前的指令全部retire.</li>
+</ul>
+<h2 id="_16">发射<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h2>
+<p>发射过程相对复杂，它要完成将指令存入 Issue Queue，从issue Queue中挑出ready的指令送到FU。这个过程中还需要获取寄存器依赖关系来确定指令是否资源均已ready。同时也需要支持bypass。</p>
+<h3 id="_17">发射队列<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p>所有指令共用一个发射队列，称为集中式发射队列(Centralized Issue Queue, CIQ); 每个FU都有单独的发射队列，则称为分布式的发射队列(Distributed Issue Queue, DIQ)。
+芯片设计领域总是没有非黑即白，总是需要进行trade off, 根据需求来综合考虑。往往最终是CIQ和DIQ的折中方案。</p>
+<p>CIQ的利弊：</p>
+<p>优点：</p>
+<ul>
+<li>能够充分利用队列的空间</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>选择电路和唤醒电路都会复杂，面积和延迟都会大</li>
+</ul>
+<p>DIQ的利弊：</p>
+<p>优点：</p>
+<ul>
+<li>简化了选择电路的设计</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>空间利用率相对低，可能会因为一个队列没有空间而阻塞所有队列</li>
+<li>唤醒操作的布线复杂度也会上升</li>
+</ul>
+<h3 id="_18">数据捕捉与非数据捕捉<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<p>数据捕捉：在流水线的发射阶段之前读取寄存器，没有ready的寄存器记录寄存器号。需要将这些数据放到payload RAM。</p>
+<p>优点：</p>
+<ul>
+<li>所需寄存器堆的读端口数比较少，需要物理宽度 * 2的读端口数</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>需要payload RAM，会占用面积</li>
+<li>寄存器数据有搬移，相对功耗会更大。</li>
+<li>速度相对低一些</li>
+</ul>
+<p>非数据捕捉：在流水线的发射阶段之后读取物理寄存器堆。获取的值直接进入FU。</p>
+<p>优点：</p>
+<ul>
+<li>功耗相对低</li>
+<li>速度相对快</li>
+<li>面积相对小</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>需要寄存器堆的读端口多，需要发射宽度 * 2的端口</li>
+</ul>
+<p>使用ROB进行寄存器重命名时，一般都会搭配使用数据捕捉的发射方式，因为使用ROB进行寄存器重命名时，真正的寄存器的值可能在ARF中也可能在ROB中，获取这个寄存器的值会很麻烦。数据捕捉因为使用payload RAM，不需要再访问寄存器堆，也就不需要关心寄存器值去哪里获取。显然，CPU设计是需要全盘考虑的，必须具备全局视角。</p>
+<h3 id="_19">压缩与非压缩<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p>压缩的发射队列就像叠着的书一样，抽掉一本，在其上面的都会下落。每本书都放在一个格子里，抽掉后，其他书都不动，就是非压缩发射队列。</p>
+<p>压缩的发射队列：</p>
+<p>优点：</p>
+<ul>
+<li>需要每一个表项前都有一个多路选择器，选择从上面的表项还是自身进行更新。</li>
+<li>选择电路简单，只需要使用优先级编码器进行选择即可</li>
+<li>分配电路简单，空闲空间总是处于上部</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>耗面积。需要大量的多路选择器支持压缩</li>
+<li>功耗大。一直在移动</li>
+</ul>
+<p>非压缩的发射队列：</p>
+<p>优点：</p>
+<ul>
+<li>功耗和面积小</li>
+<li>不需要复杂的多路选择器</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>选择电路和分配电路都会复杂</li>
+</ul>
+<h3 id="_20">发射过程的流水线<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p>想要使存在先写后读相关性的相邻指令可以背靠背执行，必须将仲裁和唤醒两个操作在一个周期内完成
+将流水线的仲裁和唤醒分开到两个周期，IPC大约会下降10%~15%</p>
+<h3 id="oldest-first">为什么要实现oldest-first功能<a class="headerlink" href="#oldest-first" title="Permanent link">&para;</a></h3>
+<p>越旧的指令，和它存在相关性的指令也就越多，因此最先执行oldest指令，概率上就可以唤醒更多的指令，能够有效的提高处理器执行指令的并行度，而且还能及时释放占据的其他资源</p>
+<h3 id="_21">获取指令年龄信息<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>可以利用ROB来获取年龄信息，但ROB实质上是FIFO,是循环使用的。因此无法简单的通过ROB的地址来判别年龄，在地址前面增加一位，当翻转时，也同时翻转这个位，这样在FIFO中，一个循环内的表项都会有同样的地址最高位。因为ROB是从小地址开始写入，因此如果高地址有最高位不一样的表项，那么一定是上一次循环中残留的表项。因此有如下结论：</p>
+<ul>
+<li>位置值相同时，ROB地址值越小，对应的指令越旧</li>
+<li>位置值不同时，ROB地址值越大，对应的指令越旧</li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>这是一种备份思想，虽然给每个人分配了晚餐，但也不想每个人都给足够的食物，就多备了几份，给那些饭量大的人&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>如果CPU能够有类似AI的学习机制，有比较大的空间能够用来学习数据地址的规律，在预取时能够保证比较高的准确率，那么效率一定能提高不少&#160;<a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>想象一下极限情况，如果每个数据都有一个端口，那么必然也不会存在端口冲突，但是代价也是巨大的，需要无数根线来连接。&#160;<a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>
