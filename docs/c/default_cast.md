@@ -36,3 +36,17 @@ uint128_t res = (((op_mask & simm5) + (op_mask & vs2)) >> sew) & 0x1u;
 - 有符号与无符号混合: 如果一个操作数是有符号的而另一个是无符号的,并且它们的类型大小相同(如signed int和unsigned int),那么有符号整数会被转换为无符号整数。如果类型大小不同,则根据以下规则进行转换:
     - 如果有符号类型能够表示无符号类型的所有值,则无符号类型被转换为有符号类型。
     - 否则,两个操作数都会被转换为无符号类型的相应更大的整数类型。(例如char或short),则它们首先会被提升为int或unsigned int。具体取决于这些类型
+
+```c++
+uint16_t a = uint16_t(0xffa0);
+int16_t b = int16_t(a);
+int64_t c = int64_t(a);
+uint64_t d = uint64_t(b);
+
+std::cout << std::dec << a << std::endl;
+std::cout << std::dec << b << std::endl;
+std::cout << std::dec << c << std::endl;
+std::cout << std::dec << d << std::endl;
+```
+
+看上面这一段代码。a和b是同宽度的，所以强制转换，内存值不变。uint16_t 转 int64_t 时，uint16_t的值首先转换成uint64_t,然后再转换成int64_t。int16_t 转 uint64_t时， int16_t 先符号扩展转换成int64_t, 再转换成 uint64_t。
